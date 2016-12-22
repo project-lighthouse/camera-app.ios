@@ -16,7 +16,7 @@ class ViewController: UIViewController {
 
     //MARK: Actions
     @IBAction func onButtonClick(_ sender: UIButton) {
-        self.imageView.image = Bridge().contours(UIImage(named: "lighthouse"))
+        self.imageView.image = Bridge().drawKeypoints(UIImage(named: "lighthouse"))
     }
 
     override func viewDidLoad() {

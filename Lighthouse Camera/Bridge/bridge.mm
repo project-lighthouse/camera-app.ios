@@ -6,13 +6,19 @@
 using namespace cv;
 
 @implementation Bridge
-- (UIImage *)contours:(UIImage *)input {
-    Lighthouse lighthouse;
+- (UIImage *)DrawKeypoints:(UIImage *)input {
+    Lighthouse lighthouse(1000);
 
     cv::Mat outputMatrix;
-    lighthouse.contours([self imageToMatrix:input], outputMatrix);
+    lighthouse.DrawKeypoints([self imageToMatrix:input], outputMatrix);
 
     return [self matrixToImage:outputMatrix andImageOrientation:[input imageOrientation]];
+}
+
+- (uint32_t)ExtractFeatures:(UIImage *)source {
+    Lighthouse lighthouse(1000);
+
+    return lighthouse.ExtractFeatures([self imageToMatrix:source]);
 }
 
 // Converts UIImage instance into cv::Mat object that is known for OpenCV.
@@ -29,7 +35,8 @@ using namespace cv;
             8,
             matrix.step[0],
             colorSpace,
-            kCGImageAlphaNoneSkipLast | kCGBitmapByteOrderDefault);
+            kCGImageAlphaNoneSkipLast | kCGBitmapByteOrderDefault
+    );
 
     CGContextDrawImage(context, CGRectMake(0, 0, cols, rows), image.CGImage);
 

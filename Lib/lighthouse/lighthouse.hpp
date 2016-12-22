@@ -12,10 +12,18 @@
 #include <stdio.h>
 #include <string>
 #include <opencv2/opencv.hpp>
+#include <opencv2/features2d.hpp>
 
 class Lighthouse {
 public:
-    const bool contours(const cv::Mat& inputFrame, cv::Mat& outputFrame);
+    Lighthouse(int32_t aNumberOfFeatures);
+
+    void DrawKeypoints(const cv::Mat &aInputFrame, cv::Mat &aOutputFrame);
+    const size_t ExtractFeatures(const cv::Mat& aInputFrame);
+
+private:
+    cv::Ptr<cv::ORB> mFeatureDetector;
+    cv::Ptr<cv::BFMatcher> mMatcher;
 };
 
 #endif /* lighthouse_hpp */

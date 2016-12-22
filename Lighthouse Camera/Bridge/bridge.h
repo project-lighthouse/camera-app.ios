@@ -5,7 +5,8 @@
 #import <UIKit/UIKit.h>
 
 @interface Bridge : NSObject
-- (UIImage*) contours:(UIImage*) source;
+- (UIImage*)DrawKeypoints:(UIImage*) source;
+- (uint32_t)ExtractFeatures:(UIImage*) source;
 @end
 
 
