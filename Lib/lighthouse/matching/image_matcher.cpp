@@ -19,11 +19,25 @@ const ImageDescription ImageMatcher::GetDescription(const cv::Mat &aInputFrame) 
     std::vector<cv::Mat> rgbaChannels(4);
     cv::split(aInputFrame, rgbaChannels);
 
+    // Detect image keypoints and compute descriptors for all of them.
     std::vector<cv::KeyPoint> keypoints;
     cv::Mat descriptors;
     this->mKeypointDetector->detectAndCompute(aInputFrame, rgbaChannels[3], keypoints, descriptors);
 
-    return ImageDescription(keypoints, descriptors);
+    // Calculate color histogram for the image. But there is no need in calculating of the color histogram if we didn't
+    // find any keypoint.
+    cv::MatND histogram;
+    if (keypoints.size() > 0) {
+        const int channels[] = {0, 1, 2};
+        const int histogramSize[] = {8, 8, 8};
+        float colorRange[] = {0, 256};
+        const float *ranges[] = {colorRange, colorRange, colorRange};
+        cv::calcHist(&aInputFrame, 1, channels, cv::Mat(), histogram, 3, histogramSize, ranges);
+
+        cv::normalize(histogram, histogram);
+    }
+
+    return ImageDescription(keypoints, descriptors, histogram);
 }
 
 } // namespace lighthouse

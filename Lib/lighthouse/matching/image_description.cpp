@@ -10,9 +10,10 @@
 
 namespace lighthouse {
 
-ImageDescription::ImageDescription(std::vector<cv::KeyPoint> keypoints, cv::Mat descriptors) {
+ImageDescription::ImageDescription(std::vector<cv::KeyPoint> keypoints, cv::Mat descriptors, cv::MatND histogram) {
     this->mKeypoints = keypoints;
     this->mDescriptors = descriptors;
+    this->mHistogram = histogram;
 }
 
 const std::vector<cv::KeyPoint> ImageDescription::GetKeypoints() {
@@ -21,6 +22,10 @@ const std::vector<cv::KeyPoint> ImageDescription::GetKeypoints() {
 
 const cv::Mat ImageDescription::GetDescriptors() {
     return this->mDescriptors;
+}
+
+const cv::MatND ImageDescription::GetHistogram() {
+    return this->mHistogram;
 }
 
 } // namespace lighthouse

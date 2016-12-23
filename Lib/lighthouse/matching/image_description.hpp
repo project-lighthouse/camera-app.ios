@@ -16,13 +16,15 @@ namespace lighthouse {
 
 class ImageDescription {
 public:
-    ImageDescription(std::vector<cv::KeyPoint> keypoints, cv::Mat descriptors);
+    ImageDescription(std::vector<cv::KeyPoint> keypoints, cv::Mat descriptors, cv::MatND histogram);
     const std::vector<cv::KeyPoint> GetKeypoints();
     const cv::Mat GetDescriptors();
+    const cv::MatND GetHistogram();
 
 private:
     std::vector<cv::KeyPoint> mKeypoints;
     cv::Mat mDescriptors;
+    cv::MatND mHistogram;
 };
 
 } // namespace lighthouse
