@@ -25,8 +25,8 @@ public:
     const ImageDescription GetDescription(const cv::Mat &aInputFrame);
     
 private:
-    cv::Ptr<cv::ORB> mKeypointDetector;
-    cv::Ptr<cv::BFMatcher> mMatcher;
+    cv::Ptr<cv::Feature2D> mKeypointDetector;
+    cv::Ptr<cv::DescriptorMatcher> mMatcher;
 };
 
 } // namespace lighthouse
