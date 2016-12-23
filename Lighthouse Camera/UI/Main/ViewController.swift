@@ -21,10 +21,18 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        self.registerSettingsBundle()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+
+    func registerSettingsBundle(){
+        let defaults = UserDefaults.standard
+
+        defaults.set(500, forKey: "Matching:NumberOfFeatures")
     }
 }
 
