@@ -14,16 +14,20 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/features2d.hpp>
 
+#include "image_matcher.hpp"
+
+namespace lighthouse {
+
 class Lighthouse {
 public:
     Lighthouse(int32_t aNumberOfFeatures);
 
     void DrawKeypoints(const cv::Mat &aInputFrame, cv::Mat &aOutputFrame);
-    const size_t ExtractFeatures(const cv::Mat& aInputFrame);
 
 private:
-    cv::Ptr<cv::ORB> mFeatureDetector;
-    cv::Ptr<cv::BFMatcher> mMatcher;
+    ImageMatcher mImageMatcher;
 };
+
+} // namespace lighthouse
 
 #endif /* lighthouse_hpp */

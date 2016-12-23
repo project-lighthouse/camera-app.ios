@@ -8,35 +8,21 @@
 
 #include "lighthouse.hpp"
 
-using namespace std;
-using namespace cv;
+namespace lighthouse {
 
-Lighthouse::Lighthouse(int32_t aNumberOfFeatures) {
-    this->mFeatureDetector = ORB::create(aNumberOfFeatures);
-    this->mMatcher = new BFMatcher(NORM_HAMMING);
+Lighthouse::Lighthouse(int32_t aNumberOfFeatures): mImageMatcher(0) {
+    this->mImageMatcher = ImageMatcher(aNumberOfFeatures);
 }
 
-void Lighthouse::DrawKeypoints(const Mat &aInputFrame, Mat &aOutputFrame) {
-    vector<KeyPoint> keypoints;
-    this->mFeatureDetector->detect(aInputFrame, keypoints);
+void Lighthouse::DrawKeypoints(const cv::Mat &aInputFrame, cv::Mat &aOutputFrame) {
+    ImageDescription description = this->mImageMatcher.GetDescription(aInputFrame);
 
     // We can't draw keypoints on the BGRA image.
-    Mat bgrInputFrame;
+    cv::Mat bgrInputFrame;
     cvtColor(aInputFrame, bgrInputFrame, cv::COLOR_BGRA2BGR);
 
-    drawKeypoints(bgrInputFrame, keypoints, aOutputFrame, Scalar::all(-1), DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+    drawKeypoints(bgrInputFrame, description.GetKeypoints(), aOutputFrame, cv::Scalar::all(-1),
+            cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 }
 
-const size_t Lighthouse::ExtractFeatures(const Mat &aInputFrame) {
-    Mat grayImage;
-    cvtColor(aInputFrame, grayImage, cv::COLOR_BGRA2GRAY);
-
-    vector<Mat> rgbChannels(3);
-    split(aInputFrame, rgbChannels);
-
-    vector<KeyPoint> keypoints;
-    Mat descriptors;
-    this->mFeatureDetector->detectAndCompute(grayImage, rgbChannels[2], keypoints, descriptors);
-
-    return keypoints.size();
-}
+} // namespace lighthouse

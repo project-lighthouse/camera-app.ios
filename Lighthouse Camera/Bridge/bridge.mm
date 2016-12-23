@@ -3,22 +3,14 @@
 
 #include "lighthouse.hpp"
 
-using namespace cv;
-
 @implementation Bridge
 - (UIImage *)DrawKeypoints:(UIImage *)input {
-    Lighthouse lighthouse(1000);
+    lighthouse::Lighthouse lighthouse(1000);
 
     cv::Mat outputMatrix;
     lighthouse.DrawKeypoints([self imageToMatrix:input], outputMatrix);
 
     return [self matrixToImage:outputMatrix andImageOrientation:[input imageOrientation]];
-}
-
-- (uint32_t)ExtractFeatures:(UIImage *)source {
-    Lighthouse lighthouse(1000);
-
-    return lighthouse.ExtractFeatures([self imageToMatrix:source]);
 }
 
 // Converts UIImage instance into cv::Mat object that is known for OpenCV.
