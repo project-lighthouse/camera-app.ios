@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
+#include <cereal/access.hpp>
 
 namespace lighthouse {
 
@@ -20,11 +21,16 @@ public:
     const std::vector<cv::KeyPoint> GetKeypoints();
     const cv::Mat GetDescriptors();
     const cv::MatND GetHistogram();
+    void Save();
 
 private:
     std::vector<cv::KeyPoint> mKeypoints;
     cv::Mat mDescriptors;
     cv::MatND mHistogram;
+
+    friend class cereal::access;
+    template<class Archive> void save(Archive& archive) const;
+    template<class Archive> void load(Archive& archive);
 };
 
 } // namespace lighthouse
