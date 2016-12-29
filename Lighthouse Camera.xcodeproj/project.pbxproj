@@ -148,6 +148,7 @@
 		7AE727DD1E13D5E5007B3758 /* utility.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = utility.hpp; sourceTree = "<group>"; };
 		7AE727DE1E13D5E5007B3758 /* valarray.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = valarray.hpp; sourceTree = "<group>"; };
 		7AE727DF1E13D5E5007B3758 /* vector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vector.hpp; sourceTree = "<group>"; };
+		7AED7F681E156576006F2C23 /* serialization.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = serialization.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,6 +238,7 @@
 				7A2FBF211E0D3F20001B4E8A /* image_matcher.hpp */,
 				7A2FBF231E0D4138001B4E8A /* image_description.cpp */,
 				7A2FBF241E0D4138001B4E8A /* image_description.hpp */,
+				7AED7F681E156576006F2C23 /* serialization.hpp */,
 			);
 			path = matching;
 			sourceTree = "<group>";

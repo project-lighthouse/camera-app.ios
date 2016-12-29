@@ -12,25 +12,32 @@
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
 #include <cereal/access.hpp>
+#include <cereal/types/vector.hpp>
 
 namespace lighthouse {
 
 class ImageDescription {
 public:
-    ImageDescription(std::vector<cv::KeyPoint> keypoints, cv::Mat descriptors, cv::MatND histogram);
+    ImageDescription(std::vector<cv::KeyPoint> aKeypoints, cv::Mat aDescriptors, cv::Mat aHistogram);
+
     const std::vector<cv::KeyPoint> GetKeypoints();
     const cv::Mat GetDescriptors();
-    const cv::MatND GetHistogram();
-    void Save();
+    const cv::Mat GetHistogram();
+
+    static void Save(const ImageDescription aDescription, const std::string aPath);
+    static ImageDescription Load(const std::string aPath);
 
 private:
     std::vector<cv::KeyPoint> mKeypoints;
     cv::Mat mDescriptors;
-    cv::MatND mHistogram;
+    cv::Mat mHistogram;
 
     friend class cereal::access;
-    template<class Archive> void save(Archive& archive) const;
-    template<class Archive> void load(Archive& archive);
+    template<class Archive> void serialize(Archive& aArchive) {
+        aArchive(mKeypoints);
+        aArchive(mDescriptors);
+        aArchive(mHistogram);
+    };
 };
 
 } // namespace lighthouse

@@ -7,88 +7,46 @@
 //
 
 #include <fstream>
-#include "image_description.hpp"
-#include <cereal/types/unordered_map.hpp>
-#include <cereal/types/memory.hpp>
+
 #include <cereal/archives/binary.hpp>
+
+#include "serialization.hpp"
+#include "image_description.hpp"
 
 namespace lighthouse {
 
-ImageDescription::ImageDescription(std::vector<cv::KeyPoint> keypoints, cv::Mat descriptors, cv::MatND histogram) {
-    this->mKeypoints = keypoints;
-    this->mDescriptors = descriptors;
-    this->mHistogram = histogram;
-}
+ImageDescription::ImageDescription(std::vector<cv::KeyPoint> aKeypoints, cv::Mat aDescriptors, cv::Mat aHistogram):
+        mKeypoints(aKeypoints), mDescriptors(aDescriptors), mHistogram(aHistogram) {}
 
 const std::vector<cv::KeyPoint> ImageDescription::GetKeypoints() {
-    return this->mKeypoints;
+    return mKeypoints;
 }
 
 const cv::Mat ImageDescription::GetDescriptors() {
-    return this->mDescriptors;
+    return mDescriptors;
 }
 
-const cv::MatND ImageDescription::GetHistogram() {
-    return this->mHistogram;
+const cv::Mat ImageDescription::GetHistogram() {
+    return mHistogram;
 }
 
-void ImageDescription::Save() {
-    std::ofstream outputStream("description.cereal", std::ios::binary);
-    cereal::BinaryOutputArchive archive(outputStream);
+void ImageDescription::Save(ImageDescription aDescription, std::string aPath) {
+    std::ofstream outputStream(aPath, std::ios::binary);
+    cereal::BinaryOutputArchive ar(outputStream);
 
-    archive(std::unique_ptr<ImageDescription>(this));
+    ar(aDescription);
 }
 
+ImageDescription ImageDescription::Load(std::string aPath) {
+    std::ifstream inputStream(aPath, std::ios::binary);
+    cereal::BinaryInputArchive archive(inputStream);
 
-/**
- * Serialize Image Description into Cereal archive.
- *
- * @param[in] archive The Cereal archive to serialise to.
- */
-template<class Archive>
-void ImageDescription::save(Archive &archive) const {
-    const int rows = mDescriptors.rows;
-    const int cols = mDescriptors.cols;
-    const bool continuous = mDescriptors.isContinuous();
-    const size_t elementSize = mDescriptors.elemSize();
+    std::vector<cv::KeyPoint> keypoints;
+    cv::Mat descriptors, histogram;
 
-    archive(rows, cols, mDescriptors.type(), continuous);
+    ImageDescription description = ImageDescription(keypoints, descriptors, histogram);
+    archive(description);
 
-    if (continuous) {
-        archive(cereal::binary_data(mDescriptors.ptr(), rows * cols * elementSize));
-        return;
-    }
-
-    const size_t rowSize = cols * elementSize;
-    for (int i = 0; i < rows; i++) {
-        archive(cereal::binary_data(mDescriptors.ptr(i), rowSize));
-    }
+    return description;
 }
-
-/**
- * De-serialize Image Description from a Cereal archive.
- *
- * @param[in] archive The archive to deserialize from.
- */
-template<class Archive>
-void ImageDescription::load(Archive &archive) {
-    int rows, cols, type;
-    bool continuous;
-
-    archive(rows, cols, type, continuous);
-    mDescriptors.create(rows, cols, type);
-
-    const size_t elementSize = mDescriptors.elemSize();
-
-    if (continuous) {
-        archive(cereal::binary_data(mDescriptors.ptr(), rows * cols * elementSize));
-        return;
-    }
-
-    const size_t rowSize = cols * elementSize;
-    for (int i = 0; i < rows; i++) {
-        archive(cereal::binary_data(mDescriptors.ptr(i), rowSize));
-    }
-}
-
 } // namespace lighthouse

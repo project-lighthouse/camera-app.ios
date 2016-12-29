@@ -24,6 +24,11 @@ public:
 
     void DrawKeypoints(const cv::Mat &aInputFrame, cv::Mat &aOutputFrame);
 
+    ImageDescription GetDescription(const cv::Mat &aInputFrame);
+
+    void SaveDescription(const ImageDescription &aDescription, const std::string aPath);
+    const ImageDescription LoadDescription(const std::string aPath);
+
 private:
     ImageMatcher mImageMatcher;
 };
