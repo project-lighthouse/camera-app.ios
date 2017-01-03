@@ -53,8 +53,6 @@
 		63B98FF21E03F211000125CB /* Lighthouse CameraUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Lighthouse CameraUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63B98FF61E03F211000125CB /* Lighthouse_CameraUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lighthouse_CameraUITests.swift; sourceTree = "<group>"; };
 		63B98FF81E03F211000125CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		63C81B791E1BD015005F850E /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = ../Libraries/opencv2.framework; sourceTree = "<group>"; };
-		63C81B7B1E1BD206005F850E /* opencv2 */ = {isa = PBXFileReference; lastKnownFileType = text; name = opencv2; path = Lib/opencv2; sourceTree = "<group>"; };
 		7A018E741E0AA40700EEB90B /* Lib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Lib; path = "$(PROJECT_DIR)/Lib"; sourceTree = "<absolute>"; };
 		7A2FBF201E0D3F20001B4E8A /* image_matcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image_matcher.cpp; sourceTree = "<group>"; };
 		7A2FBF211E0D3F20001B4E8A /* image_matcher.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = image_matcher.hpp; sourceTree = "<group>"; };
@@ -477,8 +475,6 @@
 		7AF59F771E0855760055266A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				63C81B7B1E1BD206005F850E /* opencv2 */,
-				63C81B791E1BD015005F850E /* opencv2.framework */,
 				7A608B091E0ABE6900A88001 /* opencv2.framework */,
 			);
 			name = Frameworks;
