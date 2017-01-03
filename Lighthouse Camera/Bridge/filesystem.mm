@@ -10,7 +10,7 @@
 #import <Foundation/Foundation.h>
 
 NSString *(^getRoot)() = ^() {
-    return NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES)[0];
+    return NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
 };
 
 std::string Filesystem::GetRoot() {
