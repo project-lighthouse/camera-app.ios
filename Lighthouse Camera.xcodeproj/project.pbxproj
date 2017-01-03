@@ -11,12 +11,12 @@
 		63B98FDE1E03F211000125CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63B98FDD1E03F211000125CB /* Assets.xcassets */; };
 		63B98FEC1E03F211000125CB /* Lighthouse_CameraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B98FEB1E03F211000125CB /* Lighthouse_CameraTests.swift */; };
 		63B98FF71E03F211000125CB /* Lighthouse_CameraUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B98FF61E03F211000125CB /* Lighthouse_CameraUITests.swift */; };
+		63C81B7D1E1BD23F005F850E /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A608B091E0ABE6900A88001 /* opencv2.framework */; };
 		7A018E751E0AA40700EEB90B /* Lib in Resources */ = {isa = PBXBuildFile; fileRef = 7A018E741E0AA40700EEB90B /* Lib */; };
 		7A2FBF221E0D3F20001B4E8A /* image_matcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A2FBF201E0D3F20001B4E8A /* image_matcher.cpp */; };
 		7A2FBF251E0D4138001B4E8A /* image_description.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A2FBF231E0D4138001B4E8A /* image_description.cpp */; };
 		7A2FBF2A1E0D60F2001B4E8A /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7A2FBF291E0D60F2001B4E8A /* Settings.bundle */; };
 		7A608B081E0ABE1000A88001 /* lighthouse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A608B061E0ABE1000A88001 /* lighthouse.cpp */; };
-		7A608B0A1E0ABE6900A88001 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A608B091E0ABE6900A88001 /* opencv2.framework */; };
 		7A608B111E0AC54600A88001 /* bridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A608B101E0AC54600A88001 /* bridge.mm */; };
 		7A608B131E0AC59F00A88001 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A608B121E0AC59F00A88001 /* ViewController.swift */; };
 		7A608B151E0AC5EA00A88001 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7A608B141E0AC5EA00A88001 /* LaunchScreen.storyboard */; };
@@ -53,7 +53,9 @@
 		63B98FF21E03F211000125CB /* Lighthouse CameraUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Lighthouse CameraUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63B98FF61E03F211000125CB /* Lighthouse_CameraUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lighthouse_CameraUITests.swift; sourceTree = "<group>"; };
 		63B98FF81E03F211000125CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7A018E741E0AA40700EEB90B /* Lib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Lib; path = "/Users/azasypkin/projects/project-lighthouse/camera-app.ios/Lib"; sourceTree = "<absolute>"; };
+		63C81B791E1BD015005F850E /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = ../Libraries/opencv2.framework; sourceTree = "<group>"; };
+		63C81B7B1E1BD206005F850E /* opencv2 */ = {isa = PBXFileReference; lastKnownFileType = text; name = opencv2; path = Lib/opencv2; sourceTree = "<group>"; };
+		7A018E741E0AA40700EEB90B /* Lib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Lib; path = "$(PROJECT_DIR)/Lib"; sourceTree = "<absolute>"; };
 		7A2FBF201E0D3F20001B4E8A /* image_matcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image_matcher.cpp; sourceTree = "<group>"; };
 		7A2FBF211E0D3F20001B4E8A /* image_matcher.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = image_matcher.hpp; sourceTree = "<group>"; };
 		7A2FBF231E0D4138001B4E8A /* image_description.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image_description.cpp; sourceTree = "<group>"; };
@@ -156,7 +158,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A608B0A1E0ABE6900A88001 /* opencv2.framework in Frameworks */,
+				63C81B7D1E1BD23F005F850E /* opencv2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -475,6 +477,8 @@
 		7AF59F771E0855760055266A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				63C81B7B1E1BD206005F850E /* opencv2 */,
+				63C81B791E1BD015005F850E /* opencv2.framework */,
 				7A608B091E0ABE6900A88001 /* opencv2.framework */,
 			);
 			name = Frameworks;
@@ -758,6 +762,7 @@
 		63B98FFC1E03F211000125CB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -780,6 +785,7 @@
 		63B98FFD1E03F211000125CB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
