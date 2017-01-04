@@ -18,9 +18,14 @@
 
 namespace lighthouse {
 
+struct ImageMatchingSettings {
+    int32_t numberOfFeatures, minNumberOfFeatures;
+    float ratioTestK, histogramWeight;
+};
+
 class ImageMatcher {
 public:
-    ImageMatcher(int32_t aNumberOfFeatures, float aRatioTestK, float aHistogramWeight);
+    ImageMatcher(ImageMatchingSettings aSettings);
 
     ImageDescription GetDescription(const cv::Mat &aInputFrame) const;
 
@@ -32,8 +37,7 @@ private:
     cv::Ptr<cv::Feature2D> mKeypointDetector;
     cv::Ptr<cv::DescriptorMatcher> mMatcher;
     std::vector<ImageDescription> mDB;
-    float mRatioTestK;
-    float mHistogramWeight;
+    ImageMatchingSettings mSettings;
 };
 
 } // namespace lighthouse

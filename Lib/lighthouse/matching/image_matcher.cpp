@@ -11,11 +11,11 @@
 
 namespace lighthouse {
 
-ImageMatcher::ImageMatcher(int32_t aNumberOfFeatures, float aRatioTestK, float aHistogramWeight): mDB(),
-                                                       mKeypointDetector(cv::ORB::create(aNumberOfFeatures)),
-                                                       mMatcher(new cv::BFMatcher(cv::NORM_HAMMING)),
-                                                       mRatioTestK(aRatioTestK),
-                                                       mHistogramWeight(aHistogramWeight) {}
+ImageMatcher::ImageMatcher(ImageMatchingSettings aSettings): mSettings(aSettings), mDB(),
+                                                             mKeypointDetector(
+                                                                     cv::ORB::create(aSettings.numberOfFeatures)
+                                                             ),
+                                                             mMatcher(new cv::BFMatcher(cv::NORM_HAMMING)) {}
 
 ImageDescription ImageMatcher::GetDescription(const cv::Mat &aInputFrame) const {
     std::vector<cv::Mat> rgbaChannels(4);
@@ -27,17 +27,18 @@ ImageDescription ImageMatcher::GetDescription(const cv::Mat &aInputFrame) const 
 
     mKeypointDetector->detectAndCompute(aInputFrame, rgbaChannels[3], keypoints, descriptors);
 
-    // Calculate color histogram for the image. But there is no need in calculating of the color histogram if we didn't
-    // find any keypoint.
-    if (keypoints.size() > 0) {
-        const int channels[] = {0, 1, 2};
-        const int histogramSize[] = {8, 8, 8};
-        float colorRange[] = {0, 256};
-        const float *ranges[] = {colorRange, colorRange, colorRange};
-        cv::calcHist(&aInputFrame, 1, channels, cv::Mat(), histogram, 3, histogramSize, ranges);
-
-        cv::normalize(histogram, histogram);
+    if (keypoints.size() < mSettings.minNumberOfFeatures) {
+        throw std::domain_error("Image does not have enough keypoints.");
     }
+
+    // Calculate color histogram for the image.
+    const int channels[] = {0, 1, 2};
+    const int histogramSize[] = {8, 8, 8};
+    float colorRange[] = {0, 256};
+    const float *ranges[] = {colorRange, colorRange, colorRange};
+
+    cv::calcHist(&aInputFrame, 1, channels, cv::Mat(), histogram, 3, histogramSize, ranges);
+    cv::normalize(histogram, histogram);
 
     // Generate unique ImageDescription Id.
     uuid_t uuid;
@@ -68,7 +69,7 @@ std::vector<std::tuple<float, ImageDescription>> ImageMatcher::Match(const Image
         // be a good match. Note that the absolute distance of the matches does not matter just their relative amounts.
         uint32_t numberOfGoodMatches = 0;
         for (const std::vector<cv::DMatch> matchPair : matches) {
-            if (matchPair.size() == 2 && matchPair[0].distance < mRatioTestK * matchPair[1].distance) {
+            if (matchPair.size() == 2 && matchPair[0].distance < mSettings.ratioTestK * matchPair[1].distance) {
                 numberOfGoodMatches++;
             }
         }
@@ -85,10 +86,10 @@ std::vector<std::tuple<float, ImageDescription>> ImageMatcher::Match(const Image
         float score = goodMatchRatio * 100 ; // featureRatio * goodMatchRatio * 100
 
         // Now boost the score based on how well the histograms match.
-        if (mHistogramWeight > 0) {
+        if (mSettings.histogramWeight > 0) {
             double histogramCorrelation = cv::compareHist(aDescription.GetHistogram(), description.GetHistogram(),
                     cv::HISTCMP_CORREL);
-            score += mHistogramWeight * histogramCorrelation;
+            score += mSettings.histogramWeight * histogramCorrelation;
         }
 
         matchedDescriptions.push_back(std::make_tuple(score, description));

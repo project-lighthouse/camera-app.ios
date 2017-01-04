@@ -5,7 +5,15 @@
 #include "lighthouse.hpp"
 
 @implementation Bridge
-lighthouse::Lighthouse lighthouseInstance(1000, 0.8, 5.0);
+
+lighthouse::ImageMatchingSettings matchingSettings = {
+        .numberOfFeatures = 1000,
+        .minNumberOfFeatures = 50,
+        .ratioTestK = 0.8,
+        .histogramWeight = 5.0,
+};
+
+lighthouse::Lighthouse lighthouseInstance(matchingSettings);
 
 - (UIImage *)DrawKeypoints:(UIImage *)source {
     cv::Mat outputMatrix;

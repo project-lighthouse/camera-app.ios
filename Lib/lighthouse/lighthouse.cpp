@@ -11,8 +11,8 @@
 
 namespace lighthouse {
 
-Lighthouse::Lighthouse(int32_t aNumberOfFeatures, float aRatioTestK, float aHistogramWeight):
-        mImageMatcher(ImageMatcher(aNumberOfFeatures, aRatioTestK, aHistogramWeight)),
+Lighthouse::Lighthouse(ImageMatchingSettings aImageMatchingSettings):
+        mImageMatcher(ImageMatcher(aImageMatchingSettings)),
         mDbFolderPath() {
 
     Filesystem filesystem;

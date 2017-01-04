@@ -20,7 +20,7 @@ namespace lighthouse {
 
 class Lighthouse {
 public:
-    Lighthouse(int32_t aNumberOfFeatures, float aRatioTestK, float aHistogramWeight);
+    Lighthouse(ImageMatchingSettings aImageMatchingSettings);
 
     void DrawKeypoints(const cv::Mat &aInputFrame, cv::Mat &aOutputFrame);
 
