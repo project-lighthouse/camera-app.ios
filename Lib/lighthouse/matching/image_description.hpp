@@ -21,10 +21,10 @@ class ImageDescription {
 public:
     ImageDescription(std::string aId, std::vector<cv::KeyPoint> aKeypoints, cv::Mat aDescriptors, cv::Mat aHistogram);
 
-    const std::string GetId();
-    const std::vector<cv::KeyPoint> GetKeypoints();
-    const cv::Mat GetDescriptors();
-    const cv::Mat GetHistogram();
+    std::string GetId() const;
+    std::vector<cv::KeyPoint> GetKeypoints() const;
+    cv::Mat GetDescriptors() const;
+    cv::Mat GetHistogram() const;
 
     static void Save(const ImageDescription aDescription, const std::string aPath);
     static ImageDescription Load(const std::string aPath);

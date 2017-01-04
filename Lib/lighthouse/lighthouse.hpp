@@ -26,11 +26,12 @@ public:
 
     ImageDescription GetDescription(const cv::Mat &aInputFrame);
 
-    void SaveDescription(const ImageDescription &aDescription, const std::string aPath);
+    void SaveDescription(const ImageDescription &aDescription);
 
 private:
     ImageMatcher mImageMatcher;
     std::vector<ImageDescription> mDescriptions;
+    std::string mDbFolderPath;
 };
 
 } // namespace lighthouse

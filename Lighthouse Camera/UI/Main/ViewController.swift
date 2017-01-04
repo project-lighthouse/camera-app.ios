@@ -9,6 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController {
+    var bridge: Bridge!
     
     //MARK: Properties
     @IBOutlet weak var button: UIButton!
@@ -16,11 +17,16 @@ class ViewController: UIViewController {
 
     //MARK: Actions
     @IBAction func onButtonClick(_ sender: UIButton) {
-        self.imageView.image = Bridge().drawKeypoints(UIImage(named: "lighthouse"))
+        let image = UIImage(named: "lighthouse")
+
+        self.imageView.image = bridge.drawKeypoints(image)
+        bridge.saveDescription(image)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        bridge = Bridge()
 
         self.registerSettingsBundle()
     }

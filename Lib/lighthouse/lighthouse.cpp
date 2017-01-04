@@ -11,23 +11,22 @@
 
 namespace lighthouse {
 
-Lighthouse::Lighthouse(int32_t aNumberOfFeatures): mImageMatcher(ImageMatcher(aNumberOfFeatures)), mDescriptions() {
-
+Lighthouse::Lighthouse(int32_t aNumberOfFeatures): mImageMatcher(ImageMatcher(aNumberOfFeatures)), mDescriptions(),
+                                                   mDbFolderPath() {
     Filesystem filesystem;
 
-    std::string dbFolderPath = filesystem.GetRoot() + "/Data";
-
     // Create Data directory if it doesn't exist.
-    filesystem.CreateDirectory(dbFolderPath);
+    mDbFolderPath = filesystem.GetRoot() + "/Data/";
+    filesystem.CreateDirectory(mDbFolderPath);
 
     // Iterate through all sub folders, every folder should contain the following files:
     // 1. description.bin - binary serialized image description (keypoints, descriptors, histogram etc.);
     // 2. frame.bin - binary serialized image matrix. Optional, can be disabled;
     // 3. short-audio.wav - short voice label;
     // 4. long-audio.wav - long voice label.
-    std::vector<std::string> subFolders = filesystem.GetSubFolders(dbFolderPath);
-    for (std::string path : subFolders) {
-        mDescriptions.push_back(ImageDescription::Load(path + "/description.bin"));
+    std::vector<std::string> subFolders = filesystem.GetSubFolders(mDbFolderPath);
+    for (std::string descriptionFolderPath : subFolders) {
+        mDescriptions.push_back(ImageDescription::Load(descriptionFolderPath + "/description.bin"));
     }
 }
 
@@ -46,8 +45,15 @@ ImageDescription Lighthouse::GetDescription(const cv::Mat &aInputFrame) {
     return mImageMatcher.GetDescription(aInputFrame);
 }
 
-void Lighthouse::SaveDescription(const ImageDescription &aDescription, const std::string aPath) {
-    ImageDescription::Save(aDescription, aPath);
+void Lighthouse::SaveDescription(const ImageDescription &aDescription) {
+    const std::string descriptionFolderPath = mDbFolderPath + aDescription.GetId();
+
+    Filesystem filesystem;
+    filesystem.CreateDirectory(descriptionFolderPath);
+
+    ImageDescription::Save(aDescription, descriptionFolderPath + "/description.bin");
+
+    mDescriptions.push_back(aDescription);
 }
 
 } // namespace lighthouse

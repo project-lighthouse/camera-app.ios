@@ -5,7 +5,9 @@
 #import <UIKit/UIKit.h>
 
 @interface Bridge : NSObject
-- (UIImage*)DrawKeypoints:(UIImage*) source;
+- (UIImage *)DrawKeypoints:(UIImage *)source;
+
+- (void)SaveDescription:(UIImage *)source;
 @end
 
 

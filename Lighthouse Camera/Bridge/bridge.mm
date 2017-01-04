@@ -5,17 +5,21 @@
 #include "lighthouse.hpp"
 
 @implementation Bridge
-- (UIImage *)DrawKeypoints:(UIImage *)input {
-    lighthouse::Lighthouse lighthouse(1000);
+lighthouse::Lighthouse lighthouseInstance(1000);
 
+- (UIImage *)DrawKeypoints:(UIImage *)input {
     cv::Mat outputMatrix;
-    lighthouse.DrawKeypoints([self imageToMatrix:input], outputMatrix);
+    lighthouseInstance.DrawKeypoints([self imageToMatrix:input], outputMatrix);
 
     return [self matrixToImage:outputMatrix andImageOrientation:[input imageOrientation]];
 }
 
+- (void)SaveDescription:(UIImage *)source {
+    lighthouseInstance.SaveDescription(lighthouseInstance.GetDescription([self imageToMatrix:source]));
+}
+
 // Converts UIImage instance into cv::Mat object that is known for OpenCV.
--(cv::Mat)imageToMatrix:(UIImage *) image {
+- (cv::Mat)imageToMatrix:(UIImage *)image {
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 
     CGFloat cols = image.size.width;
@@ -51,7 +55,7 @@
         colorSpace = CGColorSpaceCreateDeviceRGB();
     }
 
-    CGDataProviderRef provider = CGDataProviderCreateWithCFData((__bridge CFDataRef)data);
+    CGDataProviderRef provider = CGDataProviderCreateWithCFData((__bridge CFDataRef) data);
 
     // Creating CGImage from cv::Mat
     CGImageRef imageRef = CGImageCreate(

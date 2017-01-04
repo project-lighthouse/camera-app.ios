@@ -16,21 +16,21 @@
 namespace lighthouse {
 
 ImageDescription::ImageDescription(std::string aId, std::vector<cv::KeyPoint> aKeypoints, cv::Mat aDescriptors,
-        cv::Mat aHistogram): mId(), mKeypoints(aKeypoints), mDescriptors(aDescriptors), mHistogram(aHistogram) {}
+        cv::Mat aHistogram): mId(aId), mKeypoints(aKeypoints), mDescriptors(aDescriptors), mHistogram(aHistogram) {}
 
-const std::string ImageDescription::GetId() {
+std::string ImageDescription::GetId() const {
     return mId;
 }
 
-const std::vector<cv::KeyPoint> ImageDescription::GetKeypoints() {
+std::vector<cv::KeyPoint> ImageDescription::GetKeypoints() const {
     return mKeypoints;
 }
 
-const cv::Mat ImageDescription::GetDescriptors() {
+cv::Mat ImageDescription::GetDescriptors() const {
     return mDescriptors;
 }
 
-const cv::Mat ImageDescription::GetHistogram() {
+cv::Mat ImageDescription::GetHistogram() const {
     return mHistogram;
 }
 
