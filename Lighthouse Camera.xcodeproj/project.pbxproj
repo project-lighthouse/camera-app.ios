@@ -12,6 +12,8 @@
 		63B98FEC1E03F211000125CB /* Lighthouse_CameraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B98FEB1E03F211000125CB /* Lighthouse_CameraTests.swift */; };
 		63B98FF71E03F211000125CB /* Lighthouse_CameraUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B98FF61E03F211000125CB /* Lighthouse_CameraUITests.swift */; };
 		63C81B7D1E1BD23F005F850E /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A608B091E0ABE6900A88001 /* opencv2.framework */; };
+		63C81B851E1C0CCD005F850E /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 63C81B841E1C0CCD005F850E /* README.md */; };
+		63C81B8B1E1D2B2E005F850E /* CaptureDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C81B8A1E1D2B2E005F850E /* CaptureDelegate.swift */; };
 		7A018E751E0AA40700EEB90B /* Lib in Resources */ = {isa = PBXBuildFile; fileRef = 7A018E741E0AA40700EEB90B /* Lib */; };
 		7A2FBF221E0D3F20001B4E8A /* image_matcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A2FBF201E0D3F20001B4E8A /* image_matcher.cpp */; };
 		7A2FBF251E0D4138001B4E8A /* image_description.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A2FBF231E0D4138001B4E8A /* image_description.cpp */; };
@@ -54,6 +56,8 @@
 		63B98FF21E03F211000125CB /* Lighthouse CameraUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Lighthouse CameraUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63B98FF61E03F211000125CB /* Lighthouse_CameraUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lighthouse_CameraUITests.swift; sourceTree = "<group>"; };
 		63B98FF81E03F211000125CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		63C81B841E1C0CCD005F850E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = Vision/README.md; sourceTree = "<group>"; };
+		63C81B8A1E1D2B2E005F850E /* CaptureDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CaptureDelegate.swift; path = Vision/CaptureDelegate.swift; sourceTree = "<group>"; };
 		7A018E741E0AA40700EEB90B /* Lib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Lib; path = "$(PROJECT_DIR)/Lib"; sourceTree = "<absolute>"; };
 		7A2FBF201E0D3F20001B4E8A /* image_matcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image_matcher.cpp; sourceTree = "<group>"; };
 		7A2FBF211E0D3F20001B4E8A /* image_matcher.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = image_matcher.hpp; sourceTree = "<group>"; };
@@ -63,7 +67,7 @@
 		7A608B061E0ABE1000A88001 /* lighthouse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lighthouse.cpp; sourceTree = "<group>"; };
 		7A608B071E0ABE1000A88001 /* lighthouse.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lighthouse.hpp; sourceTree = "<group>"; };
 		7A608B091E0ABE6900A88001 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = Lib/opencv2.framework; sourceTree = "<group>"; };
-		7A608B0F1E0AC54600A88001 /* bridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bridge.h; sourceTree = "<group>"; };
+		7A608B0F1E0AC54600A88001 /* bridge.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = bridge.h; sourceTree = "<group>"; };
 		7A608B101E0AC54600A88001 /* bridge.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = bridge.mm; sourceTree = "<group>"; };
 		7A608B121E0AC59F00A88001 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		7A608B141E0AC5EA00A88001 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -205,6 +209,7 @@
 		63B98FD51E03F211000125CB /* Lighthouse Camera */ = {
 			isa = PBXGroup;
 			children = (
+				63C81B801E1C0C6C005F850E /* Vision */,
 				7A2FBF261E0D5B7B001B4E8A /* Resources */,
 				7A608B0E1E0AC2BE00A88001 /* Bridge */,
 				7A608B0C1E0AC20300A88001 /* UI */,
@@ -232,6 +237,15 @@
 				63B98FF81E03F211000125CB /* Info.plist */,
 			);
 			path = "Lighthouse CameraUITests";
+			sourceTree = "<group>";
+		};
+		63C81B801E1C0C6C005F850E /* Vision */ = {
+			isa = PBXGroup;
+			children = (
+				63C81B841E1C0CCD005F850E /* README.md */,
+				63C81B8A1E1D2B2E005F850E /* CaptureDelegate.swift */,
+			);
+			name = Vision;
 			sourceTree = "<group>";
 		};
 		7A2FBF1F1E0D3F02001B4E8A /* matching */ = {
@@ -630,7 +644,9 @@
 				7A608B131E0AC59F00A88001 /* ViewController.swift in Sources */,
 				7A2FBF221E0D3F20001B4E8A /* image_matcher.cpp in Sources */,
 				7AD590681E1BC2ED00958FEB /* filesystem.mm in Sources */,
+				63C81B851E1C0CCD005F850E /* README.md in Sources */,
 				7A608B081E0ABE1000A88001 /* lighthouse.cpp in Sources */,
+				63C81B8B1E1D2B2E005F850E /* CaptureDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
