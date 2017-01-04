@@ -7,6 +7,7 @@
 //
 
 #include "image_matcher.hpp"
+#include <uuid/uuid.h>
 
 namespace lighthouse {
 
@@ -35,7 +36,14 @@ const ImageDescription ImageMatcher::GetDescription(const cv::Mat &aInputFrame) 
         cv::normalize(histogram, histogram);
     }
 
-    return ImageDescription(keypoints, descriptors, histogram);
+    // Generate unique ImageDescription Id.
+    uuid_t uuid;
+    uuid_generate_random(uuid);
+
+    char uuidString[37];
+    uuid_unparse(uuid, uuidString);
+
+    return ImageDescription(uuidString, keypoints, descriptors, histogram);
 }
 
 } // namespace lighthouse

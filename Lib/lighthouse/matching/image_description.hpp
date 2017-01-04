@@ -13,13 +13,15 @@
 #include <opencv2/opencv.hpp>
 #include <cereal/access.hpp>
 #include <cereal/types/vector.hpp>
+#include <cereal/types/string.hpp>
 
 namespace lighthouse {
 
 class ImageDescription {
 public:
-    ImageDescription(std::vector<cv::KeyPoint> aKeypoints, cv::Mat aDescriptors, cv::Mat aHistogram);
+    ImageDescription(std::string aId, std::vector<cv::KeyPoint> aKeypoints, cv::Mat aDescriptors, cv::Mat aHistogram);
 
+    const std::string GetId();
     const std::vector<cv::KeyPoint> GetKeypoints();
     const cv::Mat GetDescriptors();
     const cv::Mat GetHistogram();
@@ -28,12 +30,14 @@ public:
     static ImageDescription Load(const std::string aPath);
 
 private:
+    std::string mId;
     std::vector<cv::KeyPoint> mKeypoints;
     cv::Mat mDescriptors;
     cv::Mat mHistogram;
 
     friend class cereal::access;
     template<class Archive> void serialize(Archive& aArchive) {
+        aArchive(mId),
         aArchive(mKeypoints);
         aArchive(mDescriptors);
         aArchive(mHistogram);

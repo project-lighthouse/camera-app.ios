@@ -15,8 +15,12 @@
 
 namespace lighthouse {
 
-ImageDescription::ImageDescription(std::vector<cv::KeyPoint> aKeypoints, cv::Mat aDescriptors, cv::Mat aHistogram):
-        mKeypoints(aKeypoints), mDescriptors(aDescriptors), mHistogram(aHistogram) {}
+ImageDescription::ImageDescription(std::string aId, std::vector<cv::KeyPoint> aKeypoints, cv::Mat aDescriptors,
+        cv::Mat aHistogram): mId(), mKeypoints(aKeypoints), mDescriptors(aDescriptors), mHistogram(aHistogram) {}
+
+const std::string ImageDescription::GetId() {
+    return mId;
+}
 
 const std::vector<cv::KeyPoint> ImageDescription::GetKeypoints() {
     return mKeypoints;
@@ -41,10 +45,11 @@ ImageDescription ImageDescription::Load(std::string aPath) {
     std::ifstream inputStream(aPath, std::ios::binary);
     cereal::BinaryInputArchive archive(inputStream);
 
+    std::string id;
     std::vector<cv::KeyPoint> keypoints;
     cv::Mat descriptors, histogram;
 
-    ImageDescription description = ImageDescription(keypoints, descriptors, histogram);
+    ImageDescription description = ImageDescription(id, keypoints, descriptors, histogram);
     archive(description);
 
     return description;
