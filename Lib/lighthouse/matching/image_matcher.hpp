@@ -20,13 +20,20 @@ namespace lighthouse {
 
 class ImageMatcher {
 public:
-    ImageMatcher(int32_t aNumberOfFeatures);
+    ImageMatcher(int32_t aNumberOfFeatures, float aRatioTestK, float aHistogramWeight);
 
-    const ImageDescription GetDescription(const cv::Mat &aInputFrame);
-    
+    ImageDescription GetDescription(const cv::Mat &aInputFrame) const;
+
+    std::vector<std::tuple<float, ImageDescription>> Match(const ImageDescription &aDescription) const;
+
+    void AddToDB(const ImageDescription &aDescription);
+
 private:
     cv::Ptr<cv::Feature2D> mKeypointDetector;
     cv::Ptr<cv::DescriptorMatcher> mMatcher;
+    std::vector<ImageDescription> mDB;
+    float mRatioTestK;
+    float mHistogramWeight;
 };
 
 } // namespace lighthouse

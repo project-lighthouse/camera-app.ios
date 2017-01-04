@@ -11,10 +11,13 @@
 
 namespace lighthouse {
 
-ImageMatcher::ImageMatcher(int32_t aNumberOfFeatures): mKeypointDetector(cv::ORB::create(aNumberOfFeatures)),
-                                                       mMatcher(new cv::BFMatcher(cv::NORM_HAMMING)) {}
+ImageMatcher::ImageMatcher(int32_t aNumberOfFeatures, float aRatioTestK, float aHistogramWeight): mDB(),
+                                                       mKeypointDetector(cv::ORB::create(aNumberOfFeatures)),
+                                                       mMatcher(new cv::BFMatcher(cv::NORM_HAMMING)),
+                                                       mRatioTestK(aRatioTestK),
+                                                       mHistogramWeight(aHistogramWeight) {}
 
-const ImageDescription ImageMatcher::GetDescription(const cv::Mat &aInputFrame) {
+ImageDescription ImageMatcher::GetDescription(const cv::Mat &aInputFrame) const {
     std::vector<cv::Mat> rgbaChannels(4);
     cv::split(aInputFrame, rgbaChannels);
 
@@ -44,6 +47,60 @@ const ImageDescription ImageMatcher::GetDescription(const cv::Mat &aInputFrame) 
     uuid_unparse(uuid, uuidString);
 
     return ImageDescription(uuidString, keypoints, descriptors, histogram);
+}
+
+void ImageMatcher::AddToDB(const ImageDescription &aDescription) {
+    mDB.push_back(aDescription);
+}
+
+std::vector<std::tuple<float, ImageDescription>> ImageMatcher::Match(const ImageDescription &aDescription) const {
+    std::vector<std::tuple<float, ImageDescription>> matchedDescriptions;
+
+    for (const ImageDescription description : mDB) {
+        std::vector<std::vector<cv::DMatch>> matches = {};
+        mMatcher->knnMatch(aDescription.GetDescriptors(), description.GetDescriptors(), matches, 2);
+
+        if (matches.size() == 0) {
+            continue;
+        }
+
+        // Apply ratio test: if the best match is significantly better than the second best match then we consider it to
+        // be a good match. Note that the absolute distance of the matches does not matter just their relative amounts.
+        uint32_t numberOfGoodMatches = 0;
+        for (const std::vector<cv::DMatch> matchPair : matches) {
+            if (matchPair.size() == 2 && matchPair[0].distance < mRatioTestK * matchPair[1].distance) {
+                numberOfGoodMatches++;
+            }
+        }
+
+        // If the two images have similar numbers of keypoints this number will be high and will increase the score.
+        // featureRatio = 1 - abs(aDescription.GetDescriptors.size() - description.GetDescriptors().size()) /
+        // description.GetDescriptors().size();
+
+        // If most of the feature matches are good ones this ratio will be high and will increase the score.
+        const float goodMatchRatio = (float) numberOfGoodMatches / (float) matches.size();
+
+        // Both of the numbers above are between 0 and 1. We take their product and multiply by 100 to create a score
+        // between 0 and 100. Kind of a match percentage.
+        float score = goodMatchRatio * 100 ; // featureRatio * goodMatchRatio * 100
+
+        // Now boost the score based on how well the histograms match.
+        if (mHistogramWeight > 0) {
+            double histogramCorrelation = cv::compareHist(aDescription.GetHistogram(), description.GetHistogram(),
+                    cv::HISTCMP_CORREL);
+            score += mHistogramWeight * histogramCorrelation;
+        }
+
+        matchedDescriptions.push_back(std::make_tuple(score, description));
+    }
+
+    // Sort matched description by score (first element of the tuple).
+    std::sort(matchedDescriptions.begin(), matchedDescriptions.end(),
+            [](std::tuple<float, ImageDescription> a, std::tuple<float, ImageDescription> b) {
+                return std::get<0>(b) < std::get<0>(a);
+            });
+
+    return matchedDescriptions;
 }
 
 } // namespace lighthouse

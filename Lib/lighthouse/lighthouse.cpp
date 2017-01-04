@@ -11,8 +11,10 @@
 
 namespace lighthouse {
 
-Lighthouse::Lighthouse(int32_t aNumberOfFeatures): mImageMatcher(ImageMatcher(aNumberOfFeatures)), mDescriptions(),
-                                                   mDbFolderPath() {
+Lighthouse::Lighthouse(int32_t aNumberOfFeatures, float aRatioTestK, float aHistogramWeight):
+        mImageMatcher(ImageMatcher(aNumberOfFeatures, aRatioTestK, aHistogramWeight)),
+        mDbFolderPath() {
+
     Filesystem filesystem;
 
     // Create Data directory if it doesn't exist.
@@ -26,7 +28,7 @@ Lighthouse::Lighthouse(int32_t aNumberOfFeatures): mImageMatcher(ImageMatcher(aN
     // 4. long-audio.wav - long voice label.
     std::vector<std::string> subFolders = filesystem.GetSubFolders(mDbFolderPath);
     for (std::string descriptionFolderPath : subFolders) {
-        mDescriptions.push_back(ImageDescription::Load(descriptionFolderPath + "/description.bin"));
+        mImageMatcher.AddToDB(ImageDescription::Load(descriptionFolderPath + "/description.bin"));
     }
 }
 
@@ -41,7 +43,7 @@ void Lighthouse::DrawKeypoints(const cv::Mat &aInputFrame, cv::Mat &aOutputFrame
             cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 }
 
-ImageDescription Lighthouse::GetDescription(const cv::Mat &aInputFrame) {
+ImageDescription Lighthouse::GetDescription(const cv::Mat &aInputFrame) const {
     return mImageMatcher.GetDescription(aInputFrame);
 }
 
@@ -53,7 +55,15 @@ void Lighthouse::SaveDescription(const ImageDescription &aDescription) {
 
     ImageDescription::Save(aDescription, descriptionFolderPath + "/description.bin");
 
-    mDescriptions.push_back(aDescription);
+    mImageMatcher.AddToDB(aDescription);
+}
+
+std::vector<std::tuple<float, ImageDescription>> Lighthouse::Match(const cv::Mat &aInputFrame) const {
+    return Match(GetDescription(aInputFrame));
+}
+
+std::vector<std::tuple<float, ImageDescription>> Lighthouse::Match(const ImageDescription &aDescription) const {
+    return mImageMatcher.Match(aDescription);
 }
 
 } // namespace lighthouse

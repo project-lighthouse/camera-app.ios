@@ -20,17 +20,20 @@ namespace lighthouse {
 
 class Lighthouse {
 public:
-    Lighthouse(int32_t aNumberOfFeatures);
+    Lighthouse(int32_t aNumberOfFeatures, float aRatioTestK, float aHistogramWeight);
 
     void DrawKeypoints(const cv::Mat &aInputFrame, cv::Mat &aOutputFrame);
 
-    ImageDescription GetDescription(const cv::Mat &aInputFrame);
+    ImageDescription GetDescription(const cv::Mat &aInputFrame) const;
 
     void SaveDescription(const ImageDescription &aDescription);
 
+    std::vector<std::tuple<float, ImageDescription>> Match(const cv::Mat &aInputFrame) const;
+
+    std::vector<std::tuple<float, ImageDescription>> Match(const ImageDescription &aDescription) const;
+
 private:
     ImageMatcher mImageMatcher;
-    std::vector<ImageDescription> mDescriptions;
     std::string mDbFolderPath;
 };
 
