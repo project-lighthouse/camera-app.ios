@@ -28,6 +28,8 @@ class ViewController: UIViewController {
 
     // Invoked when the user has clicked on "record".
     @IBAction func onRecordClick(_ sender: Any) {
+        bridge.onRecordObject();
+/*
         let captureSession = AVCaptureSession()
         captureSession.beginConfiguration()
         
@@ -37,6 +39,7 @@ class ViewController: UIViewController {
         let devices = discoverySession?.devices
         if devices?.count == 0 {
             self.showError(message: "No camera")
+            // FIXME: Check that we're on the simulator.
             return
         }
 
@@ -67,7 +70,10 @@ class ViewController: UIViewController {
     
         let delegate = CaptureDelegate()
         dataOutput.setSampleBufferDelegate(delegate, queue: self.queue)
-    }
+
+        // FIXME: When do we stop?
+*/
+ }
 
     // Invoked when the user has clicked on "identify".
     @IBAction func onIdentifyClick(_ sender: Any) {

@@ -9,4 +9,6 @@
 - (UIImage *)DrawKeypoints:(UIImage *)source;
 
 - (void)SaveDescription:(UIImage *)source;
+
+- (void)onRecordObject;
 @end

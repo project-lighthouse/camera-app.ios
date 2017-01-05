@@ -15,6 +15,7 @@
 #include <opencv2/features2d.hpp>
 
 #include "image_matcher.hpp"
+#include "video.hpp"
 
 namespace lighthouse {
 
@@ -28,8 +29,11 @@ public:
 
     void SaveDescription(const ImageDescription &aDescription);
 
+    void OnRecordObject();
+
 private:
     ImageMatcher mImageMatcher;
+    Camera mCamera;
     std::vector<ImageDescription> mDescriptions;
     std::string mDbFolderPath;
 };

@@ -11,7 +11,9 @@
 
 namespace lighthouse {
 
-Lighthouse::Lighthouse(int32_t aNumberOfFeatures): mImageMatcher(ImageMatcher(aNumberOfFeatures)), mDescriptions(),
+Lighthouse::Lighthouse(int32_t aNumberOfFeatures): mImageMatcher(ImageMatcher(aNumberOfFeatures)),
+                                                   mCamera(),
+                                                   mDescriptions(),
                                                    mDbFolderPath() {
     Filesystem filesystem;
 
@@ -54,6 +56,10 @@ void Lighthouse::SaveDescription(const ImageDescription &aDescription) {
     ImageDescription::Save(aDescription, descriptionFolderPath + "/description.bin");
 
     mDescriptions.push_back(aDescription);
+}
+
+void Lighthouse::OnRecordObject() {
+    mCamera.CaptureForRecord();
 }
 
 } // namespace lighthouse

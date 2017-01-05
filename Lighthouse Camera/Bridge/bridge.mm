@@ -92,4 +92,8 @@ lighthouse::Lighthouse lighthouseInstance(1000);
 
     return image;
 }
+
+- (void) onRecordObject {
+    lighthouseInstance.OnRecordObject();
+}
 @end
