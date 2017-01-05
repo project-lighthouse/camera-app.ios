@@ -5,16 +5,28 @@
 #include "lighthouse.hpp"
 
 @implementation Bridge
-lighthouse::Lighthouse lighthouseInstance(1000);
 
-- (UIImage *)DrawKeypoints:(UIImage *)input {
+lighthouse::ImageMatchingSettings matchingSettings = {
+        .numberOfFeatures = 1000,
+        .minNumberOfFeatures = 50,
+        .ratioTestK = 0.8,
+        .histogramWeight = 5.0,
+};
+
+lighthouse::Lighthouse lighthouseInstance(matchingSettings);
+
+- (UIImage *)DrawKeypoints:(UIImage *)source {
     cv::Mat outputMatrix;
-    lighthouseInstance.DrawKeypoints([self imageToMatrix:input], outputMatrix);
+    lighthouseInstance.DrawKeypoints([self imageToMatrix:source], outputMatrix);
 
-    return [self matrixToImage:outputMatrix andImageOrientation:[input imageOrientation]];
+    return [self matrixToImage:outputMatrix andImageOrientation:[source imageOrientation]];
 }
 
 - (void)SaveDescription:(UIImage *)source {
+    lighthouseInstance.SaveDescription(lighthouseInstance.GetDescription([self imageToMatrix:source]));
+}
+
+- (void)Match:(UIImage *)source {
     lighthouseInstance.SaveDescription(lighthouseInstance.GetDescription([self imageToMatrix:source]));
 }
 

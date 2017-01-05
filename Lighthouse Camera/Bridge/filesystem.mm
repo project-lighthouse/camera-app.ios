@@ -17,7 +17,7 @@ std::string Filesystem::GetRoot() {
     return [getRoot() UTF8String];
 }
 
-std::vector<std::string> Filesystem::GetSubFolders(std::string aDirectoryName) {
+std::vector<std::string> Filesystem::GetSubFolders(const std::string aDirectoryName) {
     NSString *directoryName = [NSString stringWithCString:aDirectoryName.c_str() encoding:NSUTF8StringEncoding];
 
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -37,7 +37,7 @@ std::vector<std::string> Filesystem::GetSubFolders(std::string aDirectoryName) {
     return subFolders;
 }
 
-void Filesystem::CreateDirectory(std::string aDirectoryPath) {
+void Filesystem::CreateDirectory(const std::string aDirectoryPath) {
     NSString *directoryPath = [NSString stringWithCString:aDirectoryPath.c_str() encoding:NSUTF8StringEncoding];
 
     NSError *error;
