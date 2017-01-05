@@ -10,5 +10,7 @@
 
 - (void)SaveDescription:(UIImage *)source;
 
+- (NSArray *)Match:(UIImage *)source;
+
 - (void)onRecordObject;
 @end

@@ -77,6 +77,15 @@ class ViewController: UIViewController {
 
     // Invoked when the user has clicked on "identify".
     @IBAction func onIdentifyClick(_ sender: Any) {
+        let matches: Array = bridge.match(self.imageView.image)
+
+        let alert = UIAlertController(title: "Match Result", message: "Matches found: \(matches.count)",
+                preferredStyle: UIAlertControllerStyle.alert)
+
+        let defaultAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default)
+        alert.addAction(defaultAction)
+
+        self.present(alert, animated: true, completion: nil)
     }
 
     private func showError(message: String) {
