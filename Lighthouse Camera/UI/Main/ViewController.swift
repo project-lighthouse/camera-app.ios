@@ -17,13 +17,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
 
     //MARK: Actions
-    @IBAction func onButtonClick(_ sender: UIButton) {
-        let image = UIImage(named: "lighthouse")
-
-        self.imageView.image = bridge.drawKeypoints(image)
-        bridge.saveDescription(image)
-    }
-
     let queue = DispatchQueue(label: "com.mozilla.cd.lighthouse")
 
     // Invoked when the user has clicked on "record".
@@ -77,6 +70,29 @@ class ViewController: UIViewController {
 
     // Invoked when the user has clicked on "identify".
     @IBAction func onIdentifyClick(_ sender: Any) {
+        let matches: Array = bridge.match(self.imageView.image)
+
+        let alert = UIAlertController(title: "Match Result", message: "Matches found: \(matches.count)",
+                preferredStyle: UIAlertControllerStyle.alert)
+
+        // Define alert actions.
+        let defaultAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default)
+
+        let rememberAction = UIAlertAction(title: "Remember", style: UIAlertActionStyle.default, handler: {
+            action in
+            self.bridge.saveDescription(self.imageView.image)
+        })
+
+        let showKeypointsAction = UIAlertAction(title: "Show Keypoints", style: UIAlertActionStyle.default, handler: {
+            action in
+            self.imageView.image = self.bridge.drawKeypoints(self.imageView.image)
+        })
+
+        alert.addAction(defaultAction)
+        alert.addAction(rememberAction)
+        alert.addAction(showKeypointsAction)
+
+        self.present(alert, animated: true, completion: nil)
     }
 
     private func showError(message: String) {

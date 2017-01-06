@@ -26,8 +26,21 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
     lighthouseInstance.SaveDescription(lighthouseInstance.GetDescription([self imageToMatrix:source]));
 }
 
-- (void)Match:(UIImage *)source {
-    lighthouseInstance.SaveDescription(lighthouseInstance.GetDescription([self imageToMatrix:source]));
+- (NSArray *)Match:(UIImage *)source {
+    std::vector<std::tuple<float, lighthouse::ImageDescription>> matches = lighthouseInstance.Match(
+            lighthouseInstance.GetDescription([self imageToMatrix:source]));
+
+    NSMutableArray *matchesArray = [NSMutableArray arrayWithCapacity:matches.size()];
+
+    // Convert C++ vector to NSArray & NSDictionary to be compatible with Swift.
+    for (const std::tuple<float, lighthouse::ImageDescription> match : matches) {
+        [matchesArray addObject:@{
+                @"score" : @(std::get<0>(match)),
+                @"id" : [NSString stringWithCString:std::get<1>(match).GetId().c_str() encoding:NSUTF8StringEncoding]
+        }];
+    }
+
+    return matchesArray;
 }
 
 // Converts UIImage instance into cv::Mat object that is known for OpenCV.
