@@ -74,6 +74,13 @@ private:
     static void HandleInputBuffer(void *aAudioQueueData, AudioQueueRef aAudioQueue,
             AudioQueueBufferRef aAudioQueueBuffer, const AudioTimeStamp *aStartTime, UInt32 aNumPackets,
             const AudioStreamPacketDescription *aPacketDescriptions);
+
+    /**
+     * Prepares custom AudioQueueRecorderState structure that will hold all the information for the audio queue (audio
+     * file format, sizes of the queue buffer etc.) including the reference to the queue itself.
+     * @return AudioQueueRecorderState
+     **/
+    static AudioQueueRecorderState PrepareState();
 };
 } // namespace lighthouse
 
