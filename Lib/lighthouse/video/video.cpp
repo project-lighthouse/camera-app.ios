@@ -28,7 +28,7 @@ void lighthouse::Camera::RunCaptureForRecord() {
         fprintf(stderr, "RunCaptureForRecord() could not open camera 0\n");
         return;
     }
-    for (uint64_t i = 0; i < 200; ++i) {
+    for (uint64_t i = 0; i < 2000; ++i) {
         cv::Mat frame;
         if (!capture->read(frame)) {
             fprintf(stderr, "RunCaptureForRecord() skipping frame %llu\n", i);

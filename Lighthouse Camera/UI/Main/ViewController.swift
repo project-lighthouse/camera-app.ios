@@ -60,6 +60,7 @@ class ViewController: UIViewController {
     
     @objc(showFrame:)
     public dynamic func showFrame(frame: UIImage) {
+        NSLog("ViewController.showFrame %f x %f\n", frame.size.width * frame.scale, frame.size.height * frame.scale);
         self.imageView.image = frame;
     }
     
