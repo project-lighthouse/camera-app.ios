@@ -10,5 +10,5 @@
 
 - (void)SaveDescription:(UIImage *)source;
 
-- (void)onRecordObject;
+- (UIImage *)onRecordObject;
 @end

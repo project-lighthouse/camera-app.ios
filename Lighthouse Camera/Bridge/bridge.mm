@@ -105,7 +105,8 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
     return image;
 }
 
-- (void) onRecordObject {
-    lighthouseInstance.OnRecordObject();
+- (UIImage *) onRecordObject {
+    cv::Mat frame = lighthouseInstance.OnRecordObject();
+    return matrixToImage:&frame andImageOrientation:UIImageOrientation.up;
 }
 @end

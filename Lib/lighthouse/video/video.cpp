@@ -9,6 +9,7 @@
 #include "video.hpp"
 #include "opencv2/videoio.hpp"
 #include "opencv2/core/cvstd.hpp"
+#include "opencv2/highgui/highgui.hpp"
 
 #include <thread>
 
@@ -24,6 +25,14 @@ void lighthouse::Camera::RunCaptureForRecord() {
     if (!capture->open(0)) {
         fprintf(stderr, "RunCaptureForRecord() could not open camera 0\n");
         return;
+    }
+    for (uint64_t i = 0; i < 200; ++i) {
+        cv::Mat frame;
+        if (!capture->read(frame)) {
+            fprintf(stderr, "RunCaptureForRecord() skipping frame %llu\n", i);
+            continue;
+        }
+        fprintf(stderr, "RunCaptureForRecord() got frame %llu\n", i);
     }
     fprintf(stderr, "RunCaptureForRecord() stop\n");
     // FIXME: Somehow reset `mCaptureThread` to `nullptr`.
