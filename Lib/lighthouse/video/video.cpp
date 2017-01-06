@@ -8,14 +8,19 @@
 
 #include "video.hpp"
 #include "feedback.hpp"
+#include "filesystem.hpp"
 
 #include "opencv2/videoio.hpp"
 #include "opencv2/core/cvstd.hpp"
 #include "opencv2/highgui/highgui.hpp"
 
+#import <TargetConditionals.h>
+
 #include <thread>
+#include <stdint.h>
 
 using namespace lighthouse;
+using namespace cv;
 
 lighthouse::Camera::Camera():
     mCaptureThread(nullptr)
@@ -23,19 +28,44 @@ lighthouse::Camera::Camera():
 
 void lighthouse::Camera::RunCaptureForRecord() {
     fprintf(stderr, "RunCaptureForRecord() start\n");
-    auto capture = cv::Ptr<cv::VideoCapture>(new cv::VideoCapture::VideoCapture());
+    auto capture = Ptr<VideoCapture>(new VideoCapture());
+    
+#if TARGET_IPHONE_SIMULATOR
+    // Simulator specific code
+
+    const uint64_t FRAMES_LEN = UINT64_MAX; // No real limit, run until the end of the video.
+
+    const std::string resourceName("box");
+    const std::string resourceType("mp4");
+    std::string path = Filesystem::GetResourcePath(resourceName, resourceType);
+    if (!capture->open(path)) {
+        fprintf(stderr, "RunCaptureForRecord() could not open bundled video\n");
+        return;
+    }
+
+#else // TARGET_IPHONE_SIMULATOR
+    // Device specific code
+
+    const uint64_t FRAMES_LEN = 2000;
+
     if (!capture->open(0)) {
         fprintf(stderr, "RunCaptureForRecord() could not open camera 0\n");
         return;
     }
-    for (uint64_t i = 0; i < 2000; ++i) {
-        cv::Mat frame;
+    
+#endif // TARGET_IPHONE_SIMULATOR
+
+    Ptr<BackgroundSubtractorMOG2> subtracted(createBackgroundSubtractorMOG2());
+    Mat mask;
+    for (uint64_t i = 0; i < FRAMES_LEN; ++i) {
+        Mat frame;
         if (!capture->read(frame)) {
-            fprintf(stderr, "RunCaptureForRecord() skipping frame %llu\n", i);
-            continue;
+            fprintf(stderr, "RunCaptureForRecord() out of frames at %llu\n", i);
+            break;
         }
         fprintf(stderr, "RunCaptureForRecord() got frame %llu\n", i);
-        Feedback::ReceivedFrame(frame);
+        subtracted->apply(frame, mask);
+        Feedback::ReceivedFrame(mask);
     }
     fprintf(stderr, "RunCaptureForRecord() stop\n");
     // FIXME: Somehow reset `mCaptureThread` to `nullptr`.
