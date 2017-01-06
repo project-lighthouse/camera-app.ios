@@ -7,6 +7,8 @@
 //
 
 #include "video.hpp"
+#include "feedback.hpp"
+
 #include "opencv2/videoio.hpp"
 #include "opencv2/core/cvstd.hpp"
 #include "opencv2/highgui/highgui.hpp"
@@ -33,6 +35,7 @@ void lighthouse::Camera::RunCaptureForRecord() {
             continue;
         }
         fprintf(stderr, "RunCaptureForRecord() got frame %llu\n", i);
+        Feedback::ReceivedFrame(frame);
     }
     fprintf(stderr, "RunCaptureForRecord() stop\n");
     // FIXME: Somehow reset `mCaptureThread` to `nullptr`.

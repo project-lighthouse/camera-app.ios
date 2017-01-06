@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6333A3351E1FC22C002CF407 /* feedback.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6333A3331E1FC22C002CF407 /* feedback.mm */; };
 		63B98FD71E03F211000125CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B98FD61E03F211000125CB /* AppDelegate.swift */; };
 		63B98FDE1E03F211000125CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63B98FDD1E03F211000125CB /* Assets.xcassets */; };
 		63B98FEC1E03F211000125CB /* Lighthouse_CameraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B98FEB1E03F211000125CB /* Lighthouse_CameraTests.swift */; };
@@ -45,6 +46,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6333A3331E1FC22C002CF407 /* feedback.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = feedback.mm; sourceTree = "<group>"; };
+		6333A3341E1FC22C002CF407 /* feedback.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = feedback.hpp; sourceTree = "<group>"; };
+		6333A3371E1FD4F8002CF407 /* image.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = image.hpp; sourceTree = "<group>"; };
+		6333A3381E1FEEBF002CF407 /* feedback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = feedback.h; sourceTree = "<group>"; };
 		63B98FD31E03F211000125CB /* Lighthouse Camera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Lighthouse Camera.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63B98FD61E03F211000125CB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		63B98FDD1E03F211000125CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -316,8 +321,12 @@
 			children = (
 				7A608B0F1E0AC54600A88001 /* bridge.h */,
 				7A608B101E0AC54600A88001 /* bridge.mm */,
+				6333A3371E1FD4F8002CF407 /* image.hpp */,
 				7AD590661E1BC2ED00958FEB /* filesystem.mm */,
 				7AD590671E1BC2ED00958FEB /* filesystem.hpp */,
+				6333A3331E1FC22C002CF407 /* feedback.mm */,
+				6333A3341E1FC22C002CF407 /* feedback.hpp */,
+				6333A3381E1FEEBF002CF407 /* feedback.h */,
 			);
 			path = Bridge;
 			sourceTree = "<group>";
@@ -642,6 +651,7 @@
 				63D7472A1E1E75C100025CE2 /* video.cpp in Sources */,
 				7A608B111E0AC54600A88001 /* bridge.mm in Sources */,
 				7A2FBF251E0D4138001B4E8A /* image_description.cpp in Sources */,
+				6333A3351E1FC22C002CF407 /* feedback.mm in Sources */,
 				7A608B131E0AC59F00A88001 /* ViewController.swift in Sources */,
 				7A2FBF221E0D3F20001B4E8A /* image_matcher.cpp in Sources */,
 				7AD590681E1BC2ED00958FEB /* filesystem.mm in Sources */,

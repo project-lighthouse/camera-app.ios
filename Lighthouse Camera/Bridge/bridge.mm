@@ -3,6 +3,87 @@
 #import "bridge.h"
 
 #include "lighthouse.hpp"
+#include "image.hpp"
+
+NSObject* sViewController;
+
+// FIXME: What's the ownership of this?
+UIImage*
+matrixToImage(const cv::Mat& matrix, UIImageOrientation* imageOrientation) {
+    UIImageOrientation orientation = imageOrientation ? *imageOrientation: UIImageOrientationUp;
+    NSData *data = [NSData dataWithBytes:matrix.data length:matrix.elemSize() * matrix.total()];
+    
+    CGColorSpaceRef colorSpace;
+    if (matrix.elemSize() == 1) {
+        colorSpace = CGColorSpaceCreateDeviceGray();
+    } else {
+        colorSpace = CGColorSpaceCreateDeviceRGB();
+    }
+    
+    CGDataProviderRef provider = CGDataProviderCreateWithCFData((__bridge CFDataRef) data);
+    
+    // Creating CGImage from cv::Mat
+    CGImageRef imageRef = CGImageCreate(
+                                        // Image width.
+                                        matrix.cols,
+                                        // Image height.
+                                        matrix.rows,
+                                        // Bits per component.
+                                        8,
+                                        // Bits per pixel.
+                                        8 * matrix.elemSize(),
+                                        // Bytes per row.
+                                        matrix.step[0],
+                                        // Color space.
+                                        colorSpace,
+                                        // Bitmap info.
+                                        kCGImageAlphaNone | kCGBitmapByteOrderDefault,
+                                        // CGDataProvider reference.
+                                        provider,
+                                        // Decode.
+                                        NULL,
+                                        // Indicates whether we should interpolate.
+                                        false,
+                                        // Intent.
+                                        kCGRenderingIntentDefault
+                                        );
+    
+    // Getting UIImage from CGImage
+    UIImage *image = [UIImage imageWithCGImage:imageRef scale:1 orientation:orientation];
+    
+    CGImageRelease(imageRef);
+    CGDataProviderRelease(provider);
+    CGColorSpaceRelease(colorSpace);
+    
+    return image;
+}
+
+
+cv::Mat
+imageToMatrix(UIImage *image) {
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    
+    CGFloat cols = image.size.width;
+    CGFloat rows = image.size.height;
+    
+    cv::Mat matrix(rows, cols, CV_8UC4);
+    CGContextRef context = CGBitmapContextCreate(matrix.data,
+                                                 cols,
+                                                 rows,
+                                                 8,
+                                                 matrix.step[0],
+                                                 colorSpace,
+                                                 kCGImageAlphaNoneSkipLast | kCGBitmapByteOrderDefault
+                                                 );
+    
+    CGContextDrawImage(context, CGRectMake(0, 0, cols, rows), image.CGImage);
+    
+    CGContextRelease(context);
+    CGColorSpaceRelease(colorSpace);
+    
+    return matrix;
+}
+
 
 @implementation Bridge
 
@@ -45,81 +126,19 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
 
 // Converts UIImage instance into cv::Mat object that is known for OpenCV.
 - (cv::Mat)imageToMatrix:(UIImage *)image {
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-
-    CGFloat cols = image.size.width;
-    CGFloat rows = image.size.height;
-
-    cv::Mat matrix(rows, cols, CV_8UC4);
-    CGContextRef context = CGBitmapContextCreate(matrix.data,
-            cols,
-            rows,
-            8,
-            matrix.step[0],
-            colorSpace,
-            kCGImageAlphaNoneSkipLast | kCGBitmapByteOrderDefault
-    );
-
-    CGContextDrawImage(context, CGRectMake(0, 0, cols, rows), image.CGImage);
-
-    CGContextRelease(context);
-    CGColorSpaceRelease(colorSpace);
-
-    return matrix;
+    return imageToMatrix(image);
 }
 
 
 // Converts cv::Mat object into UIImage instance preserving original orientation.
 - (UIImage *)matrixToImage:(const cv::Mat &)matrix andImageOrientation:(UIImageOrientation)orientation {
-    NSData *data = [NSData dataWithBytes:matrix.data length:matrix.elemSize() * matrix.total()];
-
-    CGColorSpaceRef colorSpace;
-    if (matrix.elemSize() == 1) {
-        colorSpace = CGColorSpaceCreateDeviceGray();
-    } else {
-        colorSpace = CGColorSpaceCreateDeviceRGB();
-    }
-
-    CGDataProviderRef provider = CGDataProviderCreateWithCFData((__bridge CFDataRef) data);
-
-    // Creating CGImage from cv::Mat
-    CGImageRef imageRef = CGImageCreate(
-            // Image width.
-            matrix.cols,
-            // Image height.
-            matrix.rows,
-            // Bits per component.
-            8,
-            // Bits per pixel.
-            8 * matrix.elemSize(),
-            // Bytes per row.
-            matrix.step[0],
-            // Color space.
-            colorSpace,
-            // Bitmap info.
-            kCGImageAlphaNone | kCGBitmapByteOrderDefault,
-            // CGDataProvider reference.
-            provider,
-            // Decode.
-            NULL,
-            // Indicates whether we should interpolate.
-            false,
-            // Intent.
-            kCGRenderingIntentDefault
-    );
-
-    // Getting UIImage from CGImage
-    UIImage *image = [UIImage imageWithCGImage:imageRef scale:1 orientation:orientation];
-
-    CGImageRelease(imageRef);
-    CGDataProviderRelease(provider);
-    CGColorSpaceRelease(colorSpace);
-
-    return image;
+    return matrixToImage(matrix, &orientation);
 }
 
-- (UIImage *) onRecordObject {
-    cv::Mat frame = lighthouseInstance.OnRecordObject();
-    return matrixToImage:&frame andImageOrientation:UIImageOrientation.up;
+- (void) onRecordObject {
+    lighthouseInstance.OnRecordObject();
 }
+
 @end
+
+

@@ -17,56 +17,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
 
     //MARK: Actions
-    let queue = DispatchQueue(label: "com.mozilla.cd.lighthouse")
 
     // Invoked when the user has clicked on "record".
     @IBAction func onRecordClick(_ sender: Any) {
         bridge.onRecordObject();
-/*
-        let captureSession = AVCaptureSession()
-        captureSession.beginConfiguration()
-        
-        
-        // Locate a camera.
-        let discoverySession = AVCaptureDeviceDiscoverySession(deviceTypes: [AVCaptureDeviceType.builtInWideAngleCamera], mediaType: AVMediaTypeVideo, position: AVCaptureDevicePosition.front)
-        let devices = discoverySession?.devices
-        if devices?.count == 0 {
-            self.showError(message: "No camera")
-            // FIXME: Check that we're on the simulator.
-            return
-        }
-
-        let device = devices![0]
-        if device.hasFlash {
-            device.flashMode = AVCaptureFlashMode.on
-        }
-
-        // Prepare input.
-        let input : AVCaptureDeviceInput
-        do {
-            input = try AVCaptureDeviceInput(device: device)
-        } catch _ {
-            self.showError(message: "Cannot open camera")
-            return
-        }
-
-        captureSession.addInput(input)
-        // FIXME: use preferredVideoStabilizationMode
-
-        // Prepare an output to examine frame-by-frame.
-        let dataOutput = AVCaptureVideoDataOutput()
-        dataOutput.alwaysDiscardsLateVideoFrames = true
-
-        // FIXME: Also show a preview?
-        captureSession.addOutput(dataOutput)
-        captureSession.commitConfiguration()
-    
-        let delegate = CaptureDelegate()
-        dataOutput.setSampleBufferDelegate(delegate, queue: self.queue)
-
-        // FIXME: When do we stop?
-*/
- }
+    }
 
     // Invoked when the user has clicked on "identify".
     @IBAction func onIdentifyClick(_ sender: Any) {
@@ -103,10 +58,16 @@ class ViewController: UIViewController {
         alert.show()
     }
     
+    @objc(showFrame:)
+    public dynamic func showFrame(frame: UIImage) {
+        self.imageView.image = frame;
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         bridge = Bridge()
+        sViewController = self;
 
         self.registerSettingsBundle()
     }
