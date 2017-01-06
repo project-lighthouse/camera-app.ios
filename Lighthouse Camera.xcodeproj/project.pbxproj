@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6333A3351E1FC22C002CF407 /* feedback.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6333A3331E1FC22C002CF407 /* feedback.mm */; };
+		6333A33A1E203043002CF407 /* box.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6333A3391E203043002CF407 /* box.mp4 */; };
 		63B98FD71E03F211000125CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B98FD61E03F211000125CB /* AppDelegate.swift */; };
 		63B98FDE1E03F211000125CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63B98FDD1E03F211000125CB /* Assets.xcassets */; };
 		63B98FEC1E03F211000125CB /* Lighthouse_CameraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B98FEB1E03F211000125CB /* Lighthouse_CameraTests.swift */; };
@@ -53,6 +54,7 @@
 		6333A3341E1FC22C002CF407 /* feedback.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = feedback.hpp; sourceTree = "<group>"; };
 		6333A3371E1FD4F8002CF407 /* image.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = image.hpp; sourceTree = "<group>"; };
 		6333A3381E1FEEBF002CF407 /* feedback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = feedback.h; sourceTree = "<group>"; };
+		6333A3391E203043002CF407 /* box.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = box.mp4; sourceTree = "<group>"; };
 		63B98FD31E03F211000125CB /* Lighthouse Camera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Lighthouse Camera.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63B98FD61E03F211000125CB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		63B98FDD1E03F211000125CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -275,6 +277,7 @@
 		7A2FBF261E0D5B7B001B4E8A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6333A3391E203043002CF407 /* box.mp4 */,
 				7A2FBF291E0D60F2001B4E8A /* Settings.bundle */,
 			);
 			path = Resources;
@@ -644,6 +647,7 @@
 				7AE727E11E13D5E5007B3758 /* manual.html in Resources */,
 				7A018E751E0AA40700EEB90B /* Lib in Resources */,
 				7A608B171E0AC63500A88001 /* Main.storyboard in Resources */,
+				6333A33A1E203043002CF407 /* box.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
