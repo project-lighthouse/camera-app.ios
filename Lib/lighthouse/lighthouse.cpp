@@ -8,6 +8,7 @@
 
 #include "lighthouse.hpp"
 #include "filesystem.hpp"
+#include "recorder.hpp"
 
 namespace lighthouse {
 
@@ -56,6 +57,16 @@ void Lighthouse::SaveDescription(const ImageDescription &aDescription) {
     ImageDescription::Save(aDescription, descriptionFolderPath + "/description.bin");
 
     mImageMatcher.AddToDB(aDescription);
+}
+
+void Lighthouse::RecordVoiceLabelForDescription(const ImageDescription &aDescription) {
+    const std::string descriptionFolderPath = mDbFolderPath + aDescription.GetId();
+
+    Filesystem filesystem;
+    filesystem.CreateDirectory(descriptionFolderPath);
+
+    Recorder recorder;
+    recorder.Record(descriptionFolderPath + "/short-voice-label.aiff");
 }
 
 std::vector<std::tuple<float, ImageDescription>> Lighthouse::Match(const cv::Mat &aInputFrame) const {

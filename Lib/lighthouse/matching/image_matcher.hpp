@@ -19,8 +19,8 @@
 namespace lighthouse {
 
 struct ImageMatchingSettings {
-    int32_t numberOfFeatures, minNumberOfFeatures;
-    float ratioTestK, histogramWeight;
+    int32_t mNumberOfFeatures, mMinNumberOfFeatures;
+    float mRatioTestK, mHistogramWeight;
 };
 
 class ImageMatcher {

@@ -88,10 +88,10 @@ imageToMatrix(UIImage *image) {
 @implementation Bridge
 
 lighthouse::ImageMatchingSettings matchingSettings = {
-        .numberOfFeatures = 1000,
-        .minNumberOfFeatures = 50,
-        .ratioTestK = 0.8,
-        .histogramWeight = 5.0,
+        .mNumberOfFeatures = 1000,
+        .mMinNumberOfFeatures = 50,
+        .mRatioTestK = 0.8,
+        .mHistogramWeight = 5.0,
 };
 
 lighthouse::Lighthouse lighthouseInstance(matchingSettings);
@@ -104,7 +104,9 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
 }
 
 - (void)SaveDescription:(UIImage *)source {
-    lighthouseInstance.SaveDescription(lighthouseInstance.GetDescription([self imageToMatrix:source]));
+    lighthouse::ImageDescription imageDescription = lighthouseInstance.GetDescription([self imageToMatrix:source]);
+    lighthouseInstance.SaveDescription(imageDescription);
+    lighthouseInstance.RecordVoiceLabelForDescription(imageDescription);
 }
 
 - (NSArray *)Match:(UIImage *)source {

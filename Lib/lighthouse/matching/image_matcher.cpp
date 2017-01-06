@@ -13,7 +13,7 @@ namespace lighthouse {
 
 ImageMatcher::ImageMatcher(ImageMatchingSettings aSettings): mSettings(aSettings), mDB(),
                                                              mKeypointDetector(
-                                                                     cv::ORB::create(aSettings.numberOfFeatures)
+                                                                     cv::ORB::create(aSettings.mNumberOfFeatures)
                                                              ),
                                                              mMatcher(new cv::BFMatcher(cv::NORM_HAMMING)) {}
 
@@ -27,7 +27,7 @@ ImageDescription ImageMatcher::GetDescription(const cv::Mat &aInputFrame) const 
 
     mKeypointDetector->detectAndCompute(aInputFrame, rgbaChannels[3], keypoints, descriptors);
 
-    if (keypoints.size() < mSettings.minNumberOfFeatures) {
+    if (keypoints.size() < mSettings.mMinNumberOfFeatures) {
         throw std::domain_error("Image does not have enough keypoints.");
     }
 
@@ -69,7 +69,7 @@ std::vector<std::tuple<float, ImageDescription>> ImageMatcher::Match(const Image
         // be a good match. Note that the absolute distance of the matches does not matter just their relative amounts.
         uint32_t numberOfGoodMatches = 0;
         for (const std::vector<cv::DMatch> matchPair : matches) {
-            if (matchPair.size() == 2 && matchPair[0].distance < mSettings.ratioTestK * matchPair[1].distance) {
+            if (matchPair.size() == 2 && matchPair[0].distance < mSettings.mRatioTestK * matchPair[1].distance) {
                 numberOfGoodMatches++;
             }
         }
@@ -86,10 +86,10 @@ std::vector<std::tuple<float, ImageDescription>> ImageMatcher::Match(const Image
         float score = goodMatchRatio * 100 ; // featureRatio * goodMatchRatio * 100
 
         // Now boost the score based on how well the histograms match.
-        if (mSettings.histogramWeight > 0) {
+        if (mSettings.mHistogramWeight > 0) {
             double histogramCorrelation = cv::compareHist(aDescription.GetHistogram(), description.GetHistogram(),
                     cv::HISTCMP_CORREL);
-            score += mSettings.histogramWeight * histogramCorrelation;
+            score += mSettings.mHistogramWeight * histogramCorrelation;
         }
 
         matchedDescriptions.push_back(std::make_tuple(score, description));

@@ -18,6 +18,9 @@
 		7A2FBF221E0D3F20001B4E8A /* image_matcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A2FBF201E0D3F20001B4E8A /* image_matcher.cpp */; };
 		7A2FBF251E0D4138001B4E8A /* image_description.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A2FBF231E0D4138001B4E8A /* image_description.cpp */; };
 		7A2FBF2A1E0D60F2001B4E8A /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7A2FBF291E0D60F2001B4E8A /* Settings.bundle */; };
+		7A493F311E1EB73B00394AA5 /* recorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A493F2F1E1EB73B00394AA5 /* recorder.cpp */; };
+		7A493F331E1EB7B800394AA5 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A493F321E1EB7B800394AA5 /* CoreAudio.framework */; };
+		7A493F351E1EBB7300394AA5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A493F341E1EBB7300394AA5 /* AudioToolbox.framework */; };
 		7A608B081E0ABE1000A88001 /* lighthouse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A608B061E0ABE1000A88001 /* lighthouse.cpp */; };
 		7A608B111E0AC54600A88001 /* bridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7A608B101E0AC54600A88001 /* bridge.mm */; };
 		7A608B131E0AC59F00A88001 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A608B121E0AC59F00A88001 /* ViewController.swift */; };
@@ -68,6 +71,10 @@
 		7A2FBF231E0D4138001B4E8A /* image_description.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image_description.cpp; sourceTree = "<group>"; };
 		7A2FBF241E0D4138001B4E8A /* image_description.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = image_description.hpp; sourceTree = "<group>"; };
 		7A2FBF291E0D60F2001B4E8A /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		7A493F2F1E1EB73B00394AA5 /* recorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = recorder.cpp; sourceTree = "<group>"; };
+		7A493F301E1EB73B00394AA5 /* recorder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = recorder.hpp; sourceTree = "<group>"; };
+		7A493F321E1EB7B800394AA5 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		7A493F341E1EBB7300394AA5 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		7A608B061E0ABE1000A88001 /* lighthouse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lighthouse.cpp; sourceTree = "<group>"; };
 		7A608B071E0ABE1000A88001 /* lighthouse.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lighthouse.hpp; sourceTree = "<group>"; };
 		7A608B091E0ABE6900A88001 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = Lib/opencv2.framework; sourceTree = "<group>"; };
@@ -167,6 +174,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A493F351E1EBB7300394AA5 /* AudioToolbox.framework in Frameworks */,
+				7A493F331E1EB7B800394AA5 /* CoreAudio.framework in Frameworks */,
 				63C81B7D1E1BD23F005F850E /* opencv2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -271,6 +280,15 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		7A493F2E1E1EB72400394AA5 /* audio */ = {
+			isa = PBXGroup;
+			children = (
+				7A493F2F1E1EB73B00394AA5 /* recorder.cpp */,
+				7A493F301E1EB73B00394AA5 /* recorder.hpp */,
+			);
+			path = audio;
+			sourceTree = "<group>";
+		};
 		7A608B041E0ABDE600A88001 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
@@ -283,6 +301,7 @@
 		7A608B051E0ABDF900A88001 /* lighthouse */ = {
 			isa = PBXGroup;
 			children = (
+				7A493F2E1E1EB72400394AA5 /* audio */,
 				63D747271E1E755D00025CE2 /* video */,
 				7A2FBF1F1E0D3F02001B4E8A /* matching */,
 				7A608B061E0ABE1000A88001 /* lighthouse.cpp */,
@@ -502,6 +521,8 @@
 		7AF59F771E0855760055266A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7A493F341E1EBB7300394AA5 /* AudioToolbox.framework */,
+				7A493F321E1EB7B800394AA5 /* CoreAudio.framework */,
 				7A608B091E0ABE6900A88001 /* opencv2.framework */,
 			);
 			name = Frameworks;
@@ -655,6 +676,7 @@
 				7A608B131E0AC59F00A88001 /* ViewController.swift in Sources */,
 				7A2FBF221E0D3F20001B4E8A /* image_matcher.cpp in Sources */,
 				7AD590681E1BC2ED00958FEB /* filesystem.mm in Sources */,
+				7A493F311E1EB73B00394AA5 /* recorder.cpp in Sources */,
 				7A608B081E0ABE1000A88001 /* lighthouse.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
