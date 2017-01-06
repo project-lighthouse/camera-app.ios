@@ -13,6 +13,16 @@ NSString *(^getRoot)() = ^() {
     return NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
 };
 
+/*static*/ std::string
+Filesystem::GetResourcePath(const std::string& name, const std::string& type) {
+    NSString *nsName = [NSString stringWithCString:name.c_str()
+                                                encoding:[NSString defaultCStringEncoding]];
+    NSString *nsType = [NSString stringWithCString:type.c_str()
+                                          encoding:[NSString defaultCStringEncoding]];
+    NSString *path = [[NSBundle mainBundle] pathForResource:nsName ofType:nsType];
+    return [path UTF8String]; // FIXME: What's the ownership of this?
+}
+
 std::string Filesystem::GetRoot() {
     return [getRoot() UTF8String];
 }

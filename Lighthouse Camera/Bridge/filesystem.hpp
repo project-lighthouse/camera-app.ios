@@ -15,6 +15,7 @@
 class Filesystem
 {
 public:
+    static std::string GetResourcePath(const std::string& name, const std::string& type);
     std::string GetRoot();
     std::vector<std::string> GetSubFolders(const std::string aDirectoryName);
     void CreateDirectory(const std::string aDirectoryPath);
