@@ -15,10 +15,14 @@
 
 SEL showFrameSelector = @selector(showFrame:);
 
+static int64_t sCounter = 0;
+
 void
 Feedback::ReceivedFrame(cv::Mat& frame) {
     fprintf(stderr, "Feedback::ReceivedFrame() got frame\n");
-    UIImage* image = matrixToImage(frame); // FIXME: Who owns that?
-    [sViewController performSelectorOnMainThread:showFrameSelector withObject:image waitUntilDone:false];
-    fprintf(stderr, "Feedback::ReceivedFrame() dispatched frame\n");
+    if (sCounter++ % 10 == 0) { // Throttle display, otherwise we end up saturating the RAM with requests.
+        UIImage* image = matrixToImage(frame); // FIXME: Who owns that?
+        [sViewController performSelectorOnMainThread:showFrameSelector withObject:image waitUntilDone:true];
+        fprintf(stderr, "Feedback::ReceivedFrame() dispatched frame\n");
+    }
 }
