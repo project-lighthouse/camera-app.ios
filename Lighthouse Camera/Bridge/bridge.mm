@@ -104,9 +104,7 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
 }
 
 - (void)SaveDescription:(UIImage *)source {
-    lighthouse::ImageDescription imageDescription = lighthouseInstance.GetDescription([self imageToMatrix:source]);
-    lighthouseInstance.SaveDescription(imageDescription);
-    lighthouseInstance.RecordVoiceLabelForDescription(imageDescription);
+    lighthouseInstance.SaveDescription(lighthouseInstance.GetDescription([self imageToMatrix:source]));
 }
 
 - (NSArray *)Match:(UIImage *)source {
@@ -117,9 +115,13 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
 
     // Convert C++ vector to NSArray & NSDictionary to be compatible with Swift.
     for (const std::tuple<float, lighthouse::ImageDescription> match : matches) {
+        lighthouse::ImageDescription description = std::get<1>(match);
+
+        lighthouseInstance.PlayVoiceLabelForDescription(description);
+
         [matchesArray addObject:@{
                 @"score" : @(std::get<0>(match)),
-                @"id" : [NSString stringWithCString:std::get<1>(match).GetId().c_str() encoding:NSUTF8StringEncoding]
+                @"id" : [NSString stringWithCString:description.GetId().c_str() encoding:NSUTF8StringEncoding]
         }];
     }
 

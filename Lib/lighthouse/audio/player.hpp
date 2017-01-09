@@ -33,7 +33,7 @@ public:
      * @param aFilePath Path to the audio file we'd like to play.
      * @param aVolume Volume to use while playback. THe 0.0 is for silence and 1.0 for the unity gain (default).
      */
-    void Play(const std::string aFilePath, const float aVolume = 1.0);
+    static void Play(const std::string aFilePath, const float aVolume = 1.0);
 
 private:
     /**

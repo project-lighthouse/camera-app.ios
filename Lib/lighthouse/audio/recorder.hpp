@@ -23,7 +23,7 @@ struct AudioQueueRecorderState : AudioQueueState {};
 
 class Recorder {
 public:
-    void Record(const std::string aFilePath);
+    static void Record(const std::string aFilePath);
 
 private:
     /**

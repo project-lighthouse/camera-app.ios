@@ -14,13 +14,24 @@ NSString *(^getRoot)() = ^() {
 };
 
 /*static*/ std::string
-Filesystem::GetResourcePath(const std::string& name, const std::string& type) {
-    NSString *nsName = [NSString stringWithCString:name.c_str()
-                                                encoding:[NSString defaultCStringEncoding]];
-    NSString *nsType = [NSString stringWithCString:type.c_str()
+Filesystem::GetResourcePath(const std::string &aName, const std::string &aType) {
+    NSString *nsName = [NSString stringWithCString:aName.c_str()
+                                          encoding:[NSString defaultCStringEncoding]];
+    NSString *nsType = [NSString stringWithCString:aType.c_str()
                                           encoding:[NSString defaultCStringEncoding]];
     NSString *path = [[NSBundle mainBundle] pathForResource:nsName ofType:nsType];
     return [path UTF8String]; // FIXME: What's the ownership of this?
+}
+
+// FIXME: Use common private method for all overloads.
+std::string Filesystem::GetResourcePath(const std::string &aName, const std::string &aType,
+        const std::string &aSubPath) {
+    NSString *nsName = [NSString stringWithCString:aName.c_str() encoding:[NSString defaultCStringEncoding]];
+    NSString *nsType = [NSString stringWithCString:aType.c_str() encoding:[NSString defaultCStringEncoding]];
+    NSString *nsSubPath = [NSString stringWithCString:aSubPath.c_str() encoding:[NSString defaultCStringEncoding]];
+
+    NSString *path = [[NSBundle mainBundle] pathForResource:nsName ofType:nsType inDirectory:nsSubPath];
+    return [path UTF8String];
 }
 
 std::string Filesystem::GetRoot() {
@@ -31,7 +42,7 @@ std::vector<std::string> Filesystem::GetSubFolders(const std::string aDirectoryN
     NSString *directoryName = [NSString stringWithCString:aDirectoryName.c_str() encoding:NSUTF8StringEncoding];
 
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSArray* dirs = [fileManager contentsOfDirectoryAtPath:directoryName error:NULL];
+    NSArray *dirs = [fileManager contentsOfDirectoryAtPath:directoryName error:NULL];
 
     std::vector<std::string> subFolders;
     for (NSString *itemName in dirs) {

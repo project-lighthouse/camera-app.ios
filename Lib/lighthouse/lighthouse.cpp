@@ -13,10 +13,11 @@
 
 namespace lighthouse {
 
-Lighthouse::Lighthouse(ImageMatchingSettings aImageMatchingSettings): mImageMatcher(ImageMatcher(aImageMatchingSettings)),
-                                                   mCamera(),
-                                                   mDescriptions(),
-                                                   mDbFolderPath() {
+Lighthouse::Lighthouse(ImageMatchingSettings aImageMatchingSettings)
+        : mImageMatcher(ImageMatcher(aImageMatchingSettings)),
+          mCamera(),
+          mDescriptions(),
+          mDbFolderPath() {
     Filesystem filesystem;
 
     // Create Data directory if it doesn't exist.
@@ -51,28 +52,22 @@ ImageDescription Lighthouse::GetDescription(const cv::Mat &aInputFrame) const {
 
 void Lighthouse::SaveDescription(const ImageDescription &aDescription) {
     const std::string descriptionFolderPath = mDbFolderPath + aDescription.GetId();
+    Filesystem::CreateDirectory(descriptionFolderPath);
 
-    Filesystem filesystem;
-    filesystem.CreateDirectory(descriptionFolderPath);
+    Player::Play(Filesystem::GetResourcePath("after-the-tone", "wav", "sounds"));
+
+    Player::Play(Filesystem::GetResourcePath("beep", "wav", "sounds"));
+    Recorder::Record(descriptionFolderPath + "/short-voice-label.aiff");
+    Player::Play(Filesystem::GetResourcePath("beep", "wav", "sounds"));
 
     ImageDescription::Save(aDescription, descriptionFolderPath + "/description.bin");
-
     mImageMatcher.AddToDB(aDescription);
-}
 
-void Lighthouse::RecordVoiceLabelForDescription(const ImageDescription &aDescription) {
-    const std::string descriptionFolderPath = mDbFolderPath + aDescription.GetId();
-
-    Filesystem filesystem;
-    filesystem.CreateDirectory(descriptionFolderPath);
-
-    Recorder recorder;
-    recorder.Record(descriptionFolderPath + "/short-voice-label.aiff");
+    Player::Play(Filesystem::GetResourcePath("registered", "wav", "sounds"));
 }
 
 void Lighthouse::PlayVoiceLabelForDescription(const ImageDescription &aDescription) {
-    Player player;
-    player.Play(mDbFolderPath + aDescription.GetId() + "/short-voice-label.aiff");
+    Player::Play(mDbFolderPath + aDescription.GetId() + "/short-voice-label.aiff");
 }
 
 std::vector<std::tuple<float, ImageDescription>> Lighthouse::Match(const cv::Mat &aInputFrame) const {
