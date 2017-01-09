@@ -20,6 +20,7 @@
 class Feedback {
 public:
     static void ReceivedFrame(cv::Mat& frame);
+    static void OperationComplete();
 };
 
 #endif /* feedback_hpp */

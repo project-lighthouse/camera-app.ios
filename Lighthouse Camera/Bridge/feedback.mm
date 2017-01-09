@@ -14,6 +14,7 @@
 #import <Foundation/Foundation.h>
 
 SEL showFrameSelector = @selector(showFrame:);
+SEL operationCompleteSelector =@selector(operationComplete);
 
 static int64_t sCounter = 0;
 
@@ -25,4 +26,9 @@ Feedback::ReceivedFrame(cv::Mat& frame) {
         [sViewController performSelectorOnMainThread:showFrameSelector withObject:image waitUntilDone:true];
         fprintf(stderr, "Feedback::ReceivedFrame() dispatched frame\n");
     }
+}
+
+void
+Feedback::OperationComplete() {
+    [sViewController performSelectorOnMainThread:operationCompleteSelector withObject:nullptr waitUntilDone:false];
 }

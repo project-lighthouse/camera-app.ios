@@ -62,7 +62,11 @@ Camera::CaptureForRecord(std::atomic_int *aState) {
 
     Ptr<BackgroundSubtractorMOG2> subtracted(createBackgroundSubtractorMOG2());
     Mat mask;
-    while (aState->load() == (int)Task::RECORD) {
+    while (true) {
+        if (aState->load() != (int)Task::RECORD) {
+            // We have been asked to stop. Bailout asap.
+            return;
+        }
         Mat frame;
         if (!capture->read(frame)) {
             // Nothing more to capture.
@@ -71,5 +75,6 @@ Camera::CaptureForRecord(std::atomic_int *aState) {
         subtracted->apply(frame, mask);
         Feedback::ReceivedFrame(mask);
     }
+    Feedback::OperationComplete();
     fprintf(stderr, "RunCaptureForRecord() stop\n");
 }

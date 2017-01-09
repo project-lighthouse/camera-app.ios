@@ -108,12 +108,12 @@ void Lighthouse::StopRecord() {
 
 void Lighthouse::SendMessage(lighthouse::Task aMessage) {
     int message = (int)aMessage;
-    fprintf(stderr, "Lighthouse::SendMessage(%d)\n", message);
+    fprintf(stderr, "Lighthouse::SendMessage(%d) to loop\n", message);
     std::unique_lock<std::mutex> lock(mTaskMutex);
     mTask.store(message);
     mTaskStamp += 1;
     mTaskCondition.notify_one();
-    fprintf(stderr, "Lighthouse::SendMessage(%d) done\n", message);
+    fprintf(stderr, "Lighthouse::SendMessage(%d) to loop done\n", message);
 }
     
 /*static*/void
@@ -124,17 +124,21 @@ Lighthouse::AuxRunEventLoop(Lighthouse* self)
 
 void Lighthouse::RunEventLoop() {
     // Stamp of the latest message received.
-    int stamp = 0;
+    uint64_t stamp = 0;
     while (true) {
+        fprintf(stderr, "Lighthouse::RunEventLoop() looping\n");
         int task = 0;
         do {
             // While mTaskCondition is atomic, we still need a lock for the sake of the condition.
             std::unique_lock<std::mutex> lock(mTaskMutex);
+            fprintf(stderr, "Lighthouse::RunEventLoop() checking %llu == %llu\n", mTaskStamp, stamp);
             if (mTaskStamp == stamp) {
                 // No message has arrived while we were waiting. Go to sleep.
+                fprintf(stderr, "Lighthouse::RunEventLoop() going to sleep\n");
                 mTaskCondition.wait(lock);
             }
-            task = mTask.load();
+            stamp = mTaskStamp;
+            task = mTask;
         } while(false); // Just a scope.
         switch (task) {
             case (int)Task::WAIT:

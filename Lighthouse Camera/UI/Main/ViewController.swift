@@ -80,6 +80,11 @@ class ViewController: UIViewController {
         alert.addButton(withTitle: "Ok")
         alert.show()
     }
+    
+    @objc(operationComplete)
+    public dynamic func operationComplete() {
+        self.isBusy = false
+    }
 
     // Used by `Feedback` to show frames currently being recorded
     // from the camera.
