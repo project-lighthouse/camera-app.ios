@@ -10,14 +10,16 @@
  *
  * Exposed for the sake of `Feedback`, so as to provide visual/auditory feedback to the user.
  */
-extern NSObject* sViewController;
+extern NSObject *sViewController;
 
 @interface Bridge : NSObject
 - (UIImage *)DrawKeypoints:(UIImage *)source;
 
 - (void)SaveDescription:(UIImage *)source;
 
-- (NSArray *)Match:(UIImage *)source;
+- (NSArray<NSDictionary<NSString *, NSString *> *> *)Match:(UIImage *)source;
+
+- (void)PlayVoiceLabel:(NSString *)id;
 
 // Trigger C++ code to start recording new object.
 - (void)onRecordObject;

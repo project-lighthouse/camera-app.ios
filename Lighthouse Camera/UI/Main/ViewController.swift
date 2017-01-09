@@ -11,13 +11,14 @@ import AVFoundation
 
 class ViewController: UIViewController {
     var bridge: Bridge!
+
     var isBusy: Bool
 
     required init?(coder aCoder: NSCoder) {
         isBusy = false
         super.init(coder:aCoder)
     }
-    
+
     //MARK: Properties
     @IBOutlet weak var button: UIButton!
     @IBOutlet weak var imageView: UIImageView!
@@ -39,10 +40,10 @@ class ViewController: UIViewController {
     @IBAction func onEmptyClick(_ sender: Any) {
         bridge.onStopCapture();
     }
-    
+
     // Invoked when the user has clicked on "identify".
     @IBAction func onIdentifyClick(_ sender: Any) {
-        let matches: Array = bridge.match(self.imageView.image)
+        let matches: Array<Dictionary<String, String>> = bridge.match(self.imageView.image)
 
         let alert = UIAlertController(title: "Match Result", message: "Matches found: \(matches.count)",
                 preferredStyle: UIAlertControllerStyle.alert)
@@ -65,6 +66,11 @@ class ViewController: UIViewController {
         alert.addAction(showKeypointsAction)
 
         self.present(alert, animated: true, completion: nil)
+
+        // Play voice label for the item with the highest score.
+        if matches.isEmpty == false {
+            bridge.playVoiceLabel(matches[0]["id"])
+        }
     }
 
     private func showError(message: String) {
@@ -74,7 +80,7 @@ class ViewController: UIViewController {
         alert.addButton(withTitle: "Ok")
         alert.show()
     }
-    
+
     // Used by `Feedback` to show frames currently being recorded
     // from the camera.
     @objc(showFrame:)
@@ -82,7 +88,7 @@ class ViewController: UIViewController {
         NSLog("ViewController.showFrame %f x %f\n", frame.size.width * frame.scale, frame.size.height * frame.scale);
         self.imageView.image = frame;
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -97,7 +103,7 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
 
-    func registerSettingsBundle(){
+    func registerSettingsBundle() {
         let defaults = UserDefaults.standard
 
         defaults.set(500, forKey: "Matching:NumberOfFeatures")

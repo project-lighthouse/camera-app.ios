@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <unordered_map>
 #include <opencv2/opencv.hpp>
 #include <opencv2/features2d.hpp>
 
@@ -29,6 +30,9 @@ public:
 
     ImageDescription GetDescription(const cv::Mat &aInputFrame) const;
 
+    const ImageDescription &GetDescription(const std::string &id) const;
+
+    // FIXME: We should return pointer to ImageDescription here.
     std::vector<std::tuple<float, ImageDescription>> Match(const ImageDescription &aDescription) const;
 
     void AddToDB(const ImageDescription &aDescription);
@@ -36,7 +40,7 @@ public:
 private:
     cv::Ptr<cv::Feature2D> mKeypointDetector;
     cv::Ptr<cv::DescriptorMatcher> mMatcher;
-    std::vector<ImageDescription> mDB;
+    std::unordered_map<std::string, ImageDescription> mDB;
     ImageMatchingSettings mSettings;
 };
 

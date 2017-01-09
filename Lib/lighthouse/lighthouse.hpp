@@ -44,6 +44,8 @@ public:
 
     ImageDescription GetDescription(const cv::Mat &aInputFrame) const;
 
+    const ImageDescription &GetDescription(const std::string &id) const;
+
     void SaveDescription(const ImageDescription &aDescription);
 
     void PlayVoiceLabelForDescription(const ImageDescription &aDescription);

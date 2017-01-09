@@ -62,6 +62,10 @@ ImageDescription Lighthouse::GetDescription(const cv::Mat &aInputFrame) const {
     return mImageMatcher.GetDescription(aInputFrame);
 }
 
+const ImageDescription &Lighthouse::GetDescription(const std::string &id) const {
+    return mImageMatcher.GetDescription(id);
+}
+
 void Lighthouse::SaveDescription(const ImageDescription &aDescription) {
     const std::string descriptionFolderPath = mDbFolderPath + aDescription.GetId();
     Filesystem::CreateDirectory(descriptionFolderPath);

@@ -11,11 +11,11 @@
 
 namespace lighthouse {
 
-ImageMatcher::ImageMatcher(ImageMatchingSettings aSettings): mSettings(aSettings), mDB(),
-                                                             mKeypointDetector(
-                                                                     cv::ORB::create(aSettings.mNumberOfFeatures)
-                                                             ),
-                                                             mMatcher(new cv::BFMatcher(cv::NORM_HAMMING)) {}
+ImageMatcher::ImageMatcher(ImageMatchingSettings aSettings) : mSettings(aSettings), mDB(),
+                                                              mKeypointDetector(
+                                                                      cv::ORB::create(aSettings.mNumberOfFeatures)
+                                                              ),
+                                                              mMatcher(new cv::BFMatcher(cv::NORM_HAMMING)) {}
 
 ImageDescription ImageMatcher::GetDescription(const cv::Mat &aInputFrame) const {
     std::vector<cv::Mat> rgbaChannels(4);
@@ -50,14 +50,20 @@ ImageDescription ImageMatcher::GetDescription(const cv::Mat &aInputFrame) const 
     return ImageDescription(uuidString, keypoints, descriptors, histogram);
 }
 
+const ImageDescription &ImageMatcher::GetDescription(const std::string &id) const {
+    return mDB.find(id)->second;
+}
+
 void ImageMatcher::AddToDB(const ImageDescription &aDescription) {
-    mDB.push_back(aDescription);
+    mDB.insert(std::make_pair(aDescription.GetId(), aDescription));
 }
 
 std::vector<std::tuple<float, ImageDescription>> ImageMatcher::Match(const ImageDescription &aDescription) const {
     std::vector<std::tuple<float, ImageDescription>> matchedDescriptions;
 
-    for (const ImageDescription description : mDB) {
+    for (const std::pair<std::string, ImageDescription> descriptionPair : mDB) {
+        ImageDescription description = descriptionPair.second;
+
         std::vector<std::vector<cv::DMatch>> matches = {};
         mMatcher->knnMatch(aDescription.GetDescriptors(), description.GetDescriptors(), matches, 2);
 
@@ -83,7 +89,7 @@ std::vector<std::tuple<float, ImageDescription>> ImageMatcher::Match(const Image
 
         // Both of the numbers above are between 0 and 1. We take their product and multiply by 100 to create a score
         // between 0 and 100. Kind of a match percentage.
-        float score = goodMatchRatio * 100 ; // featureRatio * goodMatchRatio * 100
+        float score = goodMatchRatio * 100; // featureRatio * goodMatchRatio * 100
 
         // Now boost the score based on how well the histograms match.
         if (mSettings.mHistogramWeight > 0) {
