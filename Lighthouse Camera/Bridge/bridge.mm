@@ -143,6 +143,11 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
     lighthouseInstance.OnRecordObject();
 }
 
+- (void) onStopCapture {
+    fprintf(stderr, "onStopCapture %s", "start");
+    lighthouseInstance.StopRecord();
+    fprintf(stderr, "onStopCapture %s", "stop");
+}
 @end
 
 

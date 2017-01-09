@@ -11,6 +11,12 @@ import AVFoundation
 
 class ViewController: UIViewController {
     var bridge: Bridge!
+    var isBusy: Bool
+
+    required init?(coder aCoder: NSCoder) {
+        isBusy = false
+        super.init(coder:aCoder)
+    }
     
     //MARK: Properties
     @IBOutlet weak var button: UIButton!
@@ -20,9 +26,20 @@ class ViewController: UIViewController {
 
     // Invoked when the user has clicked on "record".
     @IBAction func onRecordClick(_ sender: Any) {
-        bridge.onRecordObject();
+        if self.isBusy {
+            bridge.onStopCapture()
+            self.isBusy = false
+        } else {
+            bridge.onRecordObject();
+            self.isBusy = true
+        }
     }
 
+    // Invoked when the user clicks to stop the ongoing action.
+    @IBAction func onEmptyClick(_ sender: Any) {
+        bridge.onStopCapture();
+    }
+    
     // Invoked when the user has clicked on "identify".
     @IBAction func onIdentifyClick(_ sender: Any) {
         let matches: Array = bridge.match(self.imageView.image)
@@ -58,6 +75,8 @@ class ViewController: UIViewController {
         alert.show()
     }
     
+    // Used by `Feedback` to show frames currently being recorded
+    // from the camera.
     @objc(showFrame:)
     public dynamic func showFrame(frame: UIImage) {
         NSLog("ViewController.showFrame %f x %f\n", frame.size.width * frame.scale, frame.size.height * frame.scale);
@@ -68,6 +87,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         bridge = Bridge()
+        self.isBusy = false;
         sViewController = self;
 
         self.registerSettingsBundle()

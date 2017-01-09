@@ -10,21 +10,22 @@
 #define video_hpp
 
 #include <stdio.h>
-#include <thread>
+#include <atomic>
 
 namespace lighthouse {
-    
+
 class Camera {
 public:
     Camera();
-    void CaptureForRecord();
-    void CaptureForIdentification();
+
+    // Capture a video stream for the purpose of recording a new object.
+    void CaptureForRecord(std::atomic_int* aState);
+
+    // Capture a video stream for the purpose of identifying an already-known object.
+    void CaptureForIdentification(std::atomic_int* aState);
 private:
-    static void RunCaptureForRecord();
-    std::thread* mCaptureThread;
-private:
-    Camera(const Camera& rhs);
-    Camera& operator=(const Camera& rhs );
+    Camera(const Camera& rhs) = delete;
+    Camera& operator=(const Camera& rhs ) = delete;
 };
 
 }

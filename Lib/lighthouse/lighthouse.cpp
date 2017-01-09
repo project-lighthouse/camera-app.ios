@@ -17,7 +17,9 @@ Lighthouse::Lighthouse(ImageMatchingSettings aImageMatchingSettings)
         : mImageMatcher(ImageMatcher(aImageMatchingSettings)),
           mCamera(),
           mDescriptions(),
-          mDbFolderPath() {
+          mDbFolderPath(),
+          mVideoThread()
+{
     Filesystem filesystem;
 
     // Create Data directory if it doesn't exist.
@@ -33,8 +35,18 @@ Lighthouse::Lighthouse(ImageMatchingSettings aImageMatchingSettings)
     for (std::string descriptionFolderPath : subFolders) {
         mImageMatcher.AddToDB(ImageDescription::Load(descriptionFolderPath + "/description.bin"));
     }
+
+    // Start event loop.
+    std::thread thread(Lighthouse::AuxRunEventLoop, this);
+    mVideoThread.swap(thread);
 }
 
+Lighthouse::~Lighthouse()
+{
+    StopRecord();
+    mVideoThread.join();
+}
+    
 void Lighthouse::DrawKeypoints(const cv::Mat &aInputFrame, cv::Mat &aOutputFrame) {
     ImageDescription description = mImageMatcher.GetDescription(aInputFrame);
 
@@ -79,7 +91,60 @@ std::vector<std::tuple<float, ImageDescription>> Lighthouse::Match(const ImageDe
 }
 
 void Lighthouse::OnRecordObject() {
-    mCamera.CaptureForRecord();
+    SendMessage(Task::RECORD);
+}
+
+void Lighthouse::OnIdentifyObject() {
+    SendMessage(Task::IDENTIFY);
+}
+
+void Lighthouse::StopRecord() {
+    SendMessage(Task::WAIT);
+}
+
+void Lighthouse::SendMessage(lighthouse::Task aMessage) {
+    int message = (int)aMessage;
+    fprintf(stderr, "Lighthouse::SendMessage(%d)\n", message);
+    std::unique_lock<std::mutex> lock(mTaskMutex);
+    mTask.store(message);
+    mTaskStamp += 1;
+    mTaskCondition.notify_one();
+    fprintf(stderr, "Lighthouse::SendMessage(%d) done\n", message);
+}
+    
+/*static*/void
+Lighthouse::AuxRunEventLoop(Lighthouse* self)
+{
+    self->RunEventLoop();
+}
+
+void Lighthouse::RunEventLoop() {
+    // Stamp of the latest message received.
+    int stamp = 0;
+    while (true) {
+        int task = 0;
+        do {
+            // While mTaskCondition is atomic, we still need a lock for the sake of the condition.
+            std::unique_lock<std::mutex> lock(mTaskMutex);
+            if (mTaskStamp == stamp) {
+                // No message has arrived while we were waiting. Go to sleep.
+                mTaskCondition.wait(lock);
+            }
+            task = mTask.load();
+        } while(false); // Just a scope.
+        switch (task) {
+            case (int)Task::WAIT:
+                // Nothing to do.
+                continue;
+            case (int)Task::RECORD:
+                // Start recording. `mCamera` is in charge of stopping itself if `mTask` stops being `Task::RECORD`.
+                mCamera.CaptureForRecord(&mTask);
+                continue;
+            default:
+                assert(false);
+                continue;
+        }
+    }
 }
 
 } // namespace lighthouse

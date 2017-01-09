@@ -19,5 +19,12 @@ extern NSObject* sViewController;
 
 - (NSArray *)Match:(UIImage *)source;
 
+// Trigger C++ code to start recording new object.
 - (void)onRecordObject;
+
+// Trigger C++ code to start identifying an object.
+- (void)onIdentifyObject;
+
+// Trigger C++ code to stop an ongoing Record/Identify operation.
+- (void)onStopCapture;
 @end
