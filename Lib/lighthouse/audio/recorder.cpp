@@ -64,14 +64,14 @@ void Recorder::Record(const std::string aFilePath) {
     // FIXME: Here should be definitely something smarter.
     std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 
-    // Let's stop and reset the recording audio queue. True indicates that we want to stop queue synchronously.
-    AudioQueueStop(state.mQueue, true);
+    // Let's stop and reset the recording audio queue.
+    AudioQueueStop(state.mQueue, true /* stop immediately */);
 
     // Set a flag to indicate that the audio queue is not running anymore.
     state.mIsRunning = false;
 
-    // Close audio queue and dispose all related resources. True indicates that we want to dispose queue immediately.
-    AudioQueueDispose(state.mQueue, true);
+    // Close audio queue and dispose all related resources.
+    AudioQueueDispose(state.mQueue, true /* dispose queue immediately */);
 
     AudioFileClose(state.mAudioFile);
 }
@@ -101,7 +101,7 @@ AudioQueueRecorderState Recorder::PrepareState() {
 }
 
 void Recorder::DeriveBufferSize(AudioQueueRef aAudioQueue, AudioStreamBasicDescription &aAudioStreamDescription,
-        Float64 aSeconds, UInt32 *aOutBufferSize) {
+        Float64 aSeconds, UInt32 *aBufferSize) {
 
     // For CBR audio data, get the (constant) packet size from the AudioStreamBasicDescription structure. Use this value
     // as the maximum packet size. This assignment has the side effect of determining if the audio data to be recorded
@@ -120,7 +120,7 @@ void Recorder::DeriveBufferSize(AudioQueueRef aAudioQueue, AudioStreamBasicDescr
     Float64 numBytesForTime = aAudioStreamDescription.mSampleRate * maxPacketSize * aSeconds;
 
     // Limit the buffer size, if needed, to the previously set upper bound.
-    *aOutBufferSize = UInt32(numBytesForTime < kMaxBufferSize ? numBytesForTime : kMaxBufferSize);
+    *aBufferSize = UInt32(numBytesForTime < kMaxBufferSize ? numBytesForTime : kMaxBufferSize);
 }
 
 void Recorder::HandleInputBuffer(void *aAudioQueueData, AudioQueueRef aAudioQueue,
