@@ -12,8 +12,8 @@
 #include <stdio.h>
 #include <string>
 #include <CoreAudio/CoreAudioTypes.h>
-#include <AudioToolbox/AudioQueue.h>
-#include <AudioToolbox/AudioFile.h>
+#include <AudioToolbox/AudioToolbox.h>
+#include <AudioToolbox/AudioToolbox.h>
 
 namespace lighthouse {
     
