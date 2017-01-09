@@ -9,6 +9,7 @@
 #include <opencv2/opencv.hpp> // Must be imported before Cocoa
 #include "image.hpp"
 #include "feedback.hpp"
+#include "feedback.h"
 #include "bridge.h"
 
 #import <Foundation/Foundation.h>
