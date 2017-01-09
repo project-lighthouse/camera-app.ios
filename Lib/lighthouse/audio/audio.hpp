@@ -41,7 +41,7 @@ namespace lighthouse {
         // Describes type of the audio file (eg. AAIF).
         AudioFileTypeID mAudioFileType;
         // The size, in bytes, for each audio queue buffer.
-        UInt32 bufferByteSize;
+        UInt32 mBufferByteSize;
         // The packet index for the first packet to be written from the current audio queue buffer.
         SInt64 mCurrentPacket;
         // A Boolean value indicating whether or not the audio queue is running.

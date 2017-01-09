@@ -38,12 +38,12 @@ void Recorder::Record(const std::string aFilePath) {
 
     // Sets an appropriate audio queue buffer size. We set 0.5 of seconds of audio that each audio queue buffer should
     // hold.
-    DeriveBufferSize(state.mQueue, state.mDataFormat, 0.5, &state.bufferByteSize);
+    DeriveBufferSize(state.mQueue, state.mDataFormat, 0.5, &state.mBufferByteSize);
 
     // Now we should ask the audio queue to prepare a set of audio queue buffers.
     for (int i = 0; i < kNumberBuffers; ++i) {
         // Allocate audio queue buffer.
-        AudioQueueAllocateBuffer(state.mQueue, state.bufferByteSize, &state.mBuffers[i]);
+        AudioQueueAllocateBuffer(state.mQueue, state.mBufferByteSize, &state.mBuffers[i]);
 
         // Add an audio queue buffer to the end of a buffer queue.
         AudioQueueEnqueueBuffer(state.mQueue, state.mBuffers[i], 0, NULL);

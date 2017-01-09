@@ -38,7 +38,7 @@ void Player::Play(const std::string aFilePath, const float aVolume) {
 
     // Sets an appropriate audio queue buffer size. We set 0.5 of seconds of audio that each audio queue buffer should
     // hold.
-    DeriveBufferSize(state.mDataFormat, maxPacketSize, 0.5, &state.bufferByteSize, &state.mNumPacketsToRead);
+    DeriveBufferSize(state.mDataFormat, maxPacketSize, 0.5, &state.mBufferByteSize, &state.mNumPacketsToRead);
 
     // Determines if the audio file’s data format is VBR or CBR. In VBR data, one or both of the bytes-per-packet or
     // frames-per-packet values is variable, and so will be listed as 0 in the audio queue’s state structure. For an
@@ -54,9 +54,11 @@ void Player::Play(const std::string aFilePath, const float aVolume) {
 
     // Now let's allocate and prime audio queue buffers for playback.
     state.mCurrentPacket = 0;
+    // Start the queue and playback.
+    state.mIsRunning = true;
 
     for (int i = 0; i < kNumberBuffers; ++i) {
-        AudioQueueAllocateBuffer(state.mQueue, state.bufferByteSize, &state.mBuffers[i]);
+        AudioQueueAllocateBuffer(state.mQueue, state.mBufferByteSize, &state.mBuffers[i]);
 
         HandleOutputBuffer(&state, state.mQueue, state.mBuffers[i]);
     }
@@ -64,9 +66,6 @@ void Player::Play(const std::string aFilePath, const float aVolume) {
     // Before we tell an audio queue to begin playing, we set its volume by way of the audio queue parameter mechanism.
     AudioQueueSetParameter(state.mQueue, kAudioQueueParam_Volume, aVolume);
 
-
-    // Start the queue and playback.
-    state.mIsRunning = true;
     AudioQueueStart(state.mQueue, NULL /* start playing immediately */);
 
     // Polls the custom structure’s mIsRunning field regularly to check if the audio queue has stopped and run the run
@@ -92,7 +91,7 @@ void Player::HandleOutputBuffer(void *aAudioQueueData, AudioQueueRef aAudioQueue
     AudioQueuePlayerState *pAqData = (AudioQueuePlayerState *) aAudioQueueData;
 
     // If the audio queue has stopped, return.
-    if (pAqData->mIsRunning == 0) {
+    if (!pAqData->mIsRunning) {
         return;
     }
 

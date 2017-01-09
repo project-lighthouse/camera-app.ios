@@ -9,6 +9,7 @@
 #include "lighthouse.hpp"
 #include "filesystem.hpp"
 #include "recorder.hpp"
+#include "player.hpp"
 
 namespace lighthouse {
 
@@ -67,6 +68,11 @@ void Lighthouse::RecordVoiceLabelForDescription(const ImageDescription &aDescrip
 
     Recorder recorder;
     recorder.Record(descriptionFolderPath + "/short-voice-label.aiff");
+}
+
+void Lighthouse::PlayVoiceLabelForDescription(const ImageDescription &aDescription) {
+    Player player;
+    player.Play(mDbFolderPath + aDescription.GetId() + "/short-voice-label.aiff");
 }
 
 std::vector<std::tuple<float, ImageDescription>> Lighthouse::Match(const cv::Mat &aInputFrame) const {
