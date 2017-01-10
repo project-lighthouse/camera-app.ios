@@ -32,13 +32,12 @@ void Player::Play(const std::string aFilePath, const float aVolume) {
 
   // Let's set a size in bytes for each audio queue buffer, and determine the number of packets to read for each
   // invocation of the playback audio queue callback.
-  UInt32 maxPacketSize;
-  UInt32 propertySize = sizeof(maxPacketSize);
-  AudioFileGetProperty(state.mAudioFile, kAudioFilePropertyPacketSizeUpperBound, &propertySize, &maxPacketSize);
+  UInt32 propertySize = sizeof(state.mMaxPacketSize);
+  AudioFileGetProperty(state.mAudioFile, kAudioFilePropertyPacketSizeUpperBound, &propertySize, &state.mMaxPacketSize);
 
   // Sets an appropriate audio queue buffer size. We set 0.5 of seconds of audio that each audio queue buffer should
   // hold.
-  DeriveBufferSize(state.mDataFormat, maxPacketSize, 0.5, &state.mBufferByteSize, &state.mNumPacketsToRead);
+  DeriveBufferSize(state.mDataFormat, state.mMaxPacketSize, 0.5, &state.mBufferByteSize, &state.mNumPacketsToRead);
 
   // Determines if the audio file’s data format is VBR or CBR. In VBR data, one or both of the bytes-per-packet or
   // frames-per-packet values is variable, and so will be listed as 0 in the audio queue’s state structure. For an
@@ -95,13 +94,13 @@ void Player::HandleOutputBuffer(void *aAudioQueueData, AudioQueueRef aAudioQueue
     return;
   }
 
-  // The number of bytes of audio data that was read from the file being played.
-  UInt32 numBytesReadFromFile;
   // The number of packets to read from the file being played.
   UInt32 numPackets = pAqData->mNumPacketsToRead;
+  // The number of bytes of audio data that was read from the file being played.
+  UInt32 numBytesReadFromFile = numPackets * pAqData->mMaxPacketSize;
 
   // First let's read data from an audio file and place it in an audio queue buffer.
-  AudioFileReadPackets(pAqData->mAudioFile, false /* use cache */, &numBytesReadFromFile, pAqData->mPacketDescs,
+  AudioFileReadPacketData(pAqData->mAudioFile, false, &numBytesReadFromFile, pAqData->mPacketDescs,
       pAqData->mCurrentPacket, &numPackets, aAudioQueueBuffer->mAudioData);
 
   // Now that data has been read from an audio file and placed in an audio queue buffer, let's enqueue the buffer (if

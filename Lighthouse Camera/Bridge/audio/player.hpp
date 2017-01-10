@@ -23,6 +23,8 @@ struct AudioQueuePlayerState : AudioQueueState {
   // For VBR audio data, the array of packet descriptions for the file being playedß. For CBR data, the value of this
   // field is NULL.
   AudioStreamPacketDescription *mPacketDescs;
+  // Describes the maximum packet size.
+  UInt32 mMaxPacketSize;
 };
 
 class Player {
