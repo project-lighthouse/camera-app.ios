@@ -23,6 +23,7 @@ public:
 
     // Capture a video stream for the purpose of identifying an already-known object.
     void CaptureForIdentification(std::atomic_int* aState);
+
 private:
     Camera(const Camera& rhs) = delete;
     Camera& operator=(const Camera& rhs ) = delete;
