@@ -63,8 +63,8 @@ void ImageMatcher::AddToDB(const ImageDescription &aDescription) {
   mDB.insert(std::make_pair(aDescription.GetId(), aDescription));
 }
 
-std::vector<std::tuple<float, ImageDescription &>> ImageMatcher::Match(const ImageDescription &aDescription) const {
-  std::vector<std::tuple<float, ImageDescription &>> matchedDescriptions;
+std::vector<std::tuple<float, ImageDescription>> ImageMatcher::Match(const ImageDescription &aDescription) const {
+  std::vector<std::tuple<float, ImageDescription>> matchedDescriptions;
 
   for (const std::pair<std::string, ImageDescription> descriptionPair : mDB) {
     ImageDescription description = descriptionPair.second;
@@ -106,12 +106,12 @@ std::vector<std::tuple<float, ImageDescription &>> ImageMatcher::Match(const Ima
     fprintf(stderr, "ImageMatcher::Match() %s vs %s: total matches (%lu), good matches (%i), score (%f).\n",
         aDescription.GetId().c_str(), description.GetId().c_str(), matches.size(), numberOfGoodMatches, score);
 
-    matchedDescriptions.push_back(std::forward_as_tuple(score, description));
+    matchedDescriptions.push_back(std::make_tuple(score, description));
   }
 
   // Sort matched description by score (first element of the tuple).
   std::sort(std::begin(matchedDescriptions), std::end(matchedDescriptions),
-      [](const std::tuple<float, ImageDescription &> &a, const std::tuple<float, ImageDescription &> &b) {
+      [](const std::tuple<float, ImageDescription> &a, const std::tuple<float, ImageDescription> &b) {
         return std::get<0>(b) < std::get<0>(a);
       });
 

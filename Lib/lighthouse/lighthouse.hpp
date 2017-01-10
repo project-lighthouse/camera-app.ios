@@ -51,9 +51,9 @@ public:
 
   void PlayVoiceLabelForDescription(const ImageDescription &aDescription);
 
-  std::vector<std::tuple<float, ImageDescription &>> Match(const cv::Mat &aInputFrame) const;
+  std::vector<std::tuple<float, ImageDescription>> Match(const cv::Mat &aInputFrame) const;
 
-  std::vector<std::tuple<float, ImageDescription &>> Match(const ImageDescription &aDescription) const;
+  std::vector<std::tuple<float, ImageDescription>> Match(const ImageDescription &aDescription) const;
 
   void OnRecordObject();
 

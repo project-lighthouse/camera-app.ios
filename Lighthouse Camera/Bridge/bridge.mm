@@ -108,7 +108,7 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
 }
 
 - (NSArray<NSDictionary<NSString *, NSString *> *> *)Match:(UIImage *)source {
-  std::vector<std::tuple<float, lighthouse::ImageDescription &>> matches = lighthouseInstance.Match(
+  std::vector<std::tuple<float, lighthouse::ImageDescription>> matches = lighthouseInstance.Match(
       lighthouseInstance.GetDescription([self imageToMatrix:source]));
 
   NSMutableArray *matchesArray = [NSMutableArray arrayWithCapacity:matches.size()];

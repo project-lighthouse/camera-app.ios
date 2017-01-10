@@ -73,7 +73,7 @@ void Lighthouse::SaveDescription(const ImageDescription &aDescription) {
   Player::Play(Filesystem::GetResourcePath("after-the-tone", "wav", "sounds"));
 
   Player::Play(Filesystem::GetResourcePath("beep", "wav", "sounds"));
-  Recorder::Record(descriptionFolderPath + "/short-voice-label.aiff");
+  Recorder::Record(descriptionFolderPath + "/voice-label.aiff");
   Player::Play(Filesystem::GetResourcePath("beep", "wav", "sounds"));
 
   ImageDescription::Save(aDescription, descriptionFolderPath + "/description.bin");
@@ -83,14 +83,14 @@ void Lighthouse::SaveDescription(const ImageDescription &aDescription) {
 }
 
 void Lighthouse::PlayVoiceLabelForDescription(const ImageDescription &aDescription) {
-  Player::Play(mDbFolderPath + aDescription.GetId() + "/short-voice-label.aiff");
+  Player::Play(mDbFolderPath + aDescription.GetId() + "/voice-label.aiff");
 }
 
-std::vector<std::tuple<float, ImageDescription &>> Lighthouse::Match(const cv::Mat &aInputFrame) const {
+std::vector<std::tuple<float, ImageDescription>> Lighthouse::Match(const cv::Mat &aInputFrame) const {
   return Match(GetDescription(aInputFrame));
 }
 
-std::vector<std::tuple<float, ImageDescription &>> Lighthouse::Match(const ImageDescription &aDescription) const {
+std::vector<std::tuple<float, ImageDescription>> Lighthouse::Match(const ImageDescription &aDescription) const {
   return mImageMatcher.Match(aDescription);
 }
 

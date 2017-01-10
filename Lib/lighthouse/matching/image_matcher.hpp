@@ -32,7 +32,7 @@ public:
 
   const ImageDescription &GetDescription(const std::string &id) const;
 
-  std::vector<std::tuple<float, ImageDescription &>> Match(const ImageDescription &aDescription) const;
+  std::vector<std::tuple<float, ImageDescription>> Match(const ImageDescription &aDescription) const;
 
   void AddToDB(const ImageDescription &aDescription);
 
