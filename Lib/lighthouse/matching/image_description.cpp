@@ -16,42 +16,43 @@
 namespace lighthouse {
 
 ImageDescription::ImageDescription(std::string aId, std::vector<cv::KeyPoint> aKeypoints, cv::Mat aDescriptors,
-        cv::Mat aHistogram): mId(aId), mKeypoints(aKeypoints), mDescriptors(aDescriptors), mHistogram(aHistogram) {}
-
-std::string ImageDescription::GetId() const {
-    return mId;
+    cv::Mat aHistogram) : mId(aId), mKeypoints(aKeypoints), mDescriptors(aDescriptors), mHistogram(aHistogram) {
 }
 
-std::vector<cv::KeyPoint> ImageDescription::GetKeypoints() const {
-    return mKeypoints;
+const std::string &ImageDescription::GetId() const {
+  return mId;
 }
 
-cv::Mat ImageDescription::GetDescriptors() const {
-    return mDescriptors;
+const std::vector<cv::KeyPoint> &ImageDescription::GetKeypoints() const {
+  return mKeypoints;
 }
 
-cv::Mat ImageDescription::GetHistogram() const {
-    return mHistogram;
+const cv::Mat &ImageDescription::GetDescriptors() const {
+  return mDescriptors;
 }
 
-void ImageDescription::Save(ImageDescription aDescription, std::string aPath) {
-    std::ofstream outputStream(aPath, std::ios::binary);
-    cereal::BinaryOutputArchive ar(outputStream);
-
-    ar(aDescription);
+const cv::Mat &ImageDescription::GetHistogram() const {
+  return mHistogram;
 }
 
-ImageDescription ImageDescription::Load(std::string aPath) {
-    std::ifstream inputStream(aPath, std::ios::binary);
-    cereal::BinaryInputArchive archive(inputStream);
+void ImageDescription::Save(const ImageDescription &aDescription, const std::string &aPath) {
+  std::ofstream outputStream(aPath, std::ios::binary);
+  cereal::BinaryOutputArchive ar(outputStream);
 
-    std::string id;
-    std::vector<cv::KeyPoint> keypoints;
-    cv::Mat descriptors, histogram;
+  ar(aDescription);
+}
 
-    ImageDescription description = ImageDescription(id, keypoints, descriptors, histogram);
-    archive(description);
+ImageDescription ImageDescription::Load(const std::string &aPath) {
+  std::ifstream inputStream(aPath, std::ios::binary);
+  cereal::BinaryInputArchive archive(inputStream);
 
-    return description;
+  std::string id;
+  std::vector<cv::KeyPoint> keypoints;
+  cv::Mat descriptors, histogram;
+
+  ImageDescription description = ImageDescription(id, keypoints, descriptors, histogram);
+  archive(description);
+
+  return description;
 }
 } // namespace lighthouse

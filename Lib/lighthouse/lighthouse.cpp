@@ -14,145 +14,144 @@
 namespace lighthouse {
 
 Lighthouse::Lighthouse(ImageMatchingSettings aImageMatchingSettings)
-        : mImageMatcher(ImageMatcher(aImageMatchingSettings)),
-          mCamera(),
-          mDescriptions(),
-          mDbFolderPath(),
-          mVideoThread()
-{
-    Filesystem filesystem;
+    : mImageMatcher(ImageMatcher(aImageMatchingSettings)),
+      mCamera(),
+      mDescriptions(),
+      mDbFolderPath(),
+      mVideoThread() {
+  // Create Data directory if it doesn't exist.
+  mDbFolderPath = Filesystem::GetRoot() + "/Data/";
+  Filesystem::CreateDirectory(mDbFolderPath);
 
-    // Create Data directory if it doesn't exist.
-    mDbFolderPath = filesystem.GetRoot() + "/Data/";
-    filesystem.CreateDirectory(mDbFolderPath);
+  fprintf(stderr, "Lighthouse::Lighthouse() data folder is at %s.\n", mDbFolderPath.c_str());
 
-    // Iterate through all sub folders, every folder should contain the following files:
-    // 1. description.bin - binary serialized image description (keypoints, descriptors, histogram etc.);
-    // 2. frame.bin - binary serialized image matrix. Optional, can be disabled;
-    // 3. short-audio.wav - short voice label;
-    // 4. long-audio.wav - long voice label.
-    std::vector<std::string> subFolders = filesystem.GetSubFolders(mDbFolderPath);
-    for (std::string descriptionFolderPath : subFolders) {
-        mImageMatcher.AddToDB(ImageDescription::Load(descriptionFolderPath + "/description.bin"));
-    }
+  // Iterate through all sub folders, every folder should contain the following files:
+  // 1. description.bin - binary serialized image description (keypoints, descriptors, histogram etc.);
+  // 2. frame.bin - binary serialized image matrix. Optional, can be disabled;
+  // 3. short-audio.wav - short voice label;
+  // 4. long-audio.wav - long voice label.
+  std::vector<std::string> subFolders = Filesystem::GetSubFolders(mDbFolderPath);
+  for (std::string descriptionFolderPath : subFolders) {
+    mImageMatcher.AddToDB(ImageDescription::Load(descriptionFolderPath + "/description.bin"));
+  }
 
-    // Start event loop.
-    std::thread thread(Lighthouse::AuxRunEventLoop, this);
-    mVideoThread.swap(thread);
+  fprintf(stderr, "Lighthouse::Lighthouse() loaded %lu image description(s).\n", subFolders.size());
+
+  // Start event loop.
+  std::thread thread(Lighthouse::AuxRunEventLoop, this);
+  mVideoThread.swap(thread);
 }
 
-Lighthouse::~Lighthouse()
-{
-    StopRecord();
-    mVideoThread.join();
+Lighthouse::~Lighthouse() {
+  StopRecord();
+  mVideoThread.join();
 }
-    
+
 void Lighthouse::DrawKeypoints(const cv::Mat &aInputFrame, cv::Mat &aOutputFrame) {
-    ImageDescription description = mImageMatcher.GetDescription(aInputFrame);
+  ImageDescription description = mImageMatcher.GetDescription(aInputFrame);
 
-    // We can't draw keypoints on the BGRA image.
-    cv::Mat bgrInputFrame;
-    cvtColor(aInputFrame, bgrInputFrame, cv::COLOR_BGRA2BGR);
+  // We can't draw keypoints on the BGRA image.
+  cv::Mat bgrInputFrame;
+  cvtColor(aInputFrame, bgrInputFrame, cv::COLOR_BGRA2BGR);
 
-    drawKeypoints(bgrInputFrame, description.GetKeypoints(), aOutputFrame, cv::Scalar::all(-1),
-            cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+  drawKeypoints(bgrInputFrame, description.GetKeypoints(), aOutputFrame, cv::Scalar::all(-1),
+      cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 }
 
 ImageDescription Lighthouse::GetDescription(const cv::Mat &aInputFrame) const {
-    return mImageMatcher.GetDescription(aInputFrame);
+  return mImageMatcher.GetDescription(aInputFrame);
 }
 
 const ImageDescription &Lighthouse::GetDescription(const std::string &id) const {
-    return mImageMatcher.GetDescription(id);
+  return mImageMatcher.GetDescription(id);
 }
 
 void Lighthouse::SaveDescription(const ImageDescription &aDescription) {
-    const std::string descriptionFolderPath = mDbFolderPath + aDescription.GetId();
-    Filesystem::CreateDirectory(descriptionFolderPath);
+  const std::string descriptionFolderPath = mDbFolderPath + aDescription.GetId();
+  Filesystem::CreateDirectory(descriptionFolderPath);
 
-    Player::Play(Filesystem::GetResourcePath("after-the-tone", "wav", "sounds"));
+  Player::Play(Filesystem::GetResourcePath("after-the-tone", "wav", "sounds"));
 
-    Player::Play(Filesystem::GetResourcePath("beep", "wav", "sounds"));
-    Recorder::Record(descriptionFolderPath + "/short-voice-label.aiff");
-    Player::Play(Filesystem::GetResourcePath("beep", "wav", "sounds"));
+  Player::Play(Filesystem::GetResourcePath("beep", "wav", "sounds"));
+  Recorder::Record(descriptionFolderPath + "/short-voice-label.aiff");
+  Player::Play(Filesystem::GetResourcePath("beep", "wav", "sounds"));
 
-    ImageDescription::Save(aDescription, descriptionFolderPath + "/description.bin");
-    mImageMatcher.AddToDB(aDescription);
+  ImageDescription::Save(aDescription, descriptionFolderPath + "/description.bin");
+  mImageMatcher.AddToDB(aDescription);
 
-    Player::Play(Filesystem::GetResourcePath("registered", "wav", "sounds"));
+  Player::Play(Filesystem::GetResourcePath("registered", "wav", "sounds"));
 }
 
 void Lighthouse::PlayVoiceLabelForDescription(const ImageDescription &aDescription) {
-    Player::Play(mDbFolderPath + aDescription.GetId() + "/short-voice-label.aiff");
+  Player::Play(mDbFolderPath + aDescription.GetId() + "/short-voice-label.aiff");
 }
 
-std::vector<std::tuple<float, ImageDescription>> Lighthouse::Match(const cv::Mat &aInputFrame) const {
-    return Match(GetDescription(aInputFrame));
+std::vector<std::tuple<float, ImageDescription &>> Lighthouse::Match(const cv::Mat &aInputFrame) const {
+  return Match(GetDescription(aInputFrame));
 }
 
-std::vector<std::tuple<float, ImageDescription>> Lighthouse::Match(const ImageDescription &aDescription) const {
-    return mImageMatcher.Match(aDescription);
+std::vector<std::tuple<float, ImageDescription &>> Lighthouse::Match(const ImageDescription &aDescription) const {
+  return mImageMatcher.Match(aDescription);
 }
 
 void Lighthouse::OnRecordObject() {
-    SendMessage(Task::RECORD);
+  SendMessage(Task::RECORD);
 }
 
 void Lighthouse::OnIdentifyObject() {
-    SendMessage(Task::IDENTIFY);
+  SendMessage(Task::IDENTIFY);
 }
 
 void Lighthouse::StopRecord() {
-    SendMessage(Task::WAIT);
+  SendMessage(Task::WAIT);
 }
 
 void Lighthouse::SendMessage(lighthouse::Task aMessage) {
-    int message = (int)aMessage;
-    fprintf(stderr, "Lighthouse::SendMessage(%d) to loop\n", message);
-    std::unique_lock<std::mutex> lock(mTaskMutex);
-    mTask.store(message);
-    mTaskStamp += 1;
-    mTaskCondition.notify_one();
-    fprintf(stderr, "Lighthouse::SendMessage(%d) to loop done\n", message);
+  int message = (int) aMessage;
+  fprintf(stderr, "Lighthouse::SendMessage(%d) to loop\n", message);
+  std::unique_lock<std::mutex> lock(mTaskMutex);
+  mTask.store(message);
+  mTaskStamp += 1;
+  mTaskCondition.notify_one();
+  fprintf(stderr, "Lighthouse::SendMessage(%d) to loop done\n", message);
 }
-    
+
 /*static*/void
-Lighthouse::AuxRunEventLoop(Lighthouse* self)
-{
-    self->RunEventLoop();
+Lighthouse::AuxRunEventLoop(Lighthouse *self) {
+  self->RunEventLoop();
 }
 
 void Lighthouse::RunEventLoop() {
-    // Stamp of the latest message received.
-    uint64_t stamp = 0;
-    while (true) {
-        fprintf(stderr, "Lighthouse::RunEventLoop() looping\n");
-        int task = 0;
-        do {
-            // While mTaskCondition is atomic, we still need a lock for the sake of the condition.
-            std::unique_lock<std::mutex> lock(mTaskMutex);
-            fprintf(stderr, "Lighthouse::RunEventLoop() checking %llu == %llu\n", mTaskStamp, stamp);
-            if (mTaskStamp == stamp) {
-                // No message has arrived while we were waiting. Go to sleep.
-                fprintf(stderr, "Lighthouse::RunEventLoop() going to sleep\n");
-                mTaskCondition.wait(lock);
-            }
-            stamp = mTaskStamp;
-            task = mTask;
-        } while(false); // Just a scope.
-        switch (task) {
-            case (int)Task::WAIT:
-                // Nothing to do.
-                continue;
-            case (int)Task::RECORD:
-                // Start recording. `mCamera` is in charge of stopping itself if `mTask` stops being `Task::RECORD`.
-                mCamera.CaptureForRecord(&mTask);
-                continue;
-            default:
-                assert(false);
-                continue;
-        }
+  // Stamp of the latest message received.
+  uint64_t stamp = 0;
+  while (true) {
+    fprintf(stderr, "Lighthouse::RunEventLoop() looping\n");
+    int task = 0;
+    do {
+      // While mTaskCondition is atomic, we still need a lock for the sake of the condition.
+      std::unique_lock<std::mutex> lock(mTaskMutex);
+      fprintf(stderr, "Lighthouse::RunEventLoop() checking %llu == %llu\n", mTaskStamp, stamp);
+      if (mTaskStamp == stamp) {
+        // No message has arrived while we were waiting. Go to sleep.
+        fprintf(stderr, "Lighthouse::RunEventLoop() going to sleep\n");
+        mTaskCondition.wait(lock);
+      }
+      stamp = mTaskStamp;
+      task = mTask;
+    } while (false); // Just a scope.
+    switch (task) {
+      case (int) Task::WAIT:
+        // Nothing to do.
+        continue;
+      case (int) Task::RECORD:
+        // Start recording. `mCamera` is in charge of stopping itself if `mTask` stops being `Task::RECORD`.
+        mCamera.CaptureForRecord(&mTask);
+        continue;
+      default:
+        assert(false);
+        continue;
     }
+  }
 }
 
 } // namespace lighthouse

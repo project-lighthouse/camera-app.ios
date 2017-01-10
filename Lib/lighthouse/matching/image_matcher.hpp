@@ -20,28 +20,27 @@
 namespace lighthouse {
 
 struct ImageMatchingSettings {
-    int32_t mNumberOfFeatures, mMinNumberOfFeatures;
-    float mRatioTestK, mHistogramWeight;
+  int32_t mNumberOfFeatures, mMinNumberOfFeatures;
+  float mRatioTestK, mHistogramWeight;
 };
 
 class ImageMatcher {
 public:
-    ImageMatcher(ImageMatchingSettings aSettings);
+  ImageMatcher(ImageMatchingSettings aSettings);
 
-    ImageDescription GetDescription(const cv::Mat &aInputFrame) const;
+  ImageDescription GetDescription(const cv::Mat &aInputFrame) const;
 
-    const ImageDescription &GetDescription(const std::string &id) const;
+  const ImageDescription &GetDescription(const std::string &id) const;
 
-    // FIXME: We should return pointer to ImageDescription here.
-    std::vector<std::tuple<float, ImageDescription>> Match(const ImageDescription &aDescription) const;
+  std::vector<std::tuple<float, ImageDescription &>> Match(const ImageDescription &aDescription) const;
 
-    void AddToDB(const ImageDescription &aDescription);
+  void AddToDB(const ImageDescription &aDescription);
 
 private:
-    cv::Ptr<cv::Feature2D> mKeypointDetector;
-    cv::Ptr<cv::DescriptorMatcher> mMatcher;
-    std::unordered_map<std::string, ImageDescription> mDB;
-    ImageMatchingSettings mSettings;
+  cv::Ptr<cv::Feature2D> mKeypointDetector;
+  cv::Ptr<cv::DescriptorMatcher> mMatcher;
+  std::unordered_map<std::string, ImageDescription> mDB;
+  ImageMatchingSettings mSettings;
 };
 
 } // namespace lighthouse
