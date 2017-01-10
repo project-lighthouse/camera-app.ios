@@ -127,7 +127,7 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
 }
 
 - (void)PlayVoiceLabel:(NSString *)id {
-  lighthouseInstance.PlayVoiceLabelForDescription(lighthouseInstance.GetDescription([id UTF8String]));
+  lighthouseInstance.PlayVoiceLabel(lighthouseInstance.GetDescription([id UTF8String]));
 }
 
 // Converts UIImage instance into cv::Mat object that is known for OpenCV.

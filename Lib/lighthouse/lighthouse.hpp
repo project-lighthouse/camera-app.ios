@@ -49,7 +49,7 @@ public:
 
   void SaveDescription(const ImageDescription &aDescription);
 
-  void PlayVoiceLabelForDescription(const ImageDescription &aDescription);
+  void PlayVoiceLabel(const ImageDescription &aDescription);
 
   std::vector<std::tuple<float, ImageDescription>> Match(const cv::Mat &aInputFrame) const;
 

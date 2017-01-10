@@ -67,17 +67,27 @@ void Player::Play(const std::string aFilePath, const float aVolume) {
 
   AudioQueueStart(state.mQueue, NULL /* start playing immediately */);
 
+  // This audio length is very approximate and basically counts a number of loop run time cycles. We'll need it later to
+  // decide whether we want to add additional cycle iteration to make sure that all audio buffers are processed (for
+  // short audio files, it's *likely* not necessary). Initial reason behind that workaround is the cases in which we
+  // want to do something (eg. start recording audio) right after audio clip is finished without any additional delay.
+  float approxAudioLength = 0.0;
+
   // Polls the custom structure’s mIsRunning field regularly to check if the audio queue has stopped and run the run
   // loop that contains the audio queue’s thread.
   do {
     // Set the run loop’s running time to 0.25 seconds.
-    CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.25,
+    CFRunLoopRunInMode(kCFRunLoopDefaultMode, kAudioLoopRunTime,
         false /* run loop should continue for the full time specified */);
+    approxAudioLength += kAudioLoopRunTime;
   } while (state.mIsRunning);
 
   // After the audio queue has stopped, runs the run loop a bit longer to ensure that the audio queue buffer currently
-  // playing has time to finish.
-  CFRunLoopRunInMode(kCFRunLoopDefaultMode, 1, false);
+  // playing has time to finish. Don't do this for short audio files.
+  // FIXME: Need a smarter approach.
+  if (approxAudioLength > 0.25) {
+    CFRunLoopRunInMode(kCFRunLoopDefaultMode, 1, false);
+  }
 
   // Do the cleanup.
   AudioQueueDispose(state.mQueue, true /* dispose queue immediately */);

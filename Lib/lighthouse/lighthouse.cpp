@@ -82,7 +82,7 @@ void Lighthouse::SaveDescription(const ImageDescription &aDescription) {
   Player::Play(Filesystem::GetResourcePath("registered", "wav", "sounds"));
 }
 
-void Lighthouse::PlayVoiceLabelForDescription(const ImageDescription &aDescription) {
+void Lighthouse::PlayVoiceLabel(const ImageDescription &aDescription) {
   Player::Play(mDbFolderPath + aDescription.GetId() + "/voice-label.aiff");
 }
 
