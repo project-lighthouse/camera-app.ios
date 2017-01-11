@@ -72,6 +72,7 @@ class ViewController: UIViewController {
             action in
             AVAudioSession.sharedInstance().requestRecordPermission({(granted: Bool)-> Void in
                 if granted {
+                    self.bridge.saveDescription(image)
                 } else{
                     let alert = UIAlertController(title: "Microphone access is disabled.",
                         message: "Please, go to Settings > Privacy > Microphone and enable that permission for the app",
@@ -81,7 +82,6 @@ class ViewController: UIViewController {
                     self.present(alert, animated: true, completion: nil)
                 }
             })
-            self.bridge.saveDescription(image)
         })
 
         let showKeypointsAction = UIAlertAction(title: "Show Keypoints", style: UIAlertActionStyle.default, handler: {
