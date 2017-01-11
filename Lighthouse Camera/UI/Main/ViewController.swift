@@ -43,19 +43,22 @@ class ViewController: UIViewController {
 
     // Invoked when the user has clicked on "identify".
     @IBAction func onIdentifyClick(_ sender: Any) {
-        // First check if the image is good enough for matching/adding to database.
-        if !bridge.isGoodImage(self.imageView.image) {
-            let alert = UIAlertController(title: "Image Test",
-                message: "Image does not have enough keypoints. Please try again.",
-                preferredStyle: UIAlertControllerStyle.alert)
+        let image = self.imageView.image;
+        var matches: Array<Dictionary<String, String>> = Array();
 
+        do {
+            matches = try bridge.match(image)
+        } catch let error as NSError {
+            let message = error.domain == "ImageQuality" ?
+                "Image does not have enough keypoints. Please try again." :
+                "Unexpected exception occurred during image matching."
+
+            let alert = UIAlertController(title: "Error", message: message,
+                preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default))
             self.present(alert, animated: true, completion: nil)
-
-            return;
         }
 
-        let matches: Array<Dictionary<String, String>> = bridge.match(self.imageView.image)
         let hasMatches = matches.isEmpty == false
 
         let alertMessage = hasMatches ? "Best score: \(matches[0]["score"]!) out of 105." : "No matches found!"
@@ -67,12 +70,23 @@ class ViewController: UIViewController {
 
         let rememberAction = UIAlertAction(title: "Remember", style: UIAlertActionStyle.default, handler: {
             action in
-            self.bridge.saveDescription(self.imageView.image)
+            AVAudioSession.sharedInstance().requestRecordPermission({(granted: Bool)-> Void in
+                if granted {
+                } else{
+                    let alert = UIAlertController(title: "Microphone access is disabled.",
+                        message: "Please, go to Settings > Privacy > Microphone and enable that permission for the app",
+                        preferredStyle: UIAlertControllerStyle.alert)
+
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            })
+            self.bridge.saveDescription(image)
         })
 
         let showKeypointsAction = UIAlertAction(title: "Show Keypoints", style: UIAlertActionStyle.default, handler: {
             action in
-            self.imageView.image = self.bridge.drawKeypoints(self.imageView.image)
+            self.imageView.image = self.bridge.drawKeypoints(image)
         })
 
         alert.addAction(defaultAction)

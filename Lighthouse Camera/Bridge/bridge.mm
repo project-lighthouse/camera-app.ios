@@ -3,6 +3,7 @@
 #import "bridge.h"
 
 #include "lighthouse.hpp"
+#include "exceptions.hpp"
 #include "image.hpp"
 
 NSObject *sViewController;
@@ -117,9 +118,22 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
   }
 }
 
-- (NSArray<NSDictionary<NSString *, NSString *> *> *)Match:(UIImage *)source {
-  std::vector<std::tuple<float, lighthouse::ImageDescription>> matches = lighthouseInstance.Match(
-    lighthouseInstance.GetDescription([self imageToMatrix:source]));
+- (NSArray<NSDictionary<NSString *, NSString *> *> *)Match:(UIImage *)source error:(NSError **)error {
+  lighthouse::ImageDescription sourceDescription;
+
+  try {
+    sourceDescription = lighthouseInstance.GetDescription([self imageToMatrix:source]);
+  } catch (lighthouse::ImageQualityException e) {
+    fprintf(stderr, "Bridge::IsGoodImage() image quality is not satisfactory: %s", e.what());
+
+    *error = [NSError errorWithDomain:@"ImageQuality" code:e.GetCode() userInfo:@{
+        @"message": [NSString stringWithCString:e.what() encoding:NSUTF8StringEncoding]
+    }];
+
+    return nil;
+  }
+
+  std::vector<std::tuple<float, lighthouse::ImageDescription>> matches = lighthouseInstance.Match(sourceDescription);
 
   NSMutableArray *matchesArray = [NSMutableArray arrayWithCapacity:matches.size()];
 

@@ -6,8 +6,10 @@
 //  Copyright © 2016 Lighthouse. All rights reserved.
 //
 
-#include "image_matcher.hpp"
 #include <uuid/uuid.h>
+
+#include "image_matcher.hpp"
+#include "exceptions.hpp"
 
 namespace lighthouse {
 
@@ -31,7 +33,7 @@ ImageDescription ImageMatcher::GetDescription(const cv::Mat &aInputFrame) const 
   fprintf(stderr, "ImageMatcher::GetDescription() number of extracted keypoints: %i.\n", keypointsCount);
 
   if (keypointsCount < mSettings.mMinNumberOfFeatures) {
-    throw ImageQualityException("Image does not have enough keypoints.");
+    throw ImageQualityException("Image does not have enough keypoints.", ImageQualityExceptionCode::NotEnoughKeyPoints);
   }
 
   // Calculate color histogram for the image.

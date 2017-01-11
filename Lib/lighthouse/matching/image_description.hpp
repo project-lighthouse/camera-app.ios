@@ -19,6 +19,9 @@ namespace lighthouse {
 
 class ImageDescription {
 public:
+  ImageDescription() : mId(), mKeypoints(), mDescriptors(), mHistogram() {
+  };
+
   ImageDescription(std::string aId, std::vector<cv::KeyPoint> aKeypoints, cv::Mat aDescriptors, cv::Mat aHistogram);
 
   const std::string &GetId() const;

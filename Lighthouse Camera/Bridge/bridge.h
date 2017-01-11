@@ -19,7 +19,7 @@ extern NSObject *sViewController;
 
 - (bool)IsGoodImage:(UIImage *)source;
 
-- (NSArray<NSDictionary<NSString *, NSString *> *> *)Match:(UIImage *)source;
+- (NSArray<NSDictionary<NSString *, NSString *> *> *)Match:(UIImage *)source error:(NSError **)error;
 
 - (void)PlayVoiceLabel:(NSString *)id;
 
