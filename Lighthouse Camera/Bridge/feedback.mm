@@ -24,14 +24,14 @@ SEL operationCompleteSelector =@selector(operationComplete);
 void
 Feedback::ReceivedFrame(cv::Mat& frame) {
   fprintf(stderr, "Feedback::ReceivedFrame() got frame (%d,%d) => %d\n", frame.rows, frame.cols, frame.type());
-    UIImage* image = matrixToImage(frame); // FIXME: Who owns that?
-    [sViewController performSelectorOnMainThread:showFrameSelector withObject:image waitUntilDone:true];
-    fprintf(stderr, "Feedback::ReceivedFrame() dispatched frame\n");
+  UIImage* image = matrixToImage(frame); // FIXME: Who owns that?
+  [sViewController performSelectorOnMainThread:showFrameSelector withObject:image waitUntilDone:true];
+  fprintf(stderr, "Feedback::ReceivedFrame() dispatched frame\n");
 }
 
 void
 Feedback::OperationComplete() {
-    [sViewController performSelectorOnMainThread:operationCompleteSelector withObject:nullptr waitUntilDone:false];
+  [sViewController performSelectorOnMainThread:operationCompleteSelector withObject:nullptr waitUntilDone:false];
 }
 
 void

@@ -19,12 +19,12 @@
 
 class Feedback {
 public:
-    static void ReceivedFrame(cv::Mat& frame);
-    static void OperationComplete();
+  static void ReceivedFrame(cv::Mat& frame);
+  static void OperationComplete();
 
-    static void CameraSnap();
-    static void CannotTakePicture();
-    static void SetFlashLight(bool isOn); // FIXME: Implement
+  static void CameraSnap();
+  static void CannotTakePicture();
+  static void SetFlashLight(bool isOn); // FIXME: Implement
 };
 
 #endif /* feedback_hpp */

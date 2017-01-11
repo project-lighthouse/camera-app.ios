@@ -24,28 +24,28 @@ matrixToImage(const cv::Mat &matrix, UIImageOrientation *imageOrientation) {
 
   // Creating CGImage from cv::Mat
   CGImageRef imageRef = CGImageCreate(
-      // Image width.
-      matrix.cols,
-      // Image height.
-      matrix.rows,
-      // Bits per component.
-      8,
-      // Bits per pixel.
-      8 * matrix.elemSize(),
-      // Bytes per row.
-      matrix.step[0],
-      // Color space.
-      colorSpace,
-      // Bitmap info.
-      kCGImageAlphaNone | kCGBitmapByteOrderDefault,
-      // CGDataProvider reference.
-      provider,
-      // Decode.
-      NULL,
-      // Indicates whether we should interpolate.
-      false,
-      // Intent.
-      kCGRenderingIntentDefault
+    // Image width.
+    matrix.cols,
+    // Image height.
+    matrix.rows,
+    // Bits per component.
+    8,
+    // Bits per pixel.
+    8 * matrix.elemSize(),
+    // Bytes per row.
+    matrix.step[0],
+    // Color space.
+    colorSpace,
+    // Bitmap info.
+    kCGImageAlphaNone | kCGBitmapByteOrderDefault,
+    // CGDataProvider reference.
+    provider,
+    // Decode.
+    NULL,
+    // Indicates whether we should interpolate.
+    false,
+    // Intent.
+    kCGRenderingIntentDefault
   );
 
   // Getting UIImage from CGImage
@@ -68,12 +68,12 @@ imageToMatrix(UIImage *image) {
 
   cv::Mat matrix(rows, cols, CV_8UC4);
   CGContextRef context = CGBitmapContextCreate(matrix.data,
-      cols,
-      rows,
-      8,
-      matrix.step[0],
-      colorSpace,
-      kCGImageAlphaNoneSkipLast | kCGBitmapByteOrderDefault
+    cols,
+    rows,
+    8,
+    matrix.step[0],
+    colorSpace,
+    kCGImageAlphaNoneSkipLast | kCGBitmapByteOrderDefault
   );
 
   CGContextDrawImage(context, CGRectMake(0, 0, cols, rows), image.CGImage);
@@ -88,10 +88,10 @@ imageToMatrix(UIImage *image) {
 @implementation Bridge
 
 lighthouse::ImageMatchingSettings matchingSettings = {
-    .mNumberOfFeatures = 1000,
-    .mMinNumberOfFeatures = 50,
-    .mRatioTestK = 0.8,
-    .mHistogramWeight = 5.0,
+  .mNumberOfFeatures = 1000,
+  .mMinNumberOfFeatures = 50,
+  .mRatioTestK = 0.8,
+  .mHistogramWeight = 5.0,
 };
 
 lighthouse::Lighthouse lighthouseInstance(matchingSettings);
@@ -109,7 +109,7 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
 
 - (NSArray<NSDictionary<NSString *, NSString *> *> *)Match:(UIImage *)source {
   std::vector<std::tuple<float, lighthouse::ImageDescription>> matches = lighthouseInstance.Match(
-      lighthouseInstance.GetDescription([self imageToMatrix:source]));
+    lighthouseInstance.GetDescription([self imageToMatrix:source]));
 
   NSMutableArray *matchesArray = [NSMutableArray arrayWithCapacity:matches.size()];
 
@@ -118,8 +118,8 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
     lighthouse::ImageDescription description = std::get<1>(match);
 
     [matchesArray addObject:@{
-        @"score": [@(std::get<0>(match)) stringValue],
-        @"id": [NSString stringWithCString:description.GetId().c_str() encoding:NSUTF8StringEncoding]
+      @"score": [@(std::get<0>(match)) stringValue],
+      @"id": [NSString stringWithCString:description.GetId().c_str() encoding:NSUTF8StringEncoding]
     }];
   }
 
