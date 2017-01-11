@@ -43,10 +43,24 @@ class ViewController: UIViewController {
 
     // Invoked when the user has clicked on "identify".
     @IBAction func onIdentifyClick(_ sender: Any) {
-        let matches: Array<Dictionary<String, String>> = bridge.match(self.imageView.image)
-
-        let alert = UIAlertController(title: "Match Result", message: "Matches found: \(matches.count)",
+        // First check if the image is good enough for matching/adding to database.
+        if !bridge.isGoodImage(self.imageView.image) {
+            let alert = UIAlertController(title: "Image Test",
+                message: "Image does not have enough keypoints. Please try again.",
                 preferredStyle: UIAlertControllerStyle.alert)
+
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default))
+            self.present(alert, animated: true, completion: nil)
+
+            return;
+        }
+
+        let matches: Array<Dictionary<String, String>> = bridge.match(self.imageView.image)
+        let hasMatches = matches.isEmpty == false
+
+        let alertMessage = hasMatches ? "Best score: \(matches[0]["score"]!) out of 105." : "No matches found!"
+        let alert = UIAlertController(title: "Match Result", message: alertMessage,
+            preferredStyle: UIAlertControllerStyle.alert)
 
         // Define alert actions.
         let defaultAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default)
@@ -68,7 +82,7 @@ class ViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
 
         // Play voice label for the item with the highest score.
-        if matches.isEmpty == false {
+        if hasMatches {
             bridge.playVoiceLabel(matches[0]["id"])
         }
     }

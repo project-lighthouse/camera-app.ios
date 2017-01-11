@@ -43,6 +43,15 @@ private:
   ImageMatchingSettings mSettings;
 };
 
+class ImageQualityException : public std::runtime_error {
+public:
+  ImageQualityException() : std::runtime_error("") {
+  }
+
+  ImageQualityException(const std::string &message) : std::runtime_error(message) {
+  }
+};
+
 } // namespace lighthouse
 
 #endif /* image_matcher_hpp */

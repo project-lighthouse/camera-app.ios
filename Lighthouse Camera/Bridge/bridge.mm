@@ -107,6 +107,16 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
   lighthouseInstance.SaveDescription(lighthouseInstance.GetDescription([self imageToMatrix:source]));
 }
 
+- (bool)IsGoodImage:(UIImage *)source {
+  try {
+    lighthouseInstance.GetDescription([self imageToMatrix:source]);
+    return true;
+  } catch (lighthouse::ImageQualityException e) {
+    fprintf(stderr, "Bridge::IsGoodImage() image quality is not satisfactory: %s", e.what());
+    return false;
+  }
+}
+
 - (NSArray<NSDictionary<NSString *, NSString *> *> *)Match:(UIImage *)source {
   std::vector<std::tuple<float, lighthouse::ImageDescription>> matches = lighthouseInstance.Match(
     lighthouseInstance.GetDescription([self imageToMatrix:source]));

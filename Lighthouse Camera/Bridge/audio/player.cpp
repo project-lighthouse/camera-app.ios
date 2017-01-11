@@ -46,7 +46,7 @@ void Player::Play(const std::string aFilePath, const float aVolume) {
   // This the actual length of the audio (checked with PCM only).
   Float64 totalSeconds = state.mDataFormat.mFramesPerPacket * totalPackets / state.mDataFormat.mSampleRate;
 
-  fprintf(stderr, "Total length of the audio to play in seconds: %f \n", totalSeconds);
+  fprintf(stderr, "Player::Play() total length of the audio to play in seconds: %f \n", totalSeconds);
 
   // Sets an appropriate audio queue buffer size. We set 0.5 of seconds of audio that each audio queue buffer should
   // hold.

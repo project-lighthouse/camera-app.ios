@@ -31,7 +31,7 @@ ImageDescription ImageMatcher::GetDescription(const cv::Mat &aInputFrame) const 
   fprintf(stderr, "ImageMatcher::GetDescription() number of extracted keypoints: %i.\n", keypointsCount);
 
   if (keypointsCount < mSettings.mMinNumberOfFeatures) {
-    throw std::domain_error("Image does not have enough keypoints.");
+    throw ImageQualityException("Image does not have enough keypoints.");
   }
 
   // Calculate color histogram for the image.
