@@ -16,10 +16,6 @@
 
 namespace lighthouse {
 
-// The number that indicates how long we should allow audio loop to run before we check if audio queue is running in
-// seconds.
-static const float kAudioLoopRunTime = 0.25;
-
 struct AudioQueuePlayerState : AudioQueueState {
   // The number of packets to read on each invocation of the audio queue’s playback callback. It is calculated in the
   // DeriveBufferSize function, after the audio queue is created and before it is started.

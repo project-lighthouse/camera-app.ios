@@ -6,6 +6,7 @@
 //  Copyright © 2017 Lighthouse. All rights reserved.
 //
 
+#include <cmath>
 #include "player.hpp"
 
 namespace lighthouse {
@@ -34,6 +35,18 @@ void Player::Play(const std::string aFilePath, const float aVolume) {
   // invocation of the playback audio queue callback.
   UInt32 propertySize = sizeof(state.mMaxPacketSize);
   AudioFileGetProperty(state.mAudioFile, kAudioFilePropertyPacketSizeUpperBound, &propertySize, &state.mMaxPacketSize);
+
+  UInt64 fileDataSize;
+  propertySize = sizeof(fileDataSize);
+  AudioFileGetProperty(state.mAudioFile, kAudioFilePropertyAudioDataByteCount, &propertySize, &fileDataSize);
+
+  UInt64 totalPackets;
+  AudioFileGetProperty(state.mAudioFile, kAudioFilePropertyAudioDataPacketCount, &propertySize, &totalPackets);
+
+  // This the actual length of the audio (checked with PCM only).
+  Float64 totalSeconds = state.mDataFormat.mFramesPerPacket * totalPackets / state.mDataFormat.mSampleRate;
+
+  fprintf(stderr, "Total length of the audio to play in seconds: %f \n", totalSeconds);
 
   // Sets an appropriate audio queue buffer size. We set 0.5 of seconds of audio that each audio queue buffer should
   // hold.
@@ -67,27 +80,9 @@ void Player::Play(const std::string aFilePath, const float aVolume) {
 
   AudioQueueStart(state.mQueue, NULL /* start playing immediately */);
 
-  // This audio length is very approximate and basically counts a number of loop run time cycles. We'll need it later to
-  // decide whether we want to add additional cycle iteration to make sure that all audio buffers are processed (for
-  // short audio files, it's *likely* not necessary). Initial reason behind that workaround is the cases in which we
-  // want to do something (eg. start recording audio) right after audio clip is finished without any additional delay.
-  float approxAudioLength = 0.0;
-
-  // Polls the custom structure’s mIsRunning field regularly to check if the audio queue has stopped and run the run
-  // loop that contains the audio queue’s thread.
-  do {
-    // Set the run loop’s running time to 0.25 seconds.
-    CFRunLoopRunInMode(kCFRunLoopDefaultMode, kAudioLoopRunTime,
-        false /* run loop should continue for the full time specified */);
-    approxAudioLength += kAudioLoopRunTime;
-  } while (state.mIsRunning);
-
-  // After the audio queue has stopped, runs the run loop a bit longer to ensure that the audio queue buffer currently
-  // playing has time to finish. Don't do this for short audio files.
-  // FIXME: Need a smarter approach.
-  if (approxAudioLength > 0.25) {
-    CFRunLoopRunInMode(kCFRunLoopDefaultMode, 1, false);
-  }
+  // Round total seconds to a single decimal point to make sure that all audio queue buffers are emptied.
+  CFRunLoopRunInMode(kCFRunLoopDefaultMode, std::round(totalSeconds * 10) / 10,
+      false /* run loop should continue for the full time specified */);
 
   // Do the cleanup.
   AudioQueueDispose(state.mQueue, true /* dispose queue immediately */);
