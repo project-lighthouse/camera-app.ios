@@ -30,47 +30,47 @@ using namespace cv;
 // If the code is executed on the simulator (which doesn't have a camera), this opens a bundled video
 // instead.
 Ptr<VideoCapture> OpenCamera() {
-    fprintf(stderr, "OpenCamera() start\n");
-    auto capture = Ptr<VideoCapture>(new VideoCapture());
+  fprintf(stderr, "OpenCamera() start\n");
+  auto capture = Ptr<VideoCapture>(new VideoCapture());
     
 #if TARGET_IPHONE_SIMULATOR
-    // Simulator specific code
+  // Simulator specific code
     
-    const std::string resourceName("box");
-    const std::string resourceType("mp4");
-    std::string path = Filesystem::GetResourcePath(resourceName, resourceType);
-    if (!capture->open(path)) {
-        fprintf(stderr, "OpenCamera() could not open bundled video\n");
-        return Ptr<VideoCapture>();
-    }
+  const std::string resourceName("box");
+  const std::string resourceType("mp4");
+  std::string path = Filesystem::GetResourcePath(resourceName, resourceType);
+  if (!capture->open(path)) {
+    fprintf(stderr, "OpenCamera() could not open bundled video\n");
+    return Ptr<VideoCapture>();
+  }
     
 #else // TARGET_IPHONE_SIMULATOR
-    // Device specific code
+  // Device specific code
     
-    if (!capture->open(0)) {
-        fprintf(stderr, "OpenCamera() could not open camera 0\n");
-        return Ptr<VideoCapture>();
-    }
+  if (!capture->open(0)) {
+    fprintf(stderr, "OpenCamera() could not open camera 0\n");
+    return Ptr<VideoCapture>();
+  }
     
 #endif // TARGET_IPHONE_SIMULATOR
 
-    return capture;
+  return capture;
 }
 
 bool
 TakePicture(VideoCapture* aCapture, Mat& aResult) {
-    // FIXME: Turn ON the flashlight.
-  
-    // FIXME: We might want to take several images and keep the least blurry.
-    if (!aCapture->read(aResult)) {
-        Feedback::CannotTakePicture();
-        return false;
-    }
-    Feedback::CameraSnap();
-    Feedback::ReceivedFrame(aResult);
+  // FIXME: Turn ON the flashlight.
 
-    // FIXME: Turn OFF the flashlight.
-    return true;
+  // FIXME: We might want to take several images and keep the least blurry.
+  if (!aCapture->read(aResult)) {
+    Feedback::CannotTakePicture();
+    return false;
+  }
+  Feedback::CameraSnap();
+  Feedback::ReceivedFrame(aResult);
+
+  // FIXME: Turn OFF the flashlight.
+  return true;
 }
 
 bool
@@ -150,76 +150,76 @@ GetImageDelta(const Mat& imageA, const Mat& imageB,
 template< class Rep, class Period >
 bool
 NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, const std::atomic_int *aState, const Task aTask, Mat& aResult) {
-    auto capture = OpenCamera();
+  auto capture = OpenCamera();
 
-    // FIXME: Add feedback.
+  // FIXME: Add feedback.
 
-    fprintf(stderr, "NowYouSeeMeNowYouDont: Taking imageWithObject\n");
-    Mat imageWithObject;
-    if (!TakePicture(capture.get(), imageWithObject)) {
-        Feedback::CannotTakePicture();
-        return false;
-    }
+  fprintf(stderr, "NowYouSeeMeNowYouDont: Taking imageWithObject\n");
+  Mat imageWithObject;
+  if (!TakePicture(capture.get(), imageWithObject)) {
+    Feedback::CannotTakePicture();
+    return false;
+  }
 
-    if (aState->load() != (int)aTask) {
-        // We have been interrupted.
-        return false;
-    }
+  if (aState->load() != (int)aTask) {
+    // We have been interrupted.
+    return false;
+  }
 
-    auto start = std::chrono::high_resolution_clock::now();
-    std::this_thread::sleep_for(sleepDuration);
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli> elapsed = end-start;
-    std::cerr << "Waited " << elapsed.count() << " ms\n";
+  auto start = std::chrono::high_resolution_clock::now();
+  std::this_thread::sleep_for(sleepDuration);
+  auto end = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double, std::milli> elapsed = end-start;
+  std::cerr << "Waited " << elapsed.count() << " ms\n";
   
   // FIXME: Add feedback.
 
-    if (aState->load() != (int)aTask) {
-        // We have been interrupted.
-        return false;
-    }
+  if (aState->load() != (int)aTask) {
+    // We have been interrupted.
+    return false;
+  }
 
-    fprintf(stderr, "NowYouSeeMeNowYouDont: Taking imageBackground\n");
-    Mat imageBackground;
-    if (!TakePicture(capture.get(), imageBackground)) {
-        Feedback::CannotTakePicture();
-        return false;
-    }
+  fprintf(stderr, "NowYouSeeMeNowYouDont: Taking imageBackground\n");
+  Mat imageBackground;
+  if (!TakePicture(capture.get(), imageBackground)) {
+    Feedback::CannotTakePicture();
+    return false;
+  }
 
-    // FIXME: Add feedback.
+  // FIXME: Add feedback.
 
-    // FIXME: Compute camera movement between images using Phase Correlation.
-    // FIXME: Get rid of camera movement.
+  // FIXME: Compute camera movement between images using Phase Correlation.
+  // FIXME: Get rid of camera movement.
 
-    // Compute delta, extract object.
-    fprintf(stderr, "NowYouSeeMeNowYouDont: Comptuting delta\n");
-    const float DOWNSAMPLE_FACTOR = .01f;
-    const double BLUR = .5;
-    const double MIN_SIZE = .05;
-    Mat imageMask(imageWithObject.rows, imageWithObject.cols, imageWithObject.type());
-    if (!GetImageDelta(imageWithObject, imageBackground, DOWNSAMPLE_FACTOR, BLUR, MIN_SIZE, imageMask)) {
-      return false;
-    }
+  // Compute delta, extract object.
+  fprintf(stderr, "NowYouSeeMeNowYouDont: Comptuting delta\n");
+  const float DOWNSAMPLE_FACTOR = .01f;
+  const double BLUR = .5;
+  const double MIN_SIZE = .05;
+  Mat imageMask(imageWithObject.rows, imageWithObject.cols, imageWithObject.type());
+  if (!GetImageDelta(imageWithObject, imageBackground, DOWNSAMPLE_FACTOR, BLUR, MIN_SIZE, imageMask)) {
+    return false;
+  }
 
-    if (aState->load() != (int)aTask) {
-      // We have been interrupted.
-      return false;
-    }
+  if (aState->load() != (int)aTask) {
+    // We have been interrupted.
+    return false;
+  }
 
-    fprintf(stderr, "NowYouSeeMeNowYouDont: Extracting object\n");
-    Mat channels[4]; // BGRA
-    cv::split(imageWithObject, channels);
-    channels[3] = imageMask;
+  fprintf(stderr, "NowYouSeeMeNowYouDont: Extracting object\n");
+  Mat channels[4]; // BGRA
+  cv::split(imageWithObject, channels);
+  channels[3] = imageMask;
 
 #if 0 // FIXME: We'll restore that once we're mostly sure that the mask works.
-    Mat result(imageWithObject.rows, imageWithObject.cols, imageWithObject.type());
-    cv::merge(channels, 4, result);
-    aResult = result;
+  Mat result(imageWithObject.rows, imageWithObject.cols, imageWithObject.type());
+  cv::merge(channels, 4, result);
+  aResult = result;
 #endif // 0
 
-    aResult = imageMask;
-    fprintf(stderr, "NowYouSeeMeNowYouDont: Done\n");
-    return true;
+  aResult = imageMask;
+  fprintf(stderr, "NowYouSeeMeNowYouDont: Done\n");
+  return true;
 }
 
 lighthouse::Camera::Camera()
@@ -227,7 +227,7 @@ lighthouse::Camera::Camera()
 
 void
 Camera::CaptureForIdentification(std::atomic_int *aState) {
-    // FIXME: TODO
+  // FIXME: TODO
 }
 
 void
@@ -242,23 +242,23 @@ Camera::CaptureForRecord(std::atomic_int *aState) {
 
 
 #if DEMO_BACKGROUND_SUBTRACTOR // FIXME: We can probably just get rid of this.
-    auto capture = OpenCamera();
-    Ptr<BackgroundSubtractorMOG2> subtracted(createBackgroundSubtractorMOG2());
-    Mat mask;
-    while (true) {
-        if (aState->load() != (int)Task::RECORD) {
-            // We have been asked to stop. Bailout asap.
-            return;
-        }
-        Mat frame;
-        if (!capture->read(frame)) {
-            // Nothing more to capture.
-            break;
-        }
-        subtracted->apply(frame, mask);
-        Feedback::ReceivedFrame(mask);
+  auto capture = OpenCamera();
+  Ptr<BackgroundSubtractorMOG2> subtracted(createBackgroundSubtractorMOG2());
+  Mat mask;
+  while (true) {
+    if (aState->load() != (int)Task::RECORD) {
+      // We have been asked to stop. Bailout asap.
+      return;
     }
-    Feedback::OperationComplete();
-    fprintf(stderr, "CaptureForRecord() stop\n");
+    Mat frame;
+      if (!capture->read(frame)) {
+        // Nothing more to capture.
+        break;
+      }
+      subtracted->apply(frame, mask);
+      Feedback::ReceivedFrame(mask);
+  }
+  Feedback::OperationComplete();
+  fprintf(stderr, "CaptureForRecord() stop\n");
 #endif // 0
 }
