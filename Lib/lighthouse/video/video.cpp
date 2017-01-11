@@ -36,7 +36,7 @@ Ptr<VideoCapture> OpenCamera() {
 #if TARGET_IPHONE_SIMULATOR
   // Simulator specific code
     
-  const std::string resourceName("box");
+  const std::string resourceName("now-you-see-me");
   const std::string resourceType("mp4");
   std::string path = Filesystem::GetResourcePath(resourceName, resourceType);
   if (!capture->open(path)) {
@@ -67,9 +67,30 @@ TakePicture(VideoCapture* aCapture, Mat& aResult) {
     return false;
   }
   Feedback::CameraSnap();
-  Feedback::ReceivedFrame(aResult);
+  Feedback::ReceivedFrame("TakePicture", aResult);
 
   // FIXME: Turn OFF the flashlight.
+  return true;
+}
+
+bool
+DownsampleAndBlur(const Mat& image, const float DOWNSAMPLE_FACTOR, const float BLUR, Mat&result)
+{
+  Mat downsampled((int)image.rows*DOWNSAMPLE_FACTOR,
+                  (int)image.cols*DOWNSAMPLE_FACTOR,
+                  (int)image.type());
+  fprintf(stderr, "DownsampleAndBlur: (%d, %d)\n", image.rows, image.cols);
+  cv::resize(image, downsampled, downsampled.size());
+
+  fprintf(stderr, "DownsampleAndBlur after resizing: (%d, %d)\n", downsampled.rows, downsampled.cols);
+  Mat blurred(downsampled.rows,
+              downsampled.cols,
+              downsampled.type());
+  cv::GaussianBlur(downsampled, blurred, Size(), BLUR, BLUR);
+
+  fprintf(stderr, "DownsampleAndBlur after blur: (%d, %d)\n", blurred.rows, blurred.cols);
+  result = blurred;
+
   return true;
 }
 
@@ -80,39 +101,44 @@ GetImageDelta(const Mat& imageA, const Mat& imageB,
   fprintf(stderr, "GetImageDelta with DOWNSAMPLE_FACTOR %f, BLUR %f, MIN_SIZE %f\n", DOWNSAMPLE_FACTOR, BLUR, MIN_SIZE);
   // We operate on downsized images, both for performance and to minimize the impact
   // of small changes on the image.
-  Mat downsampledImageA((int)imageA.rows*DOWNSAMPLE_FACTOR,
-                        (int)imageA.cols*DOWNSAMPLE_FACTOR,
-                        (int)imageA.type());
-  fprintf(stderr, "GetImageDelta downsampledImageA: (%d, %d)\n", downsampledImageA.rows, downsampledImageA.cols);
-  cv::resize(imageA, downsampledImageA, downsampledImageA.size());
-  Mat blurredImageA(downsampledImageA.rows,
-                    downsampledImageA.cols,
-                    downsampledImageA.type());
-  cv::GaussianBlur(downsampledImageA, blurredImageA, Size(), BLUR, BLUR);
-  Mat downsampledChannelsA[3];
-  cv::split(blurredImageA, downsampledChannelsA);
 
-  Mat downsampledImageB((int)imageB.rows*DOWNSAMPLE_FACTOR,
-                        (int)imageB.cols*DOWNSAMPLE_FACTOR,
-                        (int)imageB.type());
-  cv::resize(imageB, downsampledImageB, downsampledImageB.size());
-  Mat blurredImageB(downsampledImageB.rows,
-                    downsampledImageB.cols,
-                    downsampledImageB.type());
-  cv::GaussianBlur(downsampledImageB, blurredImageB, Size(), BLUR, BLUR);
-  Mat downsampledChannelsB[3];
-  cv::split(blurredImageB, downsampledChannelsB);
+  Mat smallerA;
+  if (!DownsampleAndBlur(imageA, DOWNSAMPLE_FACTOR, BLUR, smallerA)) {
+    return false;
+  }
+  Mat channelsA[3];
+  cv::split(smallerA, channelsA);
+  Feedback::ReceivedFrame("smallerA", smallerA);
+
+  Mat smallerB;
+  if (!DownsampleAndBlur(imageB, DOWNSAMPLE_FACTOR, BLUR, smallerB)) {
+    return false;
+  }
+  Mat channelsB[3];
+  cv::split(smallerB, channelsB);
+  Feedback::ReceivedFrame("smallerB", smallerB);
+
+  Mat channelsDiff[3];
+  for (int i = 0; i < 3; ++i) {
+    fprintf(stderr, "GetImageDelta channel %i\n", i);
+    channelsDiff[i] = Mat(channelsA[i].rows, channelsA[i].cols, channelsA[i].type());
+    cv::absdiff(channelsA[i], channelsB[i], channelsDiff[i]);
+    Feedback::ReceivedFrame("channelA", channelsA[i]);
+    Feedback::ReceivedFrame("channelB", channelsB[i]);
+    Feedback::ReceivedFrame("channelDiff", channelsDiff[i]);
+  }
 
   // Compute a noisy delta of the downsampled images.
-  Mat downsampledNoisyDelta =
-    (downsampledChannelsA[0] + downsampledChannelsB[0])/3
-  + (downsampledChannelsA[1] + downsampledChannelsB[1])/3
-  + (downsampledChannelsA[2] + downsampledChannelsB[2])/3;
+  fprintf(stderr, "GetImageDelta => downsampledNoisyDelta\n");
+  Mat downsampledNoisyDelta = channelsDiff[0] / 3 + channelsDiff[1] / 3 + channelsDiff[2] / 3;
+//  Feedback::ReceivedFrame(downsampledNoisyDelta);
 
   // Convert noisy delta into a noisy mask.
+  fprintf(stderr, "GetImageDelta => downsampledNoisyMask\n");
   Mat downsampledNoisyMask(downsampledNoisyDelta.rows, downsampledNoisyDelta.cols, downsampledNoisyDelta.type());
   cv::threshold(downsampledNoisyDelta, downsampledNoisyMask, 1, 255, THRESH_BINARY_INV | THRESH_OTSU);
-
+//  Feedback::ReceivedFrame(downsampledNoisyMask);
+  
   // Get rid of small components (i.e. noise).
   Mat downsampledCleanMask(downsampledNoisyDelta.rows, downsampledNoisyDelta.cols, downsampledNoisyDelta.type());
   std::vector<std::vector<Point>> contours;
@@ -161,23 +187,46 @@ NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, c
     return false;
   }
 
-  if (aState->load() != (int)aTask) {
-    // We have been interrupted.
-    return false;
+  fprintf(stderr, "NowYouSeeMeNowYouDont: Waiting %f ms\n", std::chrono::duration<double, std::milli>(sleepDuration).count());
+
+#if TARGET_IPHONE_SIMULATOR
+  // We need to advance the video, otherwise we'll never receive the frames.
+  auto start = std::chrono::high_resolution_clock::now();
+  while (true) {
+    fprintf(stderr, "NowYouSeeMeNowYouDont: waiting...\n");
+    if (aState->load() != (int)aTask) {
+      // We have been asked to stop. Bailout asap.
+      return false;
+    }
+    Mat frame;
+    if (!capture->read(frame)) {
+      // Nothing more to capture.
+      fprintf(stderr, "NowYouSeeMeNowYouDont: no more video...\n");
+      return false;
+    }
+    auto now = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> elapsed = now - start;
+    fprintf(stderr, "NowYouSeeMeNowYouDont: elapsed: %f...\n", elapsed.count());
+    if (elapsed >= sleepDuration) {
+      break;
+    }
   }
 
+#else
   auto start = std::chrono::high_resolution_clock::now();
   std::this_thread::sleep_for(sleepDuration);
   auto end = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double, std::milli> elapsed = end-start;
-  std::cerr << "Waited " << elapsed.count() << " ms\n";
-  
+  fprintf(stderr, "NowYouSeeMeNowYouDont: Waited %f ms\n", elapsed.count());
+
   // FIXME: Add feedback.
 
   if (aState->load() != (int)aTask) {
     // We have been interrupted.
     return false;
   }
+
+#endif // TARGET_IPHONE_SIMULATOR
 
   fprintf(stderr, "NowYouSeeMeNowYouDont: Taking imageBackground\n");
   Mat imageBackground;
@@ -193,7 +242,7 @@ NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, c
 
   // Compute delta, extract object.
   fprintf(stderr, "NowYouSeeMeNowYouDont: Comptuting delta\n");
-  const float DOWNSAMPLE_FACTOR = .01f;
+  const float DOWNSAMPLE_FACTOR = .5f;
   const double BLUR = .5;
   const double MIN_SIZE = .05;
   Mat imageMask(imageWithObject.rows, imageWithObject.cols, imageWithObject.type());
@@ -206,18 +255,28 @@ NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, c
     return false;
   }
 
+#if 1 // FIXME: We'll restore that once we're mostly sure that the mask works.
   fprintf(stderr, "NowYouSeeMeNowYouDont: Extracting object\n");
   Mat channels[4]; // BGRA
   cv::split(imageWithObject, channels);
   channels[3] = imageMask;
 
-#if 0 // FIXME: We'll restore that once we're mostly sure that the mask works.
+  fprintf(stderr, "NowYouSeeMeNowYouDont: Returning merged image\n");
   Mat result(imageWithObject.rows, imageWithObject.cols, imageWithObject.type());
   cv::merge(channels, 4, result);
   aResult = result;
+#else
+  fprintf(stderr, "NowYouSeeMeNowYouDont: Returning mask\n");
+  Mat channels[3];
+  channels[0] = imageMask;
+  channels[1] = cv::Mat(imageMask.rows, imageMask.cols, imageMask.type());
+  channels[2] = cv::Mat(imageMask.rows, imageMask.cols, imageMask.type());
+  Mat result(imageWithObject.rows, imageWithObject.cols, imageWithObject.type());
+  cv::merge(channels, 3, result);
+  
+  aResult = result;
 #endif // 0
 
-  aResult = imageMask;
   fprintf(stderr, "NowYouSeeMeNowYouDont: Done\n");
   return true;
 }
@@ -233,11 +292,11 @@ Camera::CaptureForIdentification(std::atomic_int *aState) {
 void
 Camera::CaptureForRecord(std::atomic_int *aState) {
   Mat frame;
-  if (!NowYouSeeMeNowYouDont(std::chrono::seconds(3), aState, Task::RECORD, frame)) {
+  if (!NowYouSeeMeNowYouDont(std::chrono::milliseconds(100), aState, Task::RECORD, frame)) {
     Feedback::OperationComplete();
     return;
   }
-  Feedback::ReceivedFrame(frame);
+//  Feedback::ReceivedFrame(frame);
   Feedback::OperationComplete();
 
 

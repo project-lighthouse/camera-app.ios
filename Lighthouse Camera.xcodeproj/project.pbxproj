@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6314DD691E265BAB00B5689D /* now-you-see-me.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6314DD681E265BAB00B5689D /* now-you-see-me.mp4 */; };
 		6333A3351E1FC22C002CF407 /* feedback.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6333A3331E1FC22C002CF407 /* feedback.mm */; };
 		6333A33A1E203043002CF407 /* box.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6333A3391E203043002CF407 /* box.mp4 */; };
 		63B98FD71E03F211000125CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B98FD61E03F211000125CB /* AppDelegate.swift */; };
@@ -52,6 +53,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6314DD681E265BAB00B5689D /* now-you-see-me.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "now-you-see-me.mp4"; sourceTree = "<group>"; };
 		6333A3331E1FC22C002CF407 /* feedback.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = feedback.mm; sourceTree = "<group>"; };
 		6333A3341E1FC22C002CF407 /* feedback.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = feedback.hpp; sourceTree = "<group>"; };
 		6333A3371E1FD4F8002CF407 /* image.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = image.hpp; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 		7A2FBF261E0D5B7B001B4E8A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6314DD681E265BAB00B5689D /* now-you-see-me.mp4 */,
 				7A38B6A81E23CE33009BFFAD /* sounds */,
 				6333A3391E203043002CF407 /* box.mp4 */,
 				7A2FBF291E0D60F2001B4E8A /* Settings.bundle */,
@@ -656,6 +659,7 @@
 				7A2FBF2A1E0D60F2001B4E8A /* Settings.bundle in Resources */,
 				7AE727E11E13D5E5007B3758 /* manual.html in Resources */,
 				7A38B6A91E23CE33009BFFAD /* sounds in Resources */,
+				6314DD691E265BAB00B5689D /* now-you-see-me.mp4 in Resources */,
 				7A018E751E0AA40700EEB90B /* Lib in Resources */,
 				7A608B171E0AC63500A88001 /* Main.storyboard in Resources */,
 				6333A33A1E203043002CF407 /* box.mp4 in Resources */,

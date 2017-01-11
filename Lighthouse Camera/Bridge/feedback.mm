@@ -22,11 +22,11 @@ SEL operationCompleteSelector =@selector(operationComplete);
 
 
 void
-Feedback::ReceivedFrame(cv::Mat& frame) {
-  fprintf(stderr, "Feedback::ReceivedFrame() got frame (%d,%d) => %d\n", frame.rows, frame.cols, frame.type());
+Feedback::ReceivedFrame(const char* info, cv::Mat& frame) {
+  fprintf(stderr, "Feedback::ReceivedFrame(%s) got frame (%d,%d), %d channels, type %d\n", info, frame.rows, frame.cols, frame.channels(), frame.type());
   UIImage* image = matrixToImage(frame); // FIXME: Who owns that?
   [sViewController performSelectorOnMainThread:showFrameSelector withObject:image waitUntilDone:true];
-  fprintf(stderr, "Feedback::ReceivedFrame() dispatched frame\n");
+  fprintf(stderr, "Feedback::ReceivedFrame(%s) dispatched frame\n", info);
 }
 
 void
