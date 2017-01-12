@@ -33,9 +33,9 @@ public:
    * Plays the audio file path to which is passed as an argument. Note that this method doesn't support playing of
    * audio formats with "magic number/cookie".
    * @param aFilePath Path to the audio file we'd like to play.
-   * @param aVolume Volume to use while playback. THe 0.0 is for silence and 1.0 for the unity gain (default).
+   * @param aVolume Volume to use while playback. THe 0.0 is for silence and 1.0 for the unity gain. Default is 0.5.
    */
-  static void Play(const std::string aFilePath, const float aVolume = 1.0);
+  static void Play(const std::string aFilePath, const float aVolume = 0.5);
 
 private:
   /**

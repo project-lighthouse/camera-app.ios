@@ -124,7 +124,8 @@ class ViewController: UIViewController {
       // Establish audio session.
       // FIXME: We should probably start session only when we really need it and stop when we don't.
       let session = AVAudioSession.sharedInstance()
-      try! session.setCategory(AVAudioSessionCategoryPlayAndRecord)
+      try! session.setCategory(AVAudioSessionCategoryPlayAndRecord,
+          with: AVAudioSessionCategoryOptions.defaultToSpeaker)
       try! session.setActive(true)
     }
 
