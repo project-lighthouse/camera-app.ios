@@ -187,11 +187,11 @@ NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, c
     return false;
   }
 
-  fprintf(stderr, "NowYouSeeMeNowYouDont: Waiting %f ms\n", std::chrono::duration<double, std::milli>(sleepDuration).count());
 
 #if TARGET_IPHONE_SIMULATOR
   // We need to advance the video, otherwise we'll never receive the frames.
-  auto start = std::chrono::high_resolution_clock::now();
+  int frames = 0;
+  const std::chrono::duration<double, std::milli> fps(16); // For testing, we expect that 1 frame == 16ms.
   while (true) {
     fprintf(stderr, "NowYouSeeMeNowYouDont: waiting...\n");
     if (aState->load() != (int)aTask) {
@@ -204,15 +204,14 @@ NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, c
       fprintf(stderr, "NowYouSeeMeNowYouDont: no more video...\n");
       return false;
     }
-    auto now = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli> elapsed = now - start;
-    fprintf(stderr, "NowYouSeeMeNowYouDont: elapsed: %f...\n", elapsed.count());
-    if (elapsed >= sleepDuration) {
+    ++frames;
+    if (frames * fps >= sleepDuration) {
       break;
     }
   }
 
 #else
+  fprintf(stderr, "NowYouSeeMeNowYouDont: Waiting %f ms\n", std::chrono::duration<double, std::milli>(sleepDuration).count());
   auto start = std::chrono::high_resolution_clock::now();
   std::this_thread::sleep_for(sleepDuration);
   auto end = std::chrono::high_resolution_clock::now();
@@ -241,7 +240,7 @@ NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, c
   // FIXME: Get rid of camera movement.
 
   // Compute delta, extract object.
-  fprintf(stderr, "NowYouSeeMeNowYouDont: Comptuting delta\n");
+  fprintf(stderr, "NowYouSeeMeNowYouDont: Computing delta\n");
   const float DOWNSAMPLE_FACTOR = .5f;
   const double BLUR = .5;
   const double MIN_SIZE = .05;
@@ -255,7 +254,7 @@ NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, c
     return false;
   }
 
-#if 1 // FIXME: We'll restore that once we're mostly sure that the mask works.
+#if DISPLAY_MASK
   fprintf(stderr, "NowYouSeeMeNowYouDont: Extracting object\n");
   Mat channels[4]; // BGRA
   cv::split(imageWithObject, channels);
@@ -292,7 +291,7 @@ Camera::CaptureForIdentification(std::atomic_int *aState) {
 void
 Camera::CaptureForRecord(std::atomic_int *aState) {
   Mat frame;
-  if (!NowYouSeeMeNowYouDont(std::chrono::milliseconds(100), aState, Task::RECORD, frame)) {
+  if (!NowYouSeeMeNowYouDont(std::chrono::milliseconds(1000), aState, Task::RECORD, frame)) {
     Feedback::OperationComplete();
     return;
   }
