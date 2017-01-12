@@ -85,6 +85,8 @@ void Lighthouse::SaveDescription(const ImageDescription &aDescription) {
   mImageMatcher.AddToDB(aDescription);
 
   Player::Play(Filesystem::GetResourcePath("registered", "wav", "sounds"));
+
+  PlayVoiceLabel(aDescription);
 }
 
 void Lighthouse::PlayVoiceLabel(const ImageDescription &aDescription) {
