@@ -131,13 +131,13 @@ GetImageDelta(const Mat& imageA, const Mat& imageB,
   // Compute a noisy delta of the downsampled images.
   fprintf(stderr, "GetImageDelta => downsampledNoisyDelta\n");
   Mat downsampledNoisyDelta = channelsDiff[0] / 3 + channelsDiff[1] / 3 + channelsDiff[2] / 3;
-//  Feedback::ReceivedFrame(downsampledNoisyDelta);
+  Feedback::ReceivedFrame("downsampledNoisyDelta", downsampledNoisyDelta);
 
   // Convert noisy delta into a noisy mask.
   fprintf(stderr, "GetImageDelta => downsampledNoisyMask\n");
   Mat downsampledNoisyMask(downsampledNoisyDelta.rows, downsampledNoisyDelta.cols, downsampledNoisyDelta.type());
-  cv::threshold(downsampledNoisyDelta, downsampledNoisyMask, 1, 255, THRESH_BINARY_INV | THRESH_OTSU);
-//  Feedback::ReceivedFrame(downsampledNoisyMask);
+  cv::threshold(downsampledNoisyDelta, downsampledNoisyMask, 0, 255, THRESH_BINARY | THRESH_OTSU);
+  Feedback::ReceivedFrame("downsampledNoisyMask", downsampledNoisyMask);
   
   // Get rid of small components (i.e. noise).
   Mat downsampledCleanMask(downsampledNoisyDelta.rows, downsampledNoisyDelta.cols, downsampledNoisyDelta.type());
@@ -190,6 +190,7 @@ NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, c
 
 #if TARGET_IPHONE_SIMULATOR
   // We need to advance the video, otherwise we'll never receive the frames.
+  // Note that OpenCV offers primitives for skipping frames, but they don't seem to work on the simulator.
   int frames = 0;
   const std::chrono::duration<double, std::milli> fps(16); // For testing, we expect that 1 frame == 16ms.
   while (true) {
@@ -254,17 +255,7 @@ NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, c
     return false;
   }
 
-#if DISPLAY_MASK
-  fprintf(stderr, "NowYouSeeMeNowYouDont: Extracting object\n");
-  Mat channels[4]; // BGRA
-  cv::split(imageWithObject, channels);
-  channels[3] = imageMask;
-
-  fprintf(stderr, "NowYouSeeMeNowYouDont: Returning merged image\n");
-  Mat result(imageWithObject.rows, imageWithObject.cols, imageWithObject.type());
-  cv::merge(channels, 4, result);
-  aResult = result;
-#else
+#if 0 // This is useful mostly for debugging/testing.
   fprintf(stderr, "NowYouSeeMeNowYouDont: Returning mask\n");
   Mat channels[3];
   channels[0] = imageMask;
@@ -274,7 +265,27 @@ NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, c
   cv::merge(channels, 3, result);
   
   aResult = result;
-#endif // 0
+
+#else
+
+  fprintf(stderr, "NowYouSeeMeNowYouDont: Extracting object from %d channels\n", imageWithObject.channels());
+
+  fprintf(stderr, "NowYouSeeMeNowYouDont: image (%d, %d) %d %d\n", imageWithObject.rows, imageWithObject.cols, imageWithObject.type(), imageWithObject.depth());
+  fprintf(stderr, "NowYouSeeMeNowYouDont: mask (%d, %d) %d %d\n", imageMask.rows, imageMask.cols, imageMask.type(), imageMask.depth());
+  
+  std::vector<cv::Mat> channels; // BGR(A)
+  cv::split(imageWithObject, channels);
+  for (auto iter = channels.begin(); iter != channels.end(); ++iter) {
+    *iter = *iter & imageMask;
+  }
+  channels.push_back(imageMask);
+
+  Mat result(imageWithObject.rows, imageWithObject.cols, CV_8U);
+  cv::merge(channels, result);
+  fprintf(stderr, "NowYouSeeMeNowYouDont: Returning merged image with %d channels, type %d\n", result.channels(), result.type());
+  cvtColor(result, aResult, COLOR_BGR2BGRA);
+
+#endif // DISPLAY_MASK
 
   fprintf(stderr, "NowYouSeeMeNowYouDont: Done\n");
   return true;
@@ -295,7 +306,7 @@ Camera::CaptureForRecord(std::atomic_int *aState) {
     Feedback::OperationComplete();
     return;
   }
-//  Feedback::ReceivedFrame(frame);
+  Feedback::ReceivedFrame("CaptureForRecord", frame);
   Feedback::OperationComplete();
 
 
