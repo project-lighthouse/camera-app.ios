@@ -23,6 +23,8 @@ extern NSObject *sViewController;
 
 - (void)PlayVoiceLabel:(NSString *)id;
 
+- (void)PlaySound:(NSString *)soundResourceName;
+
 // Trigger C++ code to start recording new object.
 - (void)onRecordObject;
 

@@ -108,7 +108,9 @@ std::vector<std::tuple<float, ImageDescription>> ImageMatcher::Match(const Image
     fprintf(stderr, "ImageMatcher::Match() %s vs %s: total matches (%lu), good matches (%i), score (%f).\n",
         aDescription.GetId().c_str(), description.GetId().c_str(), matches.size(), numberOfGoodMatches, score);
 
-    matchedDescriptions.push_back(std::make_tuple(score, description));
+    if (score >= mSettings.mMatchingScoreThreshold) {
+      matchedDescriptions.push_back(std::make_tuple(score, description));
+    }
   }
 
   // Sort matched description by score (first element of the tuple).

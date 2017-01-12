@@ -49,66 +49,54 @@ class ViewController: UIViewController {
         do {
             matches = try bridge.match(image)
         } catch let error as NSError {
-            let message = error.domain == "ImageQuality" ?
+            showError(message: error.domain == "ImageQuality" ?
                 "Image does not have enough keypoints. Please try again." :
-                "Unexpected exception occurred during image matching."
-
-            let alert = UIAlertController(title: "Error", message: message,
-                preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default))
-            self.present(alert, animated: true, completion: nil)
+                "Unexpected exception occurred during image matching.")
             return;
         }
 
         let hasMatches = matches.isEmpty == false
 
-        let alertMessage = hasMatches ? "Best score: \(matches[0]["score"]!) out of 105." : "No matches found!"
-        let alert = UIAlertController(title: "Match Result", message: alertMessage,
+        let alert = UIAlertController(title: "Match Result",
+            message: hasMatches ? "Best score: \(matches[0]["score"]!) out of 105." : "No matches found!",
             preferredStyle: UIAlertControllerStyle.alert)
 
         // Define alert actions.
-        let defaultAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default))
 
-        let rememberAction = UIAlertAction(title: "Remember", style: UIAlertActionStyle.default, handler: {
+        alert.addAction(UIAlertAction(title: "Remember", style: UIAlertActionStyle.default, handler: {
             action in
             AVAudioSession.sharedInstance().requestRecordPermission({(granted: Bool)-> Void in
                 if granted {
                     self.bridge.saveDescription(image)
                 } else{
-                    let alert = UIAlertController(title: "Microphone access is disabled.",
-                        message: "If you want to add or edit voice labels for the images, please, go to " +
-                            "Settings > Privacy > Microphone and enable microphone permission for the Lighthouse app.",
-                        preferredStyle: UIAlertControllerStyle.alert)
-
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default))
-                    self.present(alert, animated: true, completion: nil)
+                    self.showError(message: "If you want to add or edit voice labels for the images, please, go to " +
+                        "Settings > Privacy > Microphone and enable microphone permission for the Lighthouse app.")
                 }
             })
-        })
+        }))
 
-        let showKeypointsAction = UIAlertAction(title: "Show Keypoints", style: UIAlertActionStyle.default, handler: {
+        alert.addAction(UIAlertAction(title: "Show Keypoints", style: UIAlertActionStyle.default, handler: {
             action in
             self.imageView.image = self.bridge.drawKeypoints(image)
-        })
-
-        alert.addAction(defaultAction)
-        alert.addAction(rememberAction)
-        alert.addAction(showKeypointsAction)
+        }))
 
         self.present(alert, animated: true, completion: nil)
 
         // Play voice label for the item with the highest score.
         if hasMatches {
             bridge.playVoiceLabel(matches[0]["id"])
+        } else {
+            bridge.playSound("no-item")
         }
     }
 
     private func showError(message: String) {
-        let alert = UIAlertView()
-        alert.title = "Error"
-        alert.message = message
-        alert.addButton(withTitle: "Ok")
-        alert.show()
+        let alert = UIAlertController(title: "Error", message: message,
+            preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default))
+
+        self.present(alert, animated: true, completion: nil)
     }
     
     @objc(operationComplete)

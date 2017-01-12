@@ -19,9 +19,18 @@
 
 namespace lighthouse {
 
+// Describes all possible configurable values that can be passed to the ImageMatcher.
 struct ImageMatchingSettings {
-  int32_t mNumberOfFeatures, mMinNumberOfFeatures;
-  float mRatioTestK, mHistogramWeight;
+  // Number of features to extract used in ORB detector.
+  uint32_t mNumberOfFeatures;
+  // Minimal number of keypoints that should be extracted from the target image to be considered as good enough sample.
+  uint32_t mMinNumberOfFeatures;
+  // Minimal matching score threshold below which we consider image as not matched.
+  float mMatchingScoreThreshold;
+  // Secondary matches must have a score at least this fraction of the best match.
+  float mRatioTestK;
+  // How much weight to give to histogram correlation when matching images.
+  float mHistogramWeight;
 };
 
 class ImageMatcher {

@@ -5,6 +5,8 @@
 #include "lighthouse.hpp"
 #include "exceptions.hpp"
 #include "image.hpp"
+#include "filesystem.hpp"
+#include "player.hpp"
 
 NSObject *sViewController;
 
@@ -91,6 +93,7 @@ imageToMatrix(UIImage *image) {
 lighthouse::ImageMatchingSettings matchingSettings = {
   .mNumberOfFeatures = 1000,
   .mMinNumberOfFeatures = 50,
+  .mMatchingScoreThreshold = 10.0,
   .mRatioTestK = 0.8,
   .mHistogramWeight = 5.0,
 };
@@ -152,6 +155,10 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
 
 - (void)PlayVoiceLabel:(NSString *)id {
   lighthouseInstance.PlayVoiceLabel(lighthouseInstance.GetDescription([id UTF8String]));
+}
+
+- (void)PlaySound:(NSString *)soundResourceName {
+  lighthouse::Player::Play(Filesystem::GetResourcePath([soundResourceName UTF8String], "wav", "sounds"));
 }
 
 // Converts UIImage instance into cv::Mat object that is known for OpenCV.
