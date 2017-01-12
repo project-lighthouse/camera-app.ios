@@ -57,6 +57,7 @@ class ViewController: UIViewController {
                 preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default))
             self.present(alert, animated: true, completion: nil)
+            return;
         }
 
         let hasMatches = matches.isEmpty == false
@@ -75,7 +76,8 @@ class ViewController: UIViewController {
                     self.bridge.saveDescription(image)
                 } else{
                     let alert = UIAlertController(title: "Microphone access is disabled.",
-                        message: "Please, go to Settings > Privacy > Microphone and enable that permission for the app",
+                        message: "If you want to add or edit voice labels for the images, please, go to " +
+                            "Settings > Privacy > Microphone and enable microphone permission for the Lighthouse app.",
                         preferredStyle: UIAlertControllerStyle.alert)
 
                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default))
@@ -130,6 +132,12 @@ class ViewController: UIViewController {
         sViewController = self;
 
         self.registerSettingsBundle()
+
+      // Establish audio session.
+      // FIXME: We should probably start session only when we really need it and stop when we don't.
+      let session = AVAudioSession.sharedInstance()
+      try! session.setCategory(AVAudioSessionCategoryPlayAndRecord)
+      try! session.setActive(true)
     }
 
     override func didReceiveMemoryWarning() {
