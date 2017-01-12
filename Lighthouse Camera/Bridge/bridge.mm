@@ -112,7 +112,7 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
   try {
     lighthouseInstance.GetDescription([self imageToMatrix:source]);
     return true;
-  } catch (lighthouse::ImageQualityException e) {
+  } catch (const lighthouse::ImageQualityException &e) {
     fprintf(stderr, "Bridge::IsGoodImage() image quality is not satisfactory: %s", e.what());
     return false;
   }

@@ -32,7 +32,12 @@ Lighthouse::Lighthouse(ImageMatchingSettings aImageMatchingSettings)
   // 4. long-audio.wav - long voice label.
   std::vector<std::string> subFolders = Filesystem::GetSubFolders(mDbFolderPath);
   for (std::string descriptionFolderPath : subFolders) {
-    mImageMatcher.AddToDB(ImageDescription::Load(descriptionFolderPath + "/description.bin"));
+    try {
+      mImageMatcher.AddToDB(ImageDescription::Load(descriptionFolderPath + "/description.bin"));
+    } catch(const cereal::Exception& e) {
+      fprintf(stderr, "Lighthouse::Lighthouse() couldn't deserialize description at %s (reason: %s). Skipping...\n",
+          descriptionFolderPath.c_str(), e.what());
+    }
   }
 
   fprintf(stderr, "Lighthouse::Lighthouse() loaded %lu image description(s).\n", subFolders.size());
