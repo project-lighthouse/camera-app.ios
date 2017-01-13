@@ -30,10 +30,21 @@ class ViewController: UIViewController {
         if self.isBusy {
             bridge.onStopCapture()
             self.isBusy = false
-        } else {
-            bridge.onRecordObject();
-            self.isBusy = true
+
+            return;
         }
+
+      // Ask for microphone permission beforehand so that user is not interrupted when he tries to record voice label
+      // for the first time.
+      AVAudioSession.sharedInstance().requestRecordPermission({(granted: Bool)-> Void in
+          if granted {
+              self.bridge.onRecordObject();
+              self.isBusy = true
+          } else{
+              self.showError(message: "If you want to add or edit voice labels for the images, please, go to " +
+                  "Settings > Privacy > Microphone and enable microphone permission for the Lighthouse app.")
+          }
+      })
     }
 
     // Invoked when the user clicks to stop the ongoing action.
