@@ -8,6 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		6314DD691E265BAB00B5689D /* now-you-see-me.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6314DD681E265BAB00B5689D /* now-you-see-me.mp4 */; };
+		6314DD711E2920DC00B5689D /* paper.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6314DD6A1E2920DC00B5689D /* paper.mp4 */; };
+		6314DD721E2920DC00B5689D /* bottle1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6314DD6B1E2920DC00B5689D /* bottle1.mp4 */; };
+		6314DD731E2920DC00B5689D /* bottle2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6314DD6C1E2920DC00B5689D /* bottle2.mp4 */; };
+		6314DD741E2920DC00B5689D /* badge1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6314DD6D1E2920DC00B5689D /* badge1.mp4 */; };
+		6314DD751E2920DC00B5689D /* badge2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6314DD6E1E2920DC00B5689D /* badge2.mp4 */; };
+		6314DD761E2920DC00B5689D /* oneweb.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6314DD6F1E2920DC00B5689D /* oneweb.mp4 */; };
+		6314DD771E2920DC00B5689D /* kernel.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6314DD701E2920DC00B5689D /* kernel.mp4 */; };
 		6333A3351E1FC22C002CF407 /* feedback.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6333A3331E1FC22C002CF407 /* feedback.mm */; };
 		6333A33A1E203043002CF407 /* box.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6333A3391E203043002CF407 /* box.mp4 */; };
 		63B98FD71E03F211000125CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B98FD61E03F211000125CB /* AppDelegate.swift */; };
@@ -54,6 +61,13 @@
 
 /* Begin PBXFileReference section */
 		6314DD681E265BAB00B5689D /* now-you-see-me.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "now-you-see-me.mp4"; sourceTree = "<group>"; };
+		6314DD6A1E2920DC00B5689D /* paper.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = paper.mp4; sourceTree = "<group>"; };
+		6314DD6B1E2920DC00B5689D /* bottle1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = bottle1.mp4; sourceTree = "<group>"; };
+		6314DD6C1E2920DC00B5689D /* bottle2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = bottle2.mp4; sourceTree = "<group>"; };
+		6314DD6D1E2920DC00B5689D /* badge1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = badge1.mp4; sourceTree = "<group>"; };
+		6314DD6E1E2920DC00B5689D /* badge2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = badge2.mp4; sourceTree = "<group>"; };
+		6314DD6F1E2920DC00B5689D /* oneweb.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = oneweb.mp4; sourceTree = "<group>"; };
+		6314DD701E2920DC00B5689D /* kernel.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = kernel.mp4; sourceTree = "<group>"; };
 		6333A3331E1FC22C002CF407 /* feedback.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = feedback.mm; sourceTree = "<group>"; };
 		6333A3341E1FC22C002CF407 /* feedback.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = feedback.hpp; sourceTree = "<group>"; };
 		6333A3371E1FD4F8002CF407 /* image.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = image.hpp; sourceTree = "<group>"; };
@@ -287,6 +301,13 @@
 		7A2FBF261E0D5B7B001B4E8A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6314DD6A1E2920DC00B5689D /* paper.mp4 */,
+				6314DD6B1E2920DC00B5689D /* bottle1.mp4 */,
+				6314DD6C1E2920DC00B5689D /* bottle2.mp4 */,
+				6314DD6D1E2920DC00B5689D /* badge1.mp4 */,
+				6314DD6E1E2920DC00B5689D /* badge2.mp4 */,
+				6314DD6F1E2920DC00B5689D /* oneweb.mp4 */,
+				6314DD701E2920DC00B5689D /* kernel.mp4 */,
 				6314DD681E265BAB00B5689D /* now-you-see-me.mp4 */,
 				7A38B6A81E23CE33009BFFAD /* sounds */,
 				6333A3391E203043002CF407 /* box.mp4 */,
@@ -656,14 +677,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				7AE727E01E13D5E5007B3758 /* license.txt in Resources */,
+				6314DD721E2920DC00B5689D /* bottle1.mp4 in Resources */,
 				63B98FDE1E03F211000125CB /* Assets.xcassets in Resources */,
+				6314DD731E2920DC00B5689D /* bottle2.mp4 in Resources */,
 				7A608B151E0AC5EA00A88001 /* LaunchScreen.storyboard in Resources */,
 				7A2FBF2A1E0D60F2001B4E8A /* Settings.bundle in Resources */,
+				6314DD771E2920DC00B5689D /* kernel.mp4 in Resources */,
 				7AE727E11E13D5E5007B3758 /* manual.html in Resources */,
+				6314DD741E2920DC00B5689D /* badge1.mp4 in Resources */,
 				7A38B6A91E23CE33009BFFAD /* sounds in Resources */,
+				6314DD761E2920DC00B5689D /* oneweb.mp4 in Resources */,
+				6314DD751E2920DC00B5689D /* badge2.mp4 in Resources */,
 				6314DD691E265BAB00B5689D /* now-you-see-me.mp4 in Resources */,
 				7A018E751E0AA40700EEB90B /* Lib in Resources */,
 				7A608B171E0AC63500A88001 /* Main.storyboard in Resources */,
+				6314DD711E2920DC00B5689D /* paper.mp4 in Resources */,
 				6333A33A1E203043002CF407 /* box.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
