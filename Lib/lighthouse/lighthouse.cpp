@@ -128,7 +128,30 @@ Lighthouse::AuxRunEventLoop(Lighthouse *self) {
   self->RunEventLoop();
 }
 
+void Lighthouse::RunIdentifyObject() {
+  assert(std::this_thread::get_id() == mVideoThread.get_id());
+  // Start recording. `mCamera` is in charge of stopping itself if `mTask` stops being `Task::IDENTIFY`.
+  cv::Mat image;
+  if (!mCamera.CaptureForRecord(&mTask, image)) {
+    // FIXME: Somehow report error.
+    return;
+  }
+  // FIXME: Implement.
+}
+
+void Lighthouse::RunRecordObject() {
+  assert(std::this_thread::get_id() == mVideoThread.get_id());
+  // Start recording. `mCamera` is in charge of stopping itself if `mTask` stops being `Task::RECORD`.
+  cv::Mat image;
+  if (!mCamera.CaptureForRecord(&mTask, image)) {
+    // FIXME: Somehow report error.
+    return;
+  }
+  // FIXME: Implement.
+}
+
 void Lighthouse::RunEventLoop() {
+  assert(std::this_thread::get_id() == mVideoThread.get_id());
   // Stamp of the latest message received.
   uint64_t stamp = 0;
   while (true) {
@@ -151,8 +174,10 @@ void Lighthouse::RunEventLoop() {
         // Nothing to do.
         continue;
       case (int) Task::RECORD:
-        // Start recording. `mCamera` is in charge of stopping itself if `mTask` stops being `Task::RECORD`.
-        mCamera.CaptureForRecord(&mTask);
+        RunRecordObject();
+        continue;
+      case (int) Task::IDENTIFY:
+        RunIdentifyObject();
         continue;
       default:
         assert(false);

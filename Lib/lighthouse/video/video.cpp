@@ -294,21 +294,26 @@ NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, c
 lighthouse::Camera::Camera()
 { }
 
-void
-Camera::CaptureForIdentification(std::atomic_int *aState) {
-  // FIXME: TODO
+bool
+Camera::CaptureForIdentification(std::atomic_int *aState, cv::Mat& aResult) {
+  if (!NowYouSeeMeNowYouDont(std::chrono::milliseconds(1000), aState, Task::IDENTIFY, aResult)) {
+    Feedback::OperationComplete();
+    return false;
+  }
+  Feedback::ReceivedFrame("CaptureForIdentification", aResult);
+  Feedback::OperationComplete();
+  return true;
 }
 
-void
-Camera::CaptureForRecord(std::atomic_int *aState) {
-  Mat frame;
-  if (!NowYouSeeMeNowYouDont(std::chrono::milliseconds(1000), aState, Task::RECORD, frame)) {
+bool
+Camera::CaptureForRecord(std::atomic_int *aState, cv::Mat& aResult) {
+  if (!NowYouSeeMeNowYouDont(std::chrono::milliseconds(1000), aState, Task::RECORD, aResult)) {
     Feedback::OperationComplete();
-    return;
+    return false;
   }
-  Feedback::ReceivedFrame("CaptureForRecord", frame);
+  Feedback::ReceivedFrame("CaptureForRecord", aResult);
   Feedback::OperationComplete();
-
+  return true;
 
 #if DEMO_BACKGROUND_SUBTRACTOR // FIXME: We can probably just get rid of this.
   auto capture = OpenCamera();

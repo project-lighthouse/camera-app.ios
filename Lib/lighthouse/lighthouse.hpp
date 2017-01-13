@@ -55,19 +55,29 @@ public:
 
   std::vector<std::tuple<float, ImageDescription>> Match(const ImageDescription &aDescription) const;
 
+  // Start recording a new object.
   void OnRecordObject();
 
+  // Start identifying an existing object.
   void OnIdentifyObject();
 
+  // Stop recording/identifying object.
   void StopRecord();
 
 private:
   // Run the C++ event loop on thread `mVideoThread`.
+  //
+  // The event loop is NEVER taken down.
   static void AuxRunEventLoop(Lighthouse *);
 
   void SendMessage(Task aMessage);
 
+  // Actual implementation of the event loop. Runs in `mVideoThread`.
   void RunEventLoop();
+  // Actual implementation of recording an object. Runs in `mVideoThread`.
+  void RunRecordObject();
+  // Actual implementation of identifying an object. Runs in `mVideoThread`.
+  void RunIdentifyObject();
 
   // A thread designed to run all blocking camera/vision operations.
   std::thread mVideoThread;
@@ -79,9 +89,10 @@ private:
   std::mutex mTaskMutex;
   // Condition variable used to communicate with mCaptureThread.
   std::condition_variable mTaskCondition;
+  // The camera. Access only on mVideoThread.
+  Camera mCamera;
 
   ImageMatcher mImageMatcher;
-  Camera mCamera;
   std::vector<ImageDescription> mDescriptions;
   std::string mDbFolderPath;
 };

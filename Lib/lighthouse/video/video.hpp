@@ -12,6 +12,10 @@
 #include <stdio.h>
 #include <atomic>
 
+namespace cv {
+  struct Mat;
+}
+
 namespace lighthouse {
 
 class Camera {
@@ -19,10 +23,10 @@ public:
   Camera();
 
   // Capture a video stream for the purpose of recording a new object.
-  void CaptureForRecord(std::atomic_int* aState);
+  bool CaptureForRecord(std::atomic_int* aState, cv::Mat& aResult);
 
   // Capture a video stream for the purpose of identifying an already-known object.
-  void CaptureForIdentification(std::atomic_int* aState);
+  bool CaptureForIdentification(std::atomic_int* aState, cv::Mat& aResult);
 
 private:
   Camera(const Camera& rhs) = delete;
