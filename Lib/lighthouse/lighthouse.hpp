@@ -79,6 +79,12 @@ private:
   // Actual implementation of identifying an object. Runs in `mVideoThread`.
   void RunIdentifyObject();
 
+  // Builds a full absolute path to the sound resource based on `aSoundResourceName`.
+  std::string GetSoundResourcePath(const std::string& aSoundResourceName);
+
+  // Builds a full absolute path the image description voice label based on `aVoiceLabelId`.
+  std::string GetVoiceLabelPath(const std::string& aVoiceLabelId);
+
   // A thread designed to run all blocking camera/vision operations.
   std::thread mVideoThread;
   // Representation of the latest `Task` requested from the event loop.
@@ -93,7 +99,6 @@ private:
   Camera mCamera;
 
   ImageMatcher mImageMatcher;
-  std::vector<ImageDescription> mDescriptions;
   std::string mDbFolderPath;
 };
 

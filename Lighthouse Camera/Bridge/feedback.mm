@@ -7,11 +7,11 @@
 //
 
 #include <opencv2/opencv.hpp> // Must be imported before Cocoa
-#include <chrono>
 
 #include "image.hpp"
 #include "feedback.hpp"
 #include "feedback.h"
+#include "player.hpp"
 #include "bridge.h"
 
 
@@ -50,11 +50,11 @@ Feedback::CannotTakePicture() {
 }
 
 void
-Feedback::PlaySound(const char* name) {
-  fprintf(stderr, "Feedback::PlaySound(%s): FIXME: Implement\n", name);
+Feedback::PlaySound(const std::string& aSoundPath) {
+  lighthouse::Player::Play(aSoundPath);
 }
 
 void
-Feedback::PlayVoiceLabel(const std::string &aLabel) {
-  fprintf(stderr, "Feedback::PlayVoiceLabel(%s): FIXME: Implement\n", aLabel.c_str());
+Feedback::PlaySound(const std::string &aSoundPath, float aVolume) {
+  lighthouse::Player::Play(aSoundPath, aVolume);
 }

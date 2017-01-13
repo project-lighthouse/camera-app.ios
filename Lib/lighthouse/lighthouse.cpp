@@ -10,7 +10,6 @@
 #include "filesystem.hpp"
 #include "lighthouse.hpp"
 #include "matching/exceptions.hpp"
-#include "player.hpp"
 #include "recorder.hpp"
 
 namespace lighthouse {
@@ -18,7 +17,6 @@ namespace lighthouse {
 Lighthouse::Lighthouse(ImageMatchingSettings aImageMatchingSettings)
     : mImageMatcher(ImageMatcher(aImageMatchingSettings)),
       mCamera(),
-      mDescriptions(),
       mDbFolderPath(),
       mVideoThread() {
   // Create Data directory if it doesn't exist.
@@ -77,22 +75,24 @@ void Lighthouse::SaveDescription(const ImageDescription &aDescription) {
   const std::string descriptionFolderPath = mDbFolderPath + aDescription.GetId();
   Filesystem::CreateDirectory(descriptionFolderPath);
 
-  Player::Play(Filesystem::GetResourcePath("after-the-tone", "wav", "sounds"));
+  Feedback::PlaySound(GetSoundResourcePath("after-the-tone"));
+  Feedback::PlaySound(GetSoundResourcePath("beep"));
 
-  Player::Play(Filesystem::GetResourcePath("beep", "wav", "sounds"));
-  Recorder::Record(descriptionFolderPath + "/voice-label.aiff");
-  Player::Play(Filesystem::GetResourcePath("beep", "wav", "sounds"));
+  const std::string voiceLabelPath = GetVoiceLabelPath(aDescription.GetId());
+
+  Recorder::Record(voiceLabelPath);
+
+  Feedback::PlaySound(GetSoundResourcePath("beep"));
 
   ImageDescription::Save(aDescription, descriptionFolderPath + "/description.bin");
   mImageMatcher.AddToDB(aDescription);
 
-  Player::Play(Filesystem::GetResourcePath("registered", "wav", "sounds"));
-
-  PlayVoiceLabel(aDescription);
+  Feedback::PlaySound(GetSoundResourcePath("registered"));
+  Feedback::PlaySound(voiceLabelPath);
 }
 
 void Lighthouse::PlayVoiceLabel(const ImageDescription &aDescription) {
-  Player::Play(mDbFolderPath + aDescription.GetId() + "/voice-label.aiff");
+  Feedback::PlaySound(GetVoiceLabelPath(aDescription.GetId()));
 }
 
 std::vector<std::tuple<float, ImageDescription>> Lighthouse::FindMatches(const cv::Mat &aInputFrame) const {
@@ -151,12 +151,12 @@ void Lighthouse::RunIdentifyObject() {
   std::vector<std::tuple<float, ImageDescription>> matches = FindMatches(sourceDescription);
   
   if (matches.empty()) {
-    Feedback::PlaySound("no-item");
+    Feedback::PlaySound(GetSoundResourcePath("no-item"));
     // FIXME: Display something.
   } else {
     ImageDescription match = std::get<1>(matches[0]);
     // FIXME: Display something.
-    Feedback::PlayVoiceLabel(match.GetId());
+    PlayVoiceLabel(match);
   }
 }
 
@@ -217,6 +217,14 @@ void Lighthouse::RunEventLoop() {
         continue;
     }
   }
+}
+
+std::string Lighthouse::GetSoundResourcePath(const std::string &aSoundResourceName) {
+  return Filesystem::GetResourcePath(aSoundResourceName, "wav", "sounds");
+}
+
+std::string Lighthouse::GetVoiceLabelPath(const std::string &aVoiceLabelId) {
+  return mDbFolderPath + aVoiceLabelId +  "/voice-label.aiff";
 }
 
 } // namespace lighthouse
