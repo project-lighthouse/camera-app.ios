@@ -134,7 +134,7 @@ void Lighthouse::RunIdentifyObject() {
   assert(std::this_thread::get_id() == mVideoThread.get_id());
   // Start recording. `mCamera` is in charge of stopping itself if `mTask` stops being `Task::IDENTIFY`.
   cv::Mat source;
-  if (!mCamera.CaptureForRecord(&mTask, source)) {
+  if (!mCamera.CaptureForIdentification(&mTask, source)) {
     // FIXME: Somehow report error.
     return;
   }
@@ -164,12 +164,22 @@ void Lighthouse::RunIdentifyObject() {
 void Lighthouse::RunRecordObject() {
   assert(std::this_thread::get_id() == mVideoThread.get_id());
   // Start recording. `mCamera` is in charge of stopping itself if `mTask` stops being `Task::RECORD`.
-  cv::Mat image;
-  if (!mCamera.CaptureForRecord(&mTask, image)) {
+  cv::Mat source;
+  if (!mCamera.CaptureForRecord(&mTask, source)) {
     // FIXME: Somehow report error.
     return;
   }
-  // FIXME: Implement.
+
+  // Extract comparison points.
+  ImageDescription sourceDescription;
+  try {
+    sourceDescription = GetDescription(source);
+  } catch (ImageQualityException e) {
+    fprintf(stderr, "Lighthouse::RunRecordObject() encountered an error\n");
+    return; // FIXME: Report actual error.
+  }
+
+  SaveDescription(sourceDescription);
 }
 
 void Lighthouse::RunEventLoop() {
