@@ -176,6 +176,10 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
   lighthouseInstance.OnRecordObject();
 }
 
+- (void)onIdentifyObject {
+  lighthouseInstance.OnIdentifyObject();
+}
+
 - (void)onStopCapture {
   fprintf(stderr, "onStopCapture %s", "start");
   lighthouseInstance.StopRecord();

@@ -25,6 +25,9 @@ public:
   static void CameraSnap();
   static void CannotTakePicture();
   static void SetFlashLight(bool isOn); // FIXME: Implement
+
+  static void PlaySound(const char* name);
+  static void PlayVoiceLabel(const std::string& aLabel);
 };
 
 #endif /* feedback_hpp */

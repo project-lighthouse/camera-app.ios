@@ -297,22 +297,18 @@ lighthouse::Camera::Camera()
 bool
 Camera::CaptureForIdentification(std::atomic_int *aState, cv::Mat& aResult) {
   if (!NowYouSeeMeNowYouDont(std::chrono::milliseconds(1000), aState, Task::IDENTIFY, aResult)) {
-    Feedback::OperationComplete();
     return false;
   }
   Feedback::ReceivedFrame("CaptureForIdentification", aResult);
-  Feedback::OperationComplete();
   return true;
 }
 
 bool
 Camera::CaptureForRecord(std::atomic_int *aState, cv::Mat& aResult) {
   if (!NowYouSeeMeNowYouDont(std::chrono::milliseconds(1000), aState, Task::RECORD, aResult)) {
-    Feedback::OperationComplete();
     return false;
   }
   Feedback::ReceivedFrame("CaptureForRecord", aResult);
-  Feedback::OperationComplete();
   return true;
 
 #if DEMO_BACKGROUND_SUBTRACTOR // FIXME: We can probably just get rid of this.

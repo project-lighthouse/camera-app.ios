@@ -6,10 +6,12 @@
 //  Copyright © 2016 Lighthouse. All rights reserved.
 //
 
-#include "lighthouse.hpp"
+#include "feedback.hpp"
 #include "filesystem.hpp"
-#include "recorder.hpp"
+#include "lighthouse.hpp"
+#include "matching/exceptions.hpp"
 #include "player.hpp"
+#include "recorder.hpp"
 
 namespace lighthouse {
 
@@ -131,12 +133,32 @@ Lighthouse::AuxRunEventLoop(Lighthouse *self) {
 void Lighthouse::RunIdentifyObject() {
   assert(std::this_thread::get_id() == mVideoThread.get_id());
   // Start recording. `mCamera` is in charge of stopping itself if `mTask` stops being `Task::IDENTIFY`.
-  cv::Mat image;
-  if (!mCamera.CaptureForRecord(&mTask, image)) {
+  cv::Mat source;
+  if (!mCamera.CaptureForRecord(&mTask, source)) {
     // FIXME: Somehow report error.
     return;
   }
-  // FIXME: Implement.
+
+  // Extract comparison points.
+  ImageDescription sourceDescription;
+  try {
+    sourceDescription = GetDescription(source);
+  } catch (ImageQualityException e) {
+    fprintf(stderr, "Lighthouse::RunIdentifyObject() encountered an error\n");
+    return; // FIXME: Report actual error.
+  }
+
+  // Compare with existing images.
+  std::vector<std::tuple<float, ImageDescription>> matches = Match(sourceDescription);
+  
+  if (matches.empty()) {
+    Feedback::PlaySound("no-item");
+    // FIXME: Display something.
+  } else {
+    ImageDescription match = std::get<1>(matches[0]);
+    // FIXME: Display something.
+    Feedback::PlayVoiceLabel(match.GetId());
+  }
 }
 
 void Lighthouse::RunRecordObject() {
@@ -175,9 +197,11 @@ void Lighthouse::RunEventLoop() {
         continue;
       case (int) Task::RECORD:
         RunRecordObject();
+        Feedback::OperationComplete();
         continue;
       case (int) Task::IDENTIFY:
         RunIdentifyObject();
+        Feedback::OperationComplete();
         continue;
       default:
         assert(false);

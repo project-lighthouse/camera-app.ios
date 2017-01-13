@@ -43,52 +43,13 @@ class ViewController: UIViewController {
 
     // Invoked when the user has clicked on "identify".
     @IBAction func onIdentifyClick(_ sender: Any) {
-        let image = self.imageView.image;
-        var matches: Array<Dictionary<String, String>> = Array();
-
-        do {
-            matches = try bridge.match(image)
-        } catch let error as NSError {
-            showError(message: error.domain == "ImageQuality" ?
-                "Image does not have enough keypoints. Please try again." :
-                "Unexpected exception occurred during image matching.")
-            return;
-        }
-
-        let hasMatches = matches.isEmpty == false
-
-        let alert = UIAlertController(title: "Match Result",
-            message: hasMatches ? "Best score: \(matches[0]["score"]!) out of 105." : "No matches found!",
-            preferredStyle: UIAlertControllerStyle.alert)
-
-        // Define alert actions.
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default))
-
-        alert.addAction(UIAlertAction(title: "Remember", style: UIAlertActionStyle.default, handler: {
-            action in
-            AVAudioSession.sharedInstance().requestRecordPermission({(granted: Bool)-> Void in
-                if granted {
-                    self.bridge.saveDescription(image)
-                } else{
-                    self.showError(message: "If you want to add or edit voice labels for the images, please, go to " +
-                        "Settings > Privacy > Microphone and enable microphone permission for the Lighthouse app.")
-                }
-            })
-        }))
-
-        alert.addAction(UIAlertAction(title: "Show Keypoints", style: UIAlertActionStyle.default, handler: {
-            action in
-            self.imageView.image = self.bridge.drawKeypoints(image)
-        }))
-
-        self.present(alert, animated: true, completion: nil)
-
-        // Play voice label for the item with the highest score.
-        if hasMatches {
-            bridge.playVoiceLabel(matches[0]["id"])
-        } else {
-            bridge.playSound("no-item")
-        }
+      if self.isBusy {
+        bridge.onStopCapture()
+        self.isBusy = false
+      } else {
+        bridge.onIdentifyObject();
+        self.isBusy = true
+      }
     }
 
     private func showError(message: String) {

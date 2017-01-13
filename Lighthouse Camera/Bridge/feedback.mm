@@ -43,3 +43,13 @@ void
 Feedback::CannotTakePicture() {
   fprintf(stderr, "Feedback::CannotTakePicture(): FIXME: Implement\n");
 }
+
+void
+Feedback::PlaySound(const char* name) {
+  fprintf(stderr, "Feedback::PlaySound(%s): FIXME: Implement\n", name);
+}
+
+void
+Feedback::PlayVoiceLabel(const std::string &aLabel) {
+  fprintf(stderr, "Feedback::PlayVoiceLabel(%s): FIXME: Implement\n", aLabel.c_str());
+}
