@@ -28,10 +28,13 @@ Feedback::ReceivedFrame(const char* info, cv::Mat& frame) {
   UIImage* image = matrixToImage(frame); // FIXME: Who owns that?
   [sViewController performSelectorOnMainThread:showFrameSelector withObject:image waitUntilDone:false];
   fprintf(stderr, "Feedback::ReceivedFrame(%s) dispatched frame\n", info);
+  ShowLabel(info);
+}
 
+void Feedback::ShowLabel(const char *info) {
   NSString* message = [[NSString alloc] initWithUTF8String:info];
   [sViewController performSelectorOnMainThread:showTextSelector withObject:message waitUntilDone:false];
-  fprintf(stderr, "Feedback::ReceivedFrame(%s) dispatched label\n", [message UTF8String]);
+  fprintf(stderr, "Feedback::ShowLabel(%s) dispatched label\n", [message UTF8String]);
 }
 
 void

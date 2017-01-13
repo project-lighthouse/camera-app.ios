@@ -19,8 +19,8 @@
 
 class Feedback {
 public:
-  static void ReceivedFrame(const char *info, cv::Mat &frame);
-
+  static void ShowLabel(const char* info);
+  static void ReceivedFrame(const char* info, cv::Mat& frame);
   static void OperationComplete();
 
   static void CameraSnap();
