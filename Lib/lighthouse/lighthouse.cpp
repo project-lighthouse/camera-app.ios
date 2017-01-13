@@ -27,14 +27,15 @@ Lighthouse::Lighthouse(ImageMatchingSettings aImageMatchingSettings)
 
   // Iterate through all sub folders, every folder should contain the following files:
   // 1. description.bin - binary serialized image description (keypoints, descriptors, histogram etc.);
-  // 2. frame.bin - binary serialized image matrix. Optional, can be disabled;
-  // 3. short-audio.wav - short voice label;
-  // 4. long-audio.wav - long voice label.
+  // 2. image.png - source image. Optional, can be disabled;
+  // 3. voice-label.aiff - voice label.
   std::vector<std::string> subFolders = Filesystem::GetSubFolders(mDbFolderPath);
   for (std::string descriptionFolderPath : subFolders) {
     try {
-      mImageMatcher.AddToDB(ImageDescription::Load(descriptionFolderPath + "/description.bin"));
-    } catch(const cereal::Exception& e) {
+      const ImageDescription description = ImageDescription::Load(
+          descriptionFolderPath + GetDescriptionAssetName(ImageDescriptionAsset::Data));
+      mImageMatcher.AddToDB(description);
+    } catch (const cereal::Exception &e) {
       fprintf(stderr, "Lighthouse::Lighthouse() couldn't deserialize description at %s (reason: %s). Skipping...\n",
           descriptionFolderPath.c_str(), e.what());
     }
@@ -71,28 +72,34 @@ const ImageDescription &Lighthouse::GetDescription(const std::string &id) const 
   return mImageMatcher.GetDescription(id);
 }
 
-void Lighthouse::SaveDescription(const ImageDescription &aDescription) {
-  const std::string descriptionFolderPath = mDbFolderPath + aDescription.GetId();
-  Filesystem::CreateDirectory(descriptionFolderPath);
+void Lighthouse::SaveDescription(const ImageDescription &aDescription, const cv::Mat &aSourceImage) {
+  Filesystem::CreateDirectory(mDbFolderPath + aDescription.GetId());
 
   Feedback::PlaySound(GetSoundResourcePath("after-the-tone"));
   Feedback::PlaySound(GetSoundResourcePath("beep"));
 
-  const std::string voiceLabelPath = GetVoiceLabelPath(aDescription.GetId());
+  const std::string voiceLabelPath = GetDescriptionAssetPath(aDescription.GetId(), ImageDescriptionAsset::VoiceLabel);
 
+  // Record the voice label for the description.
   Recorder::Record(voiceLabelPath);
 
   Feedback::PlaySound(GetSoundResourcePath("beep"));
 
-  ImageDescription::Save(aDescription, descriptionFolderPath + "/description.bin");
+  // Save image description itself.
+  ImageDescription::Save(aDescription, GetDescriptionAssetPath(aDescription.GetId(), ImageDescriptionAsset::Data));
   mImageMatcher.AddToDB(aDescription);
 
+  // Save source image for the later use (eg. display matches, but it isn't needed for matching).
+  cv::imwrite(GetDescriptionAssetPath(aDescription.GetId(), ImageDescriptionAsset::SourceImage), aSourceImage,
+      {CV_IMWRITE_PNG_COMPRESSION, 9 /* compression level, from 0 to 9 */});
+
+  // Notify user about successfully registered image and re-play voice label once again.
   Feedback::PlaySound(GetSoundResourcePath("registered"));
   Feedback::PlaySound(voiceLabelPath);
 }
 
 void Lighthouse::PlayVoiceLabel(const ImageDescription &aDescription) {
-  Feedback::PlaySound(GetVoiceLabelPath(aDescription.GetId()));
+  Feedback::PlaySound(GetDescriptionAssetPath(aDescription.GetId(), ImageDescriptionAsset::VoiceLabel));
 }
 
 std::vector<std::tuple<float, ImageDescription>> Lighthouse::FindMatches(const cv::Mat &aInputFrame) const {
@@ -149,7 +156,7 @@ void Lighthouse::RunIdentifyObject() {
 
   // Compare with existing images.
   std::vector<std::tuple<float, ImageDescription>> matches = FindMatches(sourceDescription);
-  
+
   if (matches.empty()) {
     Feedback::PlaySound(GetSoundResourcePath("no-item"));
     // FIXME: Display something.
@@ -178,7 +185,7 @@ void Lighthouse::RunRecordObject() {
     return; // FIXME: Report actual error.
   }
 
-  SaveDescription(sourceDescription);
+  SaveDescription(sourceDescription, source);
 }
 
 void Lighthouse::RunEventLoop() {
@@ -223,8 +230,21 @@ std::string Lighthouse::GetSoundResourcePath(const std::string &aSoundResourceNa
   return Filesystem::GetResourcePath(aSoundResourceName, "wav", "sounds");
 }
 
-std::string Lighthouse::GetVoiceLabelPath(const std::string &aVoiceLabelId) {
-  return mDbFolderPath + aVoiceLabelId +  "/voice-label.aiff";
+std::string Lighthouse::GetDescriptionAssetName(const ImageDescriptionAsset aAsset) {
+  switch (aAsset) {
+    case ImageDescriptionAsset::Data:
+      return "/description.bin";
+    case ImageDescriptionAsset::VoiceLabel:
+      return "/voice-label.aiff";
+    case ImageDescriptionAsset::SourceImage:
+      return "/image.png";
+    default:
+      throw std::invalid_argument("Asset is not supported!");
+  }
+}
+
+std::string Lighthouse::GetDescriptionAssetPath(const std::string &aDescriptionId, const ImageDescriptionAsset aAsset) {
+  return mDbFolderPath + aDescriptionId + GetDescriptionAssetName(aAsset);
 }
 
 } // namespace lighthouse

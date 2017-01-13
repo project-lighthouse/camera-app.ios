@@ -35,6 +35,16 @@ enum class Task {
   IDENTIFY = 2,
 };
 
+// Describes all possible assets that are related to the image description, but are managed separately.
+enum ImageDescriptionAsset {
+  // Main binary data for the image description (id, descriptors, keypoints, histogram).
+  Data,
+  // Image description voice label.
+  VoiceLabel,
+  // Source image from which image description has been extracted.
+  SourceImage
+};
+
 class Lighthouse {
 public:
   Lighthouse(ImageMatchingSettings aImageMatchingSettings);
@@ -47,7 +57,7 @@ public:
 
   const ImageDescription &GetDescription(const std::string &id) const;
 
-  void SaveDescription(const ImageDescription &aDescription);
+  void SaveDescription(const ImageDescription &aDescription, const cv::Mat &aSourceImage);
 
   void PlayVoiceLabel(const ImageDescription &aDescription);
 
@@ -74,16 +84,21 @@ private:
 
   // Actual implementation of the event loop. Runs in `mVideoThread`.
   void RunEventLoop();
+
   // Actual implementation of recording an object. Runs in `mVideoThread`.
   void RunRecordObject();
+
   // Actual implementation of identifying an object. Runs in `mVideoThread`.
   void RunIdentifyObject();
 
   // Builds a full absolute path to the sound resource based on `aSoundResourceName`.
-  std::string GetSoundResourcePath(const std::string& aSoundResourceName);
+  std::string GetSoundResourcePath(const std::string &aSoundResourceName);
 
-  // Builds a full absolute path the image description voice label based on `aVoiceLabelId`.
-  std::string GetVoiceLabelPath(const std::string& aVoiceLabelId);
+  // Returns a file name of the description asset (data, voice label, source image).
+  std::string GetDescriptionAssetName(const ImageDescriptionAsset aAsset);
+
+  // Builds a full absolute path the image description's asset based on description id and asset type.
+  std::string GetDescriptionAssetPath(const std::string &aDescriptionId, const ImageDescriptionAsset aAsset);
 
   // A thread designed to run all blocking camera/vision operations.
   std::thread mVideoThread;
