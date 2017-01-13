@@ -65,26 +65,37 @@ void ImageMatcher::AddToDB(const ImageDescription &aDescription) {
   mDB.insert(std::make_pair(aDescription.GetId(), aDescription));
 }
 
-std::vector<std::tuple<float, ImageDescription>> ImageMatcher::Match(const ImageDescription &aDescription) const {
+std::tuple<std::vector<std::vector<cv::DMatch>>, std::vector<std::vector<cv::DMatch>>> ImageMatcher::Match(
+    const ImageDescription &aFirstDescription, const ImageDescription &aSecondDescription) const {
+  std::vector<std::vector<cv::DMatch>> matches;
+  mMatcher->knnMatch(aFirstDescription.GetDescriptors(), aSecondDescription.GetDescriptors(), matches, 2);
+
+  // Partition matches collection in "good" and "bad" matches.
+  float ratioTestK = mSettings.mRatioTestK;
+  auto matchSplitIterator = std::partition(matches.begin(), matches.end(),
+      [&ratioTestK](std::vector<cv::DMatch> matchPair) {
+        return matchPair.size() == 2 && matchPair[0].distance < ratioTestK * matchPair[1].distance;
+      });
+
+  std::vector<std::vector<cv::DMatch>> goodMatches(matches.begin(), matchSplitIterator);
+  std::vector<std::vector<cv::DMatch>> badMatches(matchSplitIterator, matches.end());
+
+  return std::make_tuple(goodMatches, badMatches);
+}
+
+std::vector<std::tuple<float, ImageDescription>> ImageMatcher::FindMatches(const ImageDescription &aDescription) const {
   std::vector<std::tuple<float, ImageDescription>> matchedDescriptions;
 
-  for (const std::pair<std::string, ImageDescription> descriptionPair : mDB) {
-    ImageDescription description = descriptionPair.second;
+  for (const auto &descriptionPair : mDB) {
+    const ImageDescription &description = descriptionPair.second;
 
-    std::vector<std::vector<cv::DMatch>> matches = {};
-    mMatcher->knnMatch(aDescription.GetDescriptors(), description.GetDescriptors(), matches, 2);
+    auto matchesTuple = Match(aDescription, description);
 
-    if (matches.size() == 0) {
+    uint32_t goodMatchesCount = std::get<0>(matchesTuple).size();
+    uint32_t totalMatchesCount = goodMatchesCount + std::get<1>(matchesTuple).size();
+
+    if (goodMatchesCount == 0) {
       continue;
-    }
-
-    // Apply ratio test: if the best match is significantly better than the second best match then we consider it to
-    // be a good match. Note that the absolute distance of the matches does not matter just their relative amounts.
-    uint32_t numberOfGoodMatches = 0;
-    for (const std::vector<cv::DMatch> matchPair : matches) {
-      if (matchPair.size() == 2 && matchPair[0].distance < mSettings.mRatioTestK * matchPair[1].distance) {
-        numberOfGoodMatches++;
-      }
     }
 
     // If the two images have similar numbers of keypoints this number will be high and will increase the score.
@@ -92,7 +103,7 @@ std::vector<std::tuple<float, ImageDescription>> ImageMatcher::Match(const Image
     // description.GetDescriptors().size();
 
     // If most of the feature matches are good ones this ratio will be high and will increase the score.
-    const float goodMatchRatio = (float) numberOfGoodMatches / (float) matches.size();
+    const float goodMatchRatio = (float) goodMatchesCount / (float) totalMatchesCount;
 
     // Both of the numbers above are between 0 and 1. We take their product and multiply by 100 to create a score
     // between 0 and 100. Kind of a match percentage.
@@ -105,8 +116,8 @@ std::vector<std::tuple<float, ImageDescription>> ImageMatcher::Match(const Image
       score += mSettings.mHistogramWeight * histogramCorrelation;
     }
 
-    fprintf(stderr, "ImageMatcher::Match() %s vs %s: total matches (%lu), good matches (%i), score (%f).\n",
-        aDescription.GetId().c_str(), description.GetId().c_str(), matches.size(), numberOfGoodMatches, score);
+    fprintf(stderr, "ImageMatcher::FindMatches() %s vs %s: total matches (%i), good matches (%i), score (%f).\n",
+        aDescription.GetId().c_str(), description.GetId().c_str(), totalMatchesCount, goodMatchesCount, score);
 
     if (score >= mSettings.mMatchingScoreThreshold) {
       matchedDescriptions.push_back(std::make_tuple(score, description));

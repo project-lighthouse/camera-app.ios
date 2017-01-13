@@ -95,12 +95,12 @@ void Lighthouse::PlayVoiceLabel(const ImageDescription &aDescription) {
   Player::Play(mDbFolderPath + aDescription.GetId() + "/voice-label.aiff");
 }
 
-std::vector<std::tuple<float, ImageDescription>> Lighthouse::Match(const cv::Mat &aInputFrame) const {
-  return Match(GetDescription(aInputFrame));
+std::vector<std::tuple<float, ImageDescription>> Lighthouse::FindMatches(const cv::Mat &aInputFrame) const {
+  return FindMatches(GetDescription(aInputFrame));
 }
 
-std::vector<std::tuple<float, ImageDescription>> Lighthouse::Match(const ImageDescription &aDescription) const {
-  return mImageMatcher.Match(aDescription);
+std::vector<std::tuple<float, ImageDescription>> Lighthouse::FindMatches(const ImageDescription &aDescription) const {
+  return mImageMatcher.FindMatches(aDescription);
 }
 
 void Lighthouse::OnRecordObject() {
@@ -149,7 +149,7 @@ void Lighthouse::RunIdentifyObject() {
   }
 
   // Compare with existing images.
-  std::vector<std::tuple<float, ImageDescription>> matches = Match(sourceDescription);
+  std::vector<std::tuple<float, ImageDescription>> matches = FindMatches(sourceDescription);
   
   if (matches.empty()) {
     Feedback::PlaySound("no-item");

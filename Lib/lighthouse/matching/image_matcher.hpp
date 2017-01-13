@@ -41,7 +41,10 @@ public:
 
   const ImageDescription &GetDescription(const std::string &id) const;
 
-  std::vector<std::tuple<float, ImageDescription>> Match(const ImageDescription &aDescription) const;
+  std::tuple<std::vector<std::vector<cv::DMatch>>, std::vector<std::vector<cv::DMatch>>> Match(
+      const ImageDescription &aFirstDescription, const ImageDescription &aSecondDescription) const;
+
+  std::vector<std::tuple<float, ImageDescription>> FindMatches(const ImageDescription &aDescription) const;
 
   void AddToDB(const ImageDescription &aDescription);
 

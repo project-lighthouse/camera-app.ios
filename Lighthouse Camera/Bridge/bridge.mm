@@ -111,17 +111,7 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
   lighthouseInstance.SaveDescription(lighthouseInstance.GetDescription([self imageToMatrix:source]));
 }
 
-- (bool)IsGoodImage:(UIImage *)source {
-  try {
-    lighthouseInstance.GetDescription([self imageToMatrix:source]);
-    return true;
-  } catch (const lighthouse::ImageQualityException &e) {
-    fprintf(stderr, "Bridge::IsGoodImage() image quality is not satisfactory: %s", e.what());
-    return false;
-  }
-}
-
-- (NSArray<NSDictionary<NSString *, NSString *> *> *)Match:(UIImage *)source error:(NSError **)error {
+- (NSArray<NSDictionary<NSString *, NSString *> *> *)FindMatches:(UIImage *)source error:(NSError **)error {
   lighthouse::ImageDescription sourceDescription;
 
   try {
@@ -136,16 +126,17 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
     return nil;
   }
 
-  std::vector<std::tuple<float, lighthouse::ImageDescription>> matches = lighthouseInstance.Match(sourceDescription);
+  std::vector<std::tuple<float, lighthouse::ImageDescription>> matches = lighthouseInstance.FindMatches(sourceDescription);
 
   NSMutableArray *matchesArray = [NSMutableArray arrayWithCapacity:matches.size()];
 
   // Convert C++ vector to NSArray & NSDictionary to be compatible with Swift.
-  for (const std::tuple<float, lighthouse::ImageDescription> match : matches) {
-    lighthouse::ImageDescription description = std::get<1>(match);
+  for (const auto &match : matches) {
+    const float &score = std::get<0>(match);
+    const lighthouse::ImageDescription &description = std::get<1>(match);
 
     [matchesArray addObject:@{
-      @"score": [@(std::get<0>(match)) stringValue],
+      @"score": [@(score) stringValue],
       @"id": [NSString stringWithCString:description.GetId().c_str() encoding:NSUTF8StringEncoding]
     }];
   }
