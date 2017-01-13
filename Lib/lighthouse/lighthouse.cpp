@@ -150,7 +150,9 @@ void Lighthouse::RunIdentifyObject() {
   try {
     sourceDescription = GetDescription(source);
   } catch (ImageQualityException e) {
-    fprintf(stderr, "Lighthouse::RunIdentifyObject() encountered an error\n");
+    fprintf(stderr, "Lighthouse::RunIdentifyObject() encountered an error: %s\n", e.what());
+    Feedback::PlaySound(GetSoundResourcePath("nothing-recognized"));
+
     return; // FIXME: Report actual error.
   }
 
@@ -181,7 +183,9 @@ void Lighthouse::RunRecordObject() {
   try {
     sourceDescription = GetDescription(source);
   } catch (ImageQualityException e) {
-    fprintf(stderr, "Lighthouse::RunRecordObject() encountered an error\n");
+    fprintf(stderr, "Lighthouse::RunRecordObject() encountered an error: %s\n", e.what());
+    Feedback::PlaySound(GetSoundResourcePath("nothing-recognized"));
+
     return; // FIXME: Report actual error.
   }
 
