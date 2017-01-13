@@ -11,6 +11,7 @@
 
 @protocol FeedbackImpl
 - (void) showFrame: (UIImage*) image;
+- (void) showText: (NSString*)text;
 - (void) operationComplete;
 
 @end

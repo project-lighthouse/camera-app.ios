@@ -18,6 +18,7 @@
 #import <Foundation/Foundation.h>
 
 SEL showFrameSelector = @selector(showFrame:);
+SEL showTextSelector = @selector(showText:);
 SEL operationCompleteSelector =@selector(operationComplete);
 
 
@@ -25,8 +26,12 @@ void
 Feedback::ReceivedFrame(const char* info, cv::Mat& frame) {
   fprintf(stderr, "Feedback::ReceivedFrame(%s) got frame (%d,%d), %d channels, type %d\n", info, frame.rows, frame.cols, frame.channels(), frame.type());
   UIImage* image = matrixToImage(frame); // FIXME: Who owns that?
-  [sViewController performSelectorOnMainThread:showFrameSelector withObject:image waitUntilDone:true];
+  [sViewController performSelectorOnMainThread:showFrameSelector withObject:image waitUntilDone:false];
   fprintf(stderr, "Feedback::ReceivedFrame(%s) dispatched frame\n", info);
+
+  NSString* message = [[NSString alloc] initWithUTF8String:info];
+  [sViewController performSelectorOnMainThread:showTextSelector withObject:message waitUntilDone:false];
+  fprintf(stderr, "Feedback::ReceivedFrame(%s) dispatched label\n", [message UTF8String]);
 }
 
 void

@@ -15,10 +15,6 @@ extern NSObject *sViewController;
 @interface Bridge : NSObject
 - (UIImage *)DrawKeypoints:(UIImage *)source;
 
-- (void)SaveDescription:(UIImage *)source;
-
-- (NSArray<NSDictionary<NSString *, NSString *> *> *)FindMatches:(UIImage *)source error:(NSError **)error;
-
 - (void)PlayVoiceLabel:(NSString *)id;
 
 - (void)PlaySound:(NSString *)soundResourceName;

@@ -20,8 +20,8 @@ class ViewController: UIViewController {
     }
 
     //MARK: Properties
-    @IBOutlet weak var button: UIButton!
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var label: UILabel!
 
     //MARK: Actions
 
@@ -69,9 +69,15 @@ class ViewController: UIViewController {
     // from the camera.
     @objc(showFrame:)
     public dynamic func showFrame(frame: UIImage) {
-        NSLog("ViewController.showFrame %f x %f\n", frame.size.width * frame.scale, frame.size.height * frame.scale);
-        self.imageView.image = frame;
+      NSLog("ViewController.showFrame %f x %f\n", frame.size.width * frame.scale, frame.size.height * frame.scale);
+      self.imageView.image = frame;
     }
+
+  @objc(showText:)
+  public dynamic func showText(text: NSString) {
+    NSLog("ViewController.showText %s\n", text.utf8String!);
+    self.label.text = text as String;
+  }
 
     override func viewDidLoad() {
         super.viewDidLoad()

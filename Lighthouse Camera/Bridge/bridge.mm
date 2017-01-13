@@ -107,43 +107,6 @@ lighthouse::Lighthouse lighthouseInstance(matchingSettings);
   return [self matrixToImage:outputMatrix andImageOrientation:[source imageOrientation]];
 }
 
-- (void)SaveDescription:(UIImage *)source {
-  lighthouseInstance.SaveDescription(lighthouseInstance.GetDescription([self imageToMatrix:source]));
-}
-
-- (NSArray<NSDictionary<NSString *, NSString *> *> *)FindMatches:(UIImage *)source error:(NSError **)error {
-  lighthouse::ImageDescription sourceDescription;
-
-  try {
-    sourceDescription = lighthouseInstance.GetDescription([self imageToMatrix:source]);
-  } catch (lighthouse::ImageQualityException e) {
-    fprintf(stderr, "Bridge::IsGoodImage() image quality is not satisfactory: %s", e.what());
-
-    *error = [NSError errorWithDomain:@"ImageQuality" code:e.GetCode() userInfo:@{
-        @"message": [NSString stringWithCString:e.what() encoding:NSUTF8StringEncoding]
-    }];
-
-    return nil;
-  }
-
-  std::vector<std::tuple<float, lighthouse::ImageDescription>> matches = lighthouseInstance.FindMatches(sourceDescription);
-
-  NSMutableArray *matchesArray = [NSMutableArray arrayWithCapacity:matches.size()];
-
-  // Convert C++ vector to NSArray & NSDictionary to be compatible with Swift.
-  for (const auto &match : matches) {
-    const float &score = std::get<0>(match);
-    const lighthouse::ImageDescription &description = std::get<1>(match);
-
-    [matchesArray addObject:@{
-      @"score": [@(score) stringValue],
-      @"id": [NSString stringWithCString:description.GetId().c_str() encoding:NSUTF8StringEncoding]
-    }];
-  }
-
-  return matchesArray;
-}
-
 - (void)PlayVoiceLabel:(NSString *)id {
   lighthouseInstance.PlayVoiceLabel(lighthouseInstance.GetDescription([id UTF8String]));
 }
