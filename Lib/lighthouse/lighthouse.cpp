@@ -60,7 +60,7 @@ void Lighthouse::DrawKeypoints(const cv::Mat &aInputFrame, cv::Mat &aOutputFrame
   cv::Mat bgrInputFrame;
   cvtColor(aInputFrame, bgrInputFrame, cv::COLOR_BGRA2BGR);
 
-  drawKeypoints(bgrInputFrame, description.GetKeypoints(), aOutputFrame, cv::Scalar::all(-1),
+  cv::drawKeypoints(bgrInputFrame, description.GetKeypoints(), aOutputFrame, cv::Scalar::all(-1),
       cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 }
 
@@ -139,8 +139,8 @@ Lighthouse::AuxRunEventLoop(Lighthouse *self) {
 
 void Lighthouse::RunIdentifyObject() {
   // Start recording. `mCamera` is in charge of stopping itself if `mTask` stops being `Task::IDENTIFY`.
-  cv::Mat source;
-  if (!mCamera.CaptureForIdentification(&mTask, source)) {
+  cv::Mat sourceImage;
+  if (!mCamera.CaptureForIdentification(&mTask, sourceImage)) {
     // FIXME: Somehow report error.
     return;
   }
@@ -148,7 +148,7 @@ void Lighthouse::RunIdentifyObject() {
   // Extract comparison points.
   ImageDescription sourceDescription;
   try {
-    sourceDescription = GetDescription(source);
+    sourceDescription = GetDescription(sourceImage);
   } catch (ImageQualityException e) {
     fprintf(stderr, "Lighthouse::RunIdentifyObject() encountered an error: %s\n", e.what());
     Feedback::PlaySound(GetSoundResourcePath("nothing-recognized"));
@@ -162,11 +162,31 @@ void Lighthouse::RunIdentifyObject() {
   if (matches.empty()) {
     Feedback::PlaySound(GetSoundResourcePath("no-item"));
     // FIXME: Display something.
-  } else {
-    ImageDescription match = std::get<1>(matches[0]);
-    // FIXME: Display something.
-    PlayVoiceLabel(match);
+    return;
   }
+
+  ImageDescription matchedDescription = std::get<1>(matches[0]);
+
+  PlayVoiceLabel(matchedDescription);
+
+  // Now let's display what we've actually matched. We recalculate match here once again, but we don't need to be
+  // blazing fast at this stage.
+  std::vector<std::vector<cv::DMatch>> goodMatches = std::get<0>(mImageMatcher.Match(sourceDescription,
+      matchedDescription));
+
+  // Let's try to load the image for the description.
+  cv::Mat matchedImage = cv::imread(GetDescriptionAssetPath(matchedDescription.GetId(),
+      ImageDescriptionAsset::SourceImage));
+
+  // When DrawMatches creates cv::Mat by itself it uses only 3 channels, so BGRA images are not supported, so we
+  // should convert source image to BGR and matched image is read in BGR by default.
+  cv::cvtColor(sourceImage, sourceImage, cv::COLOR_BGRA2BGR);
+
+  cv::Mat imageWithMatch;
+  cv::drawMatches(sourceImage, sourceDescription.GetKeypoints(), matchedImage, matchedDescription.GetKeypoints(),
+      goodMatches, imageWithMatch);
+
+  Feedback::ReceivedFrame("match", imageWithMatch);
 }
 
 void Lighthouse::RunRecordObject() {
