@@ -222,6 +222,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6314DD791E2CE0C900B5689D /* video-samples */ = {
+			isa = PBXGroup;
+			children = (
+				6314DD6A1E2920DC00B5689D /* paper.mp4 */,
+				6314DD6B1E2920DC00B5689D /* bottle1.mp4 */,
+				6314DD6C1E2920DC00B5689D /* bottle2.mp4 */,
+				6314DD6D1E2920DC00B5689D /* badge1.mp4 */,
+				6314DD6E1E2920DC00B5689D /* badge2.mp4 */,
+				6314DD6F1E2920DC00B5689D /* oneweb.mp4 */,
+				6314DD701E2920DC00B5689D /* kernel.mp4 */,
+				6314DD681E265BAB00B5689D /* now-you-see-me.mp4 */,
+				6333A3391E203043002CF407 /* box.mp4 */,
+			);
+			name = "video-samples";
+			sourceTree = "<group>";
+		};
 		63B98FCA1E03F210000125CB = {
 			isa = PBXGroup;
 			children = (
@@ -301,16 +317,8 @@
 		7A2FBF261E0D5B7B001B4E8A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				6314DD6A1E2920DC00B5689D /* paper.mp4 */,
-				6314DD6B1E2920DC00B5689D /* bottle1.mp4 */,
-				6314DD6C1E2920DC00B5689D /* bottle2.mp4 */,
-				6314DD6D1E2920DC00B5689D /* badge1.mp4 */,
-				6314DD6E1E2920DC00B5689D /* badge2.mp4 */,
-				6314DD6F1E2920DC00B5689D /* oneweb.mp4 */,
-				6314DD701E2920DC00B5689D /* kernel.mp4 */,
-				6314DD681E265BAB00B5689D /* now-you-see-me.mp4 */,
+				6314DD791E2CE0C900B5689D /* video-samples */,
 				7A38B6A81E23CE33009BFFAD /* sounds */,
-				6333A3391E203043002CF407 /* box.mp4 */,
 				7A2FBF291E0D60F2001B4E8A /* Settings.bundle */,
 			);
 			path = Resources;

@@ -29,8 +29,8 @@ public:
 
   static void SetFlashLight(bool isOn); // FIXME: Implement
 
+  static void PlaySoundNamed(const std::string &aSoundName);
   static void PlaySound(const std::string &aSoundPath);
-
   static void PlaySound(const std::string &aSoundPath, float aVolume);
 };
 

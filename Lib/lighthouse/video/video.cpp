@@ -66,7 +66,7 @@ TakePicture(VideoCapture* aCapture, Mat& aResult) {
     Feedback::CannotTakePicture();
     return false;
   }
-  Feedback::CameraSnap();
+  Feedback::PlaySoundNamed("shutter");
   Feedback::ReceivedFrame("TakePicture", aResult);
 
   // FIXME: Turn OFF the flashlight.
@@ -178,7 +178,8 @@ bool
 NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, const std::atomic_int *aState, const Task aTask, Mat& aResult) {
   auto capture = OpenCamera();
 
-  // FIXME: Add feedback.
+  Feedback::ShowLabel("Capturing a picture with the object.");
+  Feedback::PlaySoundNamed("register_step1");
 
   fprintf(stderr, "NowYouSeeMeNowYouDont: Taking imageWithObject\n");
   Mat imageWithObject;
@@ -187,6 +188,7 @@ NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, c
     return false;
   }
 
+  Feedback::PlaySoundNamed("register_step2");
 
 #if TARGET_IPHONE_SIMULATOR
   // We need to advance the video, otherwise we'll never receive the frames.

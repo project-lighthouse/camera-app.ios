@@ -11,6 +11,7 @@
 #include "image.hpp"
 #include "feedback.hpp"
 #include "feedback.h"
+#include "filesystem.hpp"
 #include "player.hpp"
 #include "bridge.h"
 
@@ -50,6 +51,11 @@ Feedback::CameraSnap() {
 void
 Feedback::CannotTakePicture() {
   fprintf(stderr, "Feedback::CannotTakePicture(): FIXME: Implement\n");
+}
+
+void
+Feedback::PlaySoundNamed(const std::string& aName) {
+  lighthouse::Player::Play(Filesystem::GetResourcePath(aName, "wav", "sounds"));
 }
 
 void
