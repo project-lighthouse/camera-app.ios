@@ -11,7 +11,7 @@
 
 namespace lighthouse {
 
-void Player::Play(const std::string aFilePath, const float aVolume) {
+void Player::Play(const std::string &aFilePath, const float aVolume) {
   // Let's obtain CFURL object for the audio file we want to play.
   CFURLRef audioFileURL = CFURLCreateFromFileSystemRepresentation(kCFAllocatorDefault,
       (const UInt8 *) aFilePath.c_str(), aFilePath.length(), false /* file, not directory */);

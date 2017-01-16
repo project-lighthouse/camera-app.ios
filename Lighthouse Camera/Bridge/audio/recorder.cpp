@@ -13,7 +13,9 @@
 
 namespace lighthouse {
 
-void Recorder::Record(const std::string aFilePath) {
+void Recorder::Record(const std::string &aFilePath, const uint64_t aMaxLengthMs) {
+  assert(aMaxLengthMs > 0);
+
   AudioQueueRecorderState state = PrepareState();
 
   // Create a new recording audio queue. NULL specifies default behavior the run loop on which the callback will be
@@ -36,9 +38,9 @@ void Recorder::Record(const std::string aFilePath) {
   AudioFileCreateWithURL(audioFileURL, state.mAudioFileType, &state.mDataFormat, kAudioFileFlags_EraseFile,
       &state.mAudioFile);
 
-  // Sets an appropriate audio queue buffer size. We set 0.5 of seconds of audio that each audio queue buffer should
+  // Sets an appropriate audio queue buffer size. We set 0.25 of seconds of audio that each audio queue buffer should
   // hold.
-  DeriveBufferSize(state.mQueue, state.mDataFormat, 0.5, &state.mBufferByteSize);
+  DeriveBufferSize(state.mQueue, state.mDataFormat, 0.25, &state.mBufferByteSize);
 
   // Now we should ask the audio queue to prepare a set of audio queue buffers.
   for (int i = 0; i < kNumberBuffers; ++i) {
@@ -48,6 +50,11 @@ void Recorder::Record(const std::string aFilePath) {
     // Add an audio queue buffer to the end of a buffer queue.
     AudioQueueEnqueueBuffer(state.mQueue, state.mBuffers[i], 0, NULL);
   }
+
+  // Turn on level metering (will be used later for leading/trailing silence monitoring).
+  UInt32 levelMeteringOn = 1;
+  AudioQueueSetProperty(state.mQueue, kAudioQueueProperty_EnableLevelMetering, &levelMeteringOn,
+      sizeof(levelMeteringOn));
 
   // And finally let's record the audio.
   // Initialize the packet index to 0 to begin recording at the start of the audio file.
@@ -62,7 +69,7 @@ void Recorder::Record(const std::string aFilePath) {
 
   // Wait for 3 seconds to allow user to record some audio.
   // FIXME: Here should be definitely something smarter.
-  std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(aMaxLengthMs));
 
   // Let's stop and reset the recording audio queue.
   AudioQueueStop(state.mQueue, true /* stop immediately */);
@@ -136,9 +143,19 @@ void Recorder::HandleInputBuffer(void *aAudioQueueData, AudioQueueRef aAudioQueu
     aNumPackets = aAudioQueueBuffer->mAudioDataByteSize / pAqData->mDataFormat.mBytesPerPacket;
   }
 
-  // Write the contents of the buffer to the audio data file.
-  if (AudioFileWritePackets(pAqData->mAudioFile, false, aAudioQueueBuffer->mAudioDataByteSize, aPacketDescriptions,
-      pAqData->mCurrentPacket, &aNumPackets, aAudioQueueBuffer->mAudioData) == noErr) {
+  AudioQueueLevelMeterState meters[1];
+  UInt32 metersLength = sizeof(meters);
+  AudioQueueGetProperty(pAqData->mQueue, kAudioQueueProperty_CurrentLevelMeterDB, meters, &metersLength);
+  Float32 peakPower = meters[0].mPeakPower;
+
+  fprintf(stderr, "Recorder::HandleInputBuffer() sound level at %f is %f (silence: %s).\n", aStartTime->mSampleTime,
+      peakPower, peakPower < kMinSoundPowerLevelThreshold ? "true" : "false");
+
+  // If the sound level is less than the predefined threshold then we consider entire sample as silence and don't write
+  // this portion to the file, otherwise let's write the contents of the buffer to the audio data file.
+  if (peakPower > kMinSoundPowerLevelThreshold && AudioFileWritePackets(pAqData->mAudioFile, false,
+      aAudioQueueBuffer->mAudioDataByteSize, aPacketDescriptions, pAqData->mCurrentPacket, &aNumPackets,
+      aAudioQueueBuffer->mAudioData) == noErr) {
     // If successful in writing the audio data, increment the audio data file’s packet index to be ready for writing
     // the next buffer's worth of audio data.
     pAqData->mCurrentPacket += aNumPackets;

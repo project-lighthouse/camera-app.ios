@@ -19,12 +19,20 @@
 
 namespace lighthouse {
 
+// A lower audio power level that is still not considered as silence.
+static const float kMinSoundPowerLevelThreshold = -30.0;
+
 struct AudioQueueRecorderState : AudioQueueState {
 };
 
 class Recorder {
 public:
-  static void Record(const std::string aFilePath);
+  /**
+   * Records audio sample of maximum `aMacLengthMs` milliseconds and saves it to the `aFilePath`.
+   * @param aFilePath The file path to save recorded audio to.
+   * @param aMaxLengthMs Max length of the audio to record in milliseconds.
+   */
+  static void Record(const std::string &aFilePath, const uint64_t aMaxLengthMs = 5000);
 
 private:
   /**
