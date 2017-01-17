@@ -32,7 +32,6 @@ using namespace cv;
 Ptr<VideoCapture> OpenCamera() {
   fprintf(stderr, "OpenCamera() start\n");
   auto capture = Ptr<VideoCapture>(new VideoCapture());
-    
 #if TARGET_IPHONE_SIMULATOR
   // Simulator specific code
     
@@ -65,6 +64,15 @@ TakePicture(VideoCapture* aCapture, Mat& aResult) {
   if (!aCapture->read(aResult)) {
     Feedback::CannotTakePicture();
     return false;
+  }
+
+  // Normalize all images to have an alpha.
+  if (aResult.channels() < 4) {
+    std::vector<cv::Mat> channels;
+    split(aResult, channels);
+    cv::Mat alpha(channels[0].size(), channels[0].type(), 255);
+    channels.push_back(alpha);
+    merge(channels, aResult);
   }
   Feedback::PlaySoundNamed("shutter");
   Feedback::ReceivedFrame("TakePicture", aResult);
@@ -106,7 +114,7 @@ GetImageDelta(const Mat& imageA, const Mat& imageB,
   if (!DownsampleAndBlur(imageA, DOWNSAMPLE_FACTOR, BLUR, smallerA)) {
     return false;
   }
-  Mat channelsA[3];
+  Mat channelsA[4]; // We ignore channelsA[4].
   cv::split(smallerA, channelsA);
   Feedback::ReceivedFrame("smallerA", smallerA);
 
@@ -114,7 +122,7 @@ GetImageDelta(const Mat& imageA, const Mat& imageB,
   if (!DownsampleAndBlur(imageB, DOWNSAMPLE_FACTOR, BLUR, smallerB)) {
     return false;
   }
-  Mat channelsB[3];
+  Mat channelsB[4]; // We ignore channelsB[4].
   cv::split(smallerB, channelsB);
   Feedback::ReceivedFrame("smallerB", smallerB);
 
@@ -257,19 +265,6 @@ NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, c
     return false;
   }
 
-#if 0 // This is useful mostly for debugging/testing.
-  fprintf(stderr, "NowYouSeeMeNowYouDont: Returning mask\n");
-  Mat channels[3];
-  channels[0] = imageMask;
-  channels[1] = cv::Mat(imageMask.rows, imageMask.cols, imageMask.type());
-  channels[2] = cv::Mat(imageMask.rows, imageMask.cols, imageMask.type());
-  Mat result(imageWithObject.rows, imageWithObject.cols, imageWithObject.type());
-  cv::merge(channels, 3, result);
-  
-  aResult = result;
-
-#else
-
   fprintf(stderr, "NowYouSeeMeNowYouDont: Extracting object from %d channels\n", imageWithObject.channels());
 
   fprintf(stderr, "NowYouSeeMeNowYouDont: image (%d, %d) %d %d\n", imageWithObject.rows, imageWithObject.cols, imageWithObject.type(), imageWithObject.depth());
@@ -277,17 +272,18 @@ NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, c
   
   std::vector<cv::Mat> channels; // BGR(A)
   cv::split(imageWithObject, channels);
+  assert(channels.size() == 4);
+
+  // Get rid of all unnecessary pixels. Probably not strictly necessary but it might help with privacy at some point,
+  // plus it simplifies debugging.
   for (auto iter = channels.begin(); iter != channels.end(); ++iter) {
     *iter = *iter & imageMask;
   }
-  channels.push_back(imageMask);
 
-  Mat result(imageWithObject.rows, imageWithObject.cols, CV_8U);
-  cv::merge(channels, result);
-  fprintf(stderr, "NowYouSeeMeNowYouDont: Returning merged image with %d channels, type %d\n", result.channels(), result.type());
-  cvtColor(result, aResult, COLOR_BGR2BGRA);
+  channels[3] = imageMask; // Overwrite alpha channel. We expect that there is no interesting alpha channel on a picture coming from a camera anyway.
 
-#endif // DISPLAY_MASK
+  aResult = cv::Mat(imageWithObject.size(), CV_8UC4);
+  cv::merge(channels, aResult);
 
   fprintf(stderr, "NowYouSeeMeNowYouDont: Done\n");
   return true;
@@ -312,25 +308,4 @@ Camera::CaptureForRecord(std::atomic_int *aState, cv::Mat& aResult) {
   }
   Feedback::ReceivedFrame("CaptureForRecord", aResult);
   return true;
-
-#if DEMO_BACKGROUND_SUBTRACTOR // FIXME: We can probably just get rid of this.
-  auto capture = OpenCamera();
-  Ptr<BackgroundSubtractorMOG2> subtracted(createBackgroundSubtractorMOG2());
-  Mat mask;
-  while (true) {
-    if (aState->load() != (int)Task::RECORD) {
-      // We have been asked to stop. Bailout asap.
-      return;
-    }
-    Mat frame;
-      if (!capture->read(frame)) {
-        // Nothing more to capture.
-        break;
-      }
-      subtracted->apply(frame, mask);
-      Feedback::ReceivedFrame(mask);
-  }
-  Feedback::OperationComplete();
-  fprintf(stderr, "CaptureForRecord() stop\n");
-#endif // 0
 }

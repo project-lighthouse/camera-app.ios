@@ -40,7 +40,7 @@ matrixToImage(const cv::Mat &matrix, UIImageOrientation *imageOrientation) {
     // Color space.
     colorSpace,
     // Bitmap info.
-    kCGImageAlphaNone | kCGBitmapByteOrderDefault,
+   (matrix.channels() == 4 ? kCGImageAlphaLast : kCGImageAlphaNone) | kCGBitmapByteOrderDefault,
     // CGDataProvider reference.
     provider,
     // Decode.

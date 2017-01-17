@@ -16,6 +16,7 @@
 
 cv::Mat imageToMatrix(UIImage *image);
 
+/// Convert a BGR(A) OpenCV image to a UIImage.
 UIImage* matrixToImage(const cv::Mat& matrix, UIImageOrientation* imageOrientation = nullptr);
 
 #endif /* bridge_hpp */
