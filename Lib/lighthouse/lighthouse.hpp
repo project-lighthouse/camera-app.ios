@@ -91,9 +91,6 @@ private:
   // Actual implementation of identifying an object. Runs in `mVideoThread`.
   void RunIdentifyObject();
 
-  // Builds a full absolute path to the sound resource based on `aSoundResourceName`.
-  std::string GetSoundResourcePath(const std::string &aSoundResourceName);
-
   // Returns a file name of the description asset (data, voice label, source image).
   std::string GetDescriptionAssetName(const ImageDescriptionAsset aAsset);
 

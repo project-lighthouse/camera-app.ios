@@ -75,15 +75,21 @@ const ImageDescription &Lighthouse::GetDescription(const std::string &id) const 
 void Lighthouse::SaveDescription(const ImageDescription &aDescription, const cv::Mat &aSourceImage) {
   Filesystem::CreateDirectory(mDbFolderPath + aDescription.GetId());
 
-  Feedback::PlaySound(GetSoundResourcePath("after-the-tone"));
-  Feedback::PlaySound(GetSoundResourcePath("beep"));
-
   const std::string voiceLabelPath = GetDescriptionAssetPath(aDescription.GetId(), ImageDescriptionAsset::VoiceLabel);
 
-  // Record the voice label for the description.
-  Recorder::Record(voiceLabelPath);
+  Feedback::PlaySoundNamed("after-the-tone");
 
-  Feedback::PlaySound(GetSoundResourcePath("beep"));
+  // Try to record the voice label for the description, if sound is not recorded, ask user to try again.
+  bool isSoundRecorded;
+  do {
+    Feedback::PlaySoundNamed("beep");
+    isSoundRecorded = Recorder::Record(voiceLabelPath);
+    Feedback::PlaySoundNamed("beep");
+
+    if (!isSoundRecorded) {
+      Feedback::PlaySoundNamed("no-sound");
+    }
+  } while (!isSoundRecorded);
 
   // Save image description itself.
   ImageDescription::Save(aDescription, GetDescriptionAssetPath(aDescription.GetId(), ImageDescriptionAsset::Data));
@@ -94,7 +100,7 @@ void Lighthouse::SaveDescription(const ImageDescription &aDescription, const cv:
       {CV_IMWRITE_PNG_COMPRESSION, 9 /* compression level, from 0 to 9 */});
 
   // Notify user about successfully registered image and re-play voice label once again.
-  Feedback::PlaySound(GetSoundResourcePath("registered"));
+  Feedback::PlaySoundNamed("registered");
   Feedback::PlaySound(voiceLabelPath);
 }
 
@@ -151,7 +157,7 @@ void Lighthouse::RunIdentifyObject() {
     sourceDescription = GetDescription(sourceImage);
   } catch (ImageQualityException e) {
     fprintf(stderr, "Lighthouse::RunIdentifyObject() encountered an error: %s\n", e.what());
-    Feedback::PlaySound(GetSoundResourcePath("nothing-recognized"));
+    Feedback::PlaySoundNamed("nothing-recognized");
 
     return; // FIXME: Report actual error.
   }
@@ -160,7 +166,7 @@ void Lighthouse::RunIdentifyObject() {
   std::vector<std::tuple<float, ImageDescription>> matches = FindMatches(sourceDescription);
 
   if (matches.empty()) {
-    Feedback::PlaySound(GetSoundResourcePath("no-item"));
+    Feedback::PlaySoundNamed("no-item");
     // FIXME: Display something.
     return;
   }
@@ -204,7 +210,7 @@ void Lighthouse::RunRecordObject() {
     sourceDescription = GetDescription(source);
   } catch (ImageQualityException e) {
     fprintf(stderr, "Lighthouse::RunRecordObject() encountered an error: %s\n", e.what());
-    Feedback::PlaySound(GetSoundResourcePath("nothing-recognized"));
+    Feedback::PlaySoundNamed("nothing-recognized");
 
     return; // FIXME: Report actual error.
   }
@@ -248,10 +254,6 @@ void Lighthouse::RunEventLoop() {
         continue;
     }
   }
-}
-
-std::string Lighthouse::GetSoundResourcePath(const std::string &aSoundResourceName) {
-  return Filesystem::GetResourcePath(aSoundResourceName, "wav", "sounds");
 }
 
 std::string Lighthouse::GetDescriptionAssetName(const ImageDescriptionAsset aAsset) {

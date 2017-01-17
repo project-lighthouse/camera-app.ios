@@ -13,7 +13,7 @@
 
 namespace lighthouse {
 
-void Recorder::Record(const std::string &aFilePath, const uint64_t aMaxLengthMs) {
+bool Recorder::Record(const std::string &aFilePath, const uint64_t aMaxLengthMs) {
   assert(aMaxLengthMs > 0);
 
   AudioQueueRecorderState state = PrepareState();
@@ -38,9 +38,9 @@ void Recorder::Record(const std::string &aFilePath, const uint64_t aMaxLengthMs)
   AudioFileCreateWithURL(audioFileURL, state.mAudioFileType, &state.mDataFormat, kAudioFileFlags_EraseFile,
       &state.mAudioFile);
 
-  // Sets an appropriate audio queue buffer size. We set 0.25 of seconds of audio that each audio queue buffer should
+  // Sets an appropriate audio queue buffer size. We set 0.1 of seconds of audio that each audio queue buffer should
   // hold.
-  DeriveBufferSize(state.mQueue, state.mDataFormat, 0.25, &state.mBufferByteSize);
+  DeriveBufferSize(state.mQueue, state.mDataFormat, 0.1, &state.mBufferByteSize);
 
   // Now we should ask the audio queue to prepare a set of audio queue buffers.
   for (int i = 0; i < kNumberBuffers; ++i) {
@@ -81,6 +81,9 @@ void Recorder::Record(const std::string &aFilePath, const uint64_t aMaxLengthMs)
   AudioQueueDispose(state.mQueue, true /* dispose queue immediately */);
 
   AudioFileClose(state.mAudioFile);
+
+  // If we record at least something we say that recording completed successfully.
+  return state.mCurrentPacket > 0;
 }
 
 AudioQueueRecorderState Recorder::PrepareState() {
@@ -158,6 +161,7 @@ void Recorder::HandleInputBuffer(void *aAudioQueueData, AudioQueueRef aAudioQueu
       aAudioQueueBuffer->mAudioData) == noErr) {
     // If successful in writing the audio data, increment the audio data file’s packet index to be ready for writing
     // the next buffer's worth of audio data.
+    fprintf(stderr, "Recorder::HandleInputBuffer() packets written to a file: %lu.\n", aNumPackets);
     pAqData->mCurrentPacket += aNumPackets;
   }
 
