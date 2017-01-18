@@ -19,16 +19,16 @@ ImageMatcher::ImageMatcher(ImageMatchingSettings aSettings)
 }
 
 ImageDescription ImageMatcher::GetDescription(const cv::Mat &aInputFrame) const {
-  cv::Mat without_alpha(aInputFrame.size(), aInputFrame.type());
-  cv::cvtColor(aInputFrame, without_alpha, CV_BGRA2BGR);
+  // Use alpha channel as a mask.
   std::vector<cv::Mat> rgbaChannels(4);
-  cv::split(without_alpha, rgbaChannels);
+  cv::split(aInputFrame, rgbaChannels);
+  cv::Mat mask = rgbaChannels[3];
 
   // Detect image keypoints and compute descriptors for all of them.
   std::vector<cv::KeyPoint> keypoints;
   cv::Mat descriptors, histogram;
 
-  mKeypointDetector->detectAndCompute(without_alpha, rgbaChannels[3], keypoints, descriptors);
+  mKeypointDetector->detectAndCompute(aInputFrame, mask, keypoints, descriptors);
 
   uint32_t keypointsCount = keypoints.size();
 
@@ -44,7 +44,7 @@ ImageDescription ImageMatcher::GetDescription(const cv::Mat &aInputFrame) const 
   float colorRange[] = {0, 256};
   const float *ranges[] = {colorRange, colorRange, colorRange};
 
-  cv::calcHist(&without_alpha, 1, channels, cv::Mat(), histogram, 3, histogramSize, ranges);
+  cv::calcHist(&aInputFrame, 1, channels, cv::Mat(), histogram, 3, histogramSize, ranges);
   cv::normalize(histogram, histogram);
 
   // Generate unique ImageDescription Id.
