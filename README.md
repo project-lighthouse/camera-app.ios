@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Yoric/camera-app.ios.svg?branch=master)](https://travis-ci.org/project-lighthouse/camera-app.ios)
+[![Build Status](https://travis-ci.org/project-lighthouse/camera-app.ios.svg?branch=master)](https://travis-ci.org/project-lighthouse/camera-app.ios)
 
 # Lighthouse
 
