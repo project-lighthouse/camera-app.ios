@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Yoric/camera-app.ios.svg?branch=master)](https://travis-ci.org/project-lighthouse/camera-app.ios)
+
 # Lighthouse
 
 Lighthouse iOS App that empowers the visually impaired to efficiently & independently identify household items.
@@ -23,9 +25,9 @@ Prerequisites:
 - Download the code in the repo
 - Download, extract and copy [OpenCV iOS framework](http://opencv.org/downloads.html) to Lib folder
 - Double click to open Lighthouse%20Camera.xcodeproj. To run on device change below two project level settings and push to device
-  - Link your AppleId in XCode (XCode->Preferences->Accounts) 
+  - Link your AppleId in XCode (XCode->Preferences->Accounts)
   - Change App Bundle Id to your unique name
-- If you see 'Untrusted Enterprise Devloper' message on device, go to Settings - General - Device Management - Tap on your Profile - Tap on Trust button
+- If you see 'Untrusted Enterprise Developer' message on device, go to Settings - General - Device Management - Tap on your Profile - Tap on Trust button
 
 ## Targeted Device Support
 
