@@ -110,8 +110,6 @@ void Lighthouse::SaveDescription(const ImageDescription &aDescription, const cv:
   // FIXME: Should it be called from UI instead?
   // Notify user about successfully registered image and re-play voice label once again.
   Feedback::PlaySoundNamed("registered");
-
-  PlayVoiceLabel(aDescription);
 }
 
 std::vector<std::tuple<float, ImageDescription>> Lighthouse::FindMatches(const cv::Mat &aInputFrame) const {

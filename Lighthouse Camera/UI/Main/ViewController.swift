@@ -99,6 +99,9 @@ class ViewController: UIViewController {
   @objc(onItemRecorded:)
   public dynamic func onItemRecorded(itemId: String) {
     print("Item is successfully added: ", itemId)
+
+    // Item has been successfully added, so let's replay the voice label.
+    bridge.playVoiceLabel(itemId)
   }
 
   override func viewDidLoad() {
