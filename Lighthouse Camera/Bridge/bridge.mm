@@ -100,19 +100,23 @@ lighthouse::ImageMatchingSettings matchingSettings = {
 
 lighthouse::Lighthouse lighthouseInstance(matchingSettings);
 
-- (UIImage *)DrawKeypoints:(UIImage *)source {
+- (UIImage *)DrawKeypoints:(UIImage *)aSource {
   cv::Mat outputMatrix;
-  lighthouseInstance.DrawKeypoints([self imageToMatrix:source], outputMatrix);
+  lighthouseInstance.DrawKeypoints([self imageToMatrix:aSource], outputMatrix);
 
-  return [self matrixToImage:outputMatrix andImageOrientation:[source imageOrientation]];
+  return [self matrixToImage:outputMatrix andImageOrientation:[aSource imageOrientation]];
 }
 
-- (void)PlayVoiceLabel:(NSString *)id {
-  lighthouseInstance.PlayVoiceLabel(lighthouseInstance.GetDescription([id UTF8String]));
+- (void)PlayVoiceLabel:(NSString *)aId {
+  lighthouseInstance.PlayVoiceLabel(lighthouseInstance.GetDescription([aId UTF8String]));
 }
 
-- (void)PlaySound:(NSString *)soundResourceName {
-  lighthouse::Player::Play(Filesystem::GetResourcePath([soundResourceName UTF8String], "wav", "sounds"));
+- (void)RecordVoiceLabel:(NSString *)aId {
+  lighthouseInstance.RecordVoiceLabel(lighthouseInstance.GetDescription([aId UTF8String]));
+}
+
+- (void)PlaySound:(NSString *)aSoundResourceName {
+  lighthouse::Player::Play(Filesystem::GetResourcePath([aSoundResourceName UTF8String], "wav", "sounds"));
 }
 
 // Converts UIImage instance into cv::Mat object that is known for OpenCV.

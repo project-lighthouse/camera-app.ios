@@ -55,11 +55,15 @@ public:
 
   ImageDescription GetDescription(const cv::Mat &aInputFrame) const;
 
-  const ImageDescription &GetDescription(const std::string &id) const;
+  const ImageDescription &GetDescription(const std::string &aId) const;
+
+  // Record voice label for the specified existing description.
+  void RecordVoiceLabel(const ImageDescription &aDescription) const;
+
+  // Play voice label for the specified existing description.
+  void PlayVoiceLabel(const ImageDescription &aDescription);
 
   void SaveDescription(const ImageDescription &aDescription, const cv::Mat &aSourceImage);
-
-  void PlayVoiceLabel(const ImageDescription &aDescription);
 
   std::vector<std::tuple<float, ImageDescription>> FindMatches(const cv::Mat &aInputFrame) const;
 
@@ -92,10 +96,10 @@ private:
   void RunIdentifyObject();
 
   // Returns a file name of the description asset (data, voice label, source image).
-  std::string GetDescriptionAssetName(const ImageDescriptionAsset aAsset);
+  std::string GetDescriptionAssetName(const ImageDescriptionAsset aAsset) const;
 
   // Builds a full absolute path the image description's asset based on description id and asset type.
-  std::string GetDescriptionAssetPath(const std::string &aDescriptionId, const ImageDescriptionAsset aAsset);
+  std::string GetDescriptionAssetPath(const std::string &aDescriptionId, const ImageDescriptionAsset aAsset) const;
 
   // A thread designed to run all blocking camera/vision operations.
   std::thread mVideoThread;

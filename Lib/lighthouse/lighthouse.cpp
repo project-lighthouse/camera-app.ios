@@ -68,16 +68,14 @@ ImageDescription Lighthouse::GetDescription(const cv::Mat &aInputFrame) const {
   return mImageMatcher.GetDescription(aInputFrame);
 }
 
-const ImageDescription &Lighthouse::GetDescription(const std::string &id) const {
-  return mImageMatcher.GetDescription(id);
+const ImageDescription &Lighthouse::GetDescription(const std::string &aId) const {
+  return mImageMatcher.GetDescription(aId);
 }
 
-void Lighthouse::SaveDescription(const ImageDescription &aDescription, const cv::Mat &aSourceImage) {
-  Filesystem::CreateDirectory(mDbFolderPath + aDescription.GetId());
+void Lighthouse::RecordVoiceLabel(const ImageDescription &aDescription) const {
+  Feedback::PlaySoundNamed("after-the-tone");
 
   const std::string voiceLabelPath = GetDescriptionAssetPath(aDescription.GetId(), ImageDescriptionAsset::VoiceLabel);
-
-  Feedback::PlaySoundNamed("after-the-tone");
 
   // Try to record the voice label for the description, if sound is not recorded, ask user to try again.
   bool isSoundRecorded;
@@ -90,6 +88,16 @@ void Lighthouse::SaveDescription(const ImageDescription &aDescription, const cv:
       Feedback::PlaySoundNamed("no-sound");
     }
   } while (!isSoundRecorded);
+}
+
+void Lighthouse::PlayVoiceLabel(const ImageDescription &aDescription) {
+  Feedback::PlaySound(GetDescriptionAssetPath(aDescription.GetId(), ImageDescriptionAsset::VoiceLabel));
+}
+
+void Lighthouse::SaveDescription(const ImageDescription &aDescription, const cv::Mat &aSourceImage) {
+  Filesystem::CreateDirectory(mDbFolderPath + aDescription.GetId());
+
+  RecordVoiceLabel(aDescription);
 
   // Save image description itself.
   ImageDescription::Save(aDescription, GetDescriptionAssetPath(aDescription.GetId(), ImageDescriptionAsset::Data));
@@ -99,13 +107,11 @@ void Lighthouse::SaveDescription(const ImageDescription &aDescription, const cv:
   cv::imwrite(GetDescriptionAssetPath(aDescription.GetId(), ImageDescriptionAsset::SourceImage), aSourceImage,
       {CV_IMWRITE_PNG_COMPRESSION, 9 /* compression level, from 0 to 9 */});
 
+  // FIXME: Should it be called from UI instead?
   // Notify user about successfully registered image and re-play voice label once again.
   Feedback::PlaySoundNamed("registered");
-  Feedback::PlaySound(voiceLabelPath);
-}
 
-void Lighthouse::PlayVoiceLabel(const ImageDescription &aDescription) {
-  Feedback::PlaySound(GetDescriptionAssetPath(aDescription.GetId(), ImageDescriptionAsset::VoiceLabel));
+  PlayVoiceLabel(aDescription);
 }
 
 std::vector<std::tuple<float, ImageDescription>> Lighthouse::FindMatches(const cv::Mat &aInputFrame) const {
@@ -258,7 +264,7 @@ void Lighthouse::RunEventLoop() {
   }
 }
 
-std::string Lighthouse::GetDescriptionAssetName(const ImageDescriptionAsset aAsset) {
+std::string Lighthouse::GetDescriptionAssetName(const ImageDescriptionAsset aAsset) const {
   switch (aAsset) {
     case ImageDescriptionAsset::Data:
       return "/description.bin";
@@ -271,7 +277,8 @@ std::string Lighthouse::GetDescriptionAssetName(const ImageDescriptionAsset aAss
   }
 }
 
-std::string Lighthouse::GetDescriptionAssetPath(const std::string &aDescriptionId, const ImageDescriptionAsset aAsset) {
+std::string Lighthouse::GetDescriptionAssetPath(const std::string &aDescriptionId,
+    const ImageDescriptionAsset aAsset) const {
   return mDbFolderPath + aDescriptionId + GetDescriptionAssetName(aAsset);
 }
 

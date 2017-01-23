@@ -13,11 +13,15 @@
 extern NSObject *sViewController;
 
 @interface Bridge : NSObject
-- (UIImage *)DrawKeypoints:(UIImage *)source;
+- (UIImage *)DrawKeypoints:(UIImage *)aSource;
 
-- (void)PlayVoiceLabel:(NSString *)id;
+// Play voice label for the item description with the specified id.
+- (void)PlayVoiceLabel:(NSString *)aId;
 
-- (void)PlaySound:(NSString *)soundResourceName;
+// Record voice label for the item description with the specified id.
+- (void)RecordVoiceLabel:(NSString *)aId;
+
+- (void)PlaySound:(NSString *)aSoundResourceName;
 
 // Trigger C++ code to start recording new object.
 - (void)onRecordObject;
