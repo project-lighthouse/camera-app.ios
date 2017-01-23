@@ -90,6 +90,17 @@ class ViewController: UIViewController {
     self.label.text = text as String;
   }
 
+  /**
+   Method is called whenever new item is recorded to perform followup actions (re-record voice label, discard item
+   etc.).
+
+   - parameter itemId: String Unique identifier of the item that has been recorded.
+  */
+  @objc(onItemRecorded:)
+  public dynamic func onItemRecorded(itemId: String) {
+    print("Item is successfully added: ", itemId)
+  }
+
   override func viewDidLoad() {
     super.viewDidLoad()
 

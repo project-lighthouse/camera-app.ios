@@ -216,6 +216,8 @@ void Lighthouse::RunRecordObject() {
   }
 
   SaveDescription(sourceDescription, source);
+
+  Feedback::OnItemRecorded(sourceDescription.GetId());
 }
 
 void Lighthouse::RunEventLoop() {

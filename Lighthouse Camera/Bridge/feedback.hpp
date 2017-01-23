@@ -22,6 +22,7 @@ public:
   static void ShowLabel(const char* info);
   static void ReceivedFrame(const char* info, cv::Mat& frame);
   static void OperationComplete();
+  static void OnItemRecorded(const std::string &aItemId);
 
   static void CameraSnap();
 

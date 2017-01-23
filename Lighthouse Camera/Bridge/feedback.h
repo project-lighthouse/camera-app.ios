@@ -10,9 +10,13 @@
 #define feedback_h
 
 @protocol FeedbackImpl
-- (void) showFrame: (UIImage*) image;
-- (void) showText: (NSString*)text;
-- (void) operationComplete;
+- (void)showFrame:(UIImage *)image;
+
+- (void)showText:(NSString *)text;
+
+- (void)operationComplete;
+
+- (void)onItemRecorded:(NSString *)aItemId;
 
 @end
 

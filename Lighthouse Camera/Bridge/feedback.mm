@@ -20,7 +20,8 @@
 
 SEL showFrameSelector = @selector(showFrame:);
 SEL showTextSelector = @selector(showText:);
-SEL operationCompleteSelector =@selector(operationComplete);
+SEL operationCompleteSelector = @selector(operationComplete);
+SEL onItemRecordedSelector = @selector(onItemRecorded:);
 
 
 void
@@ -41,6 +42,12 @@ void Feedback::ShowLabel(const char *info) {
 void
 Feedback::OperationComplete() {
   [sViewController performSelectorOnMainThread:operationCompleteSelector withObject:nullptr waitUntilDone:false];
+}
+
+void Feedback::OnItemRecorded(const std::string &aItemId) {
+  NSString* itemId = [[NSString alloc] initWithUTF8String:aItemId.c_str()];
+  [sViewController performSelectorOnMainThread:onItemRecordedSelector withObject:itemId waitUntilDone:false];
+  fprintf(stderr, "Feedback::OnItemRecorded(%s) dispatched new item id.\n", aItemId.c_str());
 }
 
 void
