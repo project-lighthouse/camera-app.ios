@@ -33,6 +33,10 @@ public:
   static void PlaySoundNamed(const std::string &aSoundName);
   static void PlaySound(const std::string &aSoundPath);
   static void PlaySound(const std::string &aSoundPath, float aVolume);
+
+  // Uses TTS engine to say the text with the specified utterance rate (default is -1.0f that is interpreted as
+  // AVSpeechUtteranceDefaultSpeechRate).
+  static void Say(const std::string &aText, float aUtteranceRate = -1.0f);
 };
 
 #endif /* feedback_hpp */

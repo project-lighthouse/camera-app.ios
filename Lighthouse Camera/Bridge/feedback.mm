@@ -8,6 +8,8 @@
 
 #include <opencv2/opencv.hpp> // Must be imported before Cocoa
 
+#include <AVFoundation/AVFoundation.h>
+
 #include "image.hpp"
 #include "feedback.hpp"
 #include "feedback.h"
@@ -15,8 +17,6 @@
 #include "player.hpp"
 #include "bridge.h"
 
-
-#import <Foundation/Foundation.h>
 
 SEL showFrameSelector = @selector(showFrame:);
 SEL showTextSelector = @selector(showText:);
@@ -45,7 +45,7 @@ Feedback::OperationComplete() {
 }
 
 void Feedback::OnItemRecorded(const std::string &aItemId) {
-  NSString* itemId = [[NSString alloc] initWithUTF8String:aItemId.c_str()];
+  NSString *itemId = [[NSString alloc] initWithUTF8String:aItemId.c_str()];
   [sViewController performSelectorOnMainThread:onItemRecordedSelector withObject:itemId waitUntilDone:false];
   fprintf(stderr, "Feedback::OnItemRecorded(%s) dispatched new item id.\n", aItemId.c_str());
 }
@@ -61,16 +61,25 @@ Feedback::CannotTakePicture() {
 }
 
 void
-Feedback::PlaySoundNamed(const std::string& aName) {
+Feedback::PlaySoundNamed(const std::string &aName) {
   lighthouse::Player::Play(Filesystem::GetResourcePath(aName, "wav", "sounds"));
 }
 
 void
-Feedback::PlaySound(const std::string& aSoundPath) {
+Feedback::PlaySound(const std::string &aSoundPath) {
   lighthouse::Player::Play(aSoundPath);
 }
 
 void
 Feedback::PlaySound(const std::string &aSoundPath, float aVolume) {
   lighthouse::Player::Play(aSoundPath, aVolume);
+}
+
+void Feedback::Say(const std::string &aText, float aUtteranceRate) {
+  NSString *text = [[NSString alloc] initWithUTF8String:aText.c_str()];
+
+  AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:text];
+  [utterance setRate:aUtteranceRate < 0 ? AVSpeechUtteranceDefaultSpeechRate : aUtteranceRate];
+
+  [[[AVSpeechSynthesizer alloc] init] speakUtterance:utterance];
 }
