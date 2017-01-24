@@ -1,0 +1,3 @@
+[submodule "3rdparty/xctool"]
+	path = 3rdparty/xctool
+	url = https://github.com/facebook/xctool.git

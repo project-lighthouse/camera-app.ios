@@ -24,4 +24,4 @@ script:
   # Now build for xctool. Disable code coverage, otherwise xctool won't find the binary.
   - xcodebuild build-for-testing -enableCodeCoverage NO -project "Lighthouse Camera.xcodeproj" -scheme "Lighthouse Camera" -sdk iphonesimulator10.2 | xcpretty -f `xcpretty-travis-formatter` && exit ${PIPESTATUS[0]}
   # Interestingly, xcodebuild doesn't know how to launch tests for iOS. So, use xctool for this.
-  - 3rdparty/xctool.sh run-tests -test-sdk iphonesimulator10.2 -scheme "Lighthouse Camera"
+  - 3rdparty/xctool/xctool.sh run-tests -test-sdk iphonesimulator10.2 -scheme "Lighthouse Camera"
