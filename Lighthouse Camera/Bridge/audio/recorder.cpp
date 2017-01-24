@@ -38,9 +38,10 @@ bool Recorder::Record(const std::string &aFilePath, const uint64_t aMaxLengthMs)
   AudioFileCreateWithURL(audioFileURL, state.mAudioFileType, &state.mDataFormat, kAudioFileFlags_EraseFile,
       &state.mAudioFile);
 
-  // Sets an appropriate audio queue buffer size. We set 0.1 of seconds of audio that each audio queue buffer should
-  // hold.
-  DeriveBufferSize(state.mQueue, state.mDataFormat, 0.1, &state.mBufferByteSize);
+  // Sets an appropriate audio queue buffer size. We set `kAudioBufferLengthMs` milliseconds of audio that each audio
+  // queue buffer should hold.
+  DeriveBufferSize(state.mQueue, state.mDataFormat, kAudioBufferLengthMs, &state.mBufferByteSize,
+      &state.mMaxPacketSize);
 
   // Now we should ask the audio queue to prepare a set of audio queue buffers.
   for (int i = 0; i < kNumberBuffers; ++i) {
@@ -67,9 +68,19 @@ bool Recorder::Record(const std::string &aFilePath, const uint64_t aMaxLengthMs)
   // Start the audio queue, on its own thread. NULL indicates that the audio queue should start recording immediately.
   AudioQueueStart(state.mQueue, NULL);
 
-  // Wait for 3 seconds to allow user to record some audio.
-  // FIXME: Here should be definitely something smarter.
-  std::this_thread::sleep_for(std::chrono::milliseconds(aMaxLengthMs));
+  // Wait for `aMaxLengthMs` milliseconds to allow user to record some audio. The max audio length still can be a little
+  // longer than that because of time we spend in the main thread to analyze trailing silence, but it's not a problem.
+  const uint32_t numberOfSleepCycles = (uint32_t) ceil(aMaxLengthMs / kAudioBufferLengthMs);
+  const auto cycleDuration = std::chrono::milliseconds(kAudioBufferLengthMs);
+  for (uint32_t i = 0; i < numberOfSleepCycles; i++) {
+    std::this_thread::sleep_for(cycleDuration);
+
+    if (state.mTrailingSilenceLength >= kMaxTrailingSilenceLengthMs) {
+      fprintf(stderr, "Recorder::Record() stopping recording because of large trailing silence: %d ms. \n",
+          state.mTrailingSilenceLength);
+      break;
+    }
+  }
 
   // Let's stop and reset the recording audio queue.
   AudioQueueStop(state.mQueue, true /* stop immediately */);
@@ -107,11 +118,13 @@ AudioQueueRecorderState Recorder::PrepareState() {
   state.mDataFormat.mFormatFlags = kLinearPCMFormatFlagIsBigEndian | kLinearPCMFormatFlagIsSignedInteger
       | kLinearPCMFormatFlagIsPacked;
 
+  state.mTrailingSilenceLength = 0;
+
   return state;
 }
 
 void Recorder::DeriveBufferSize(AudioQueueRef aAudioQueue, AudioStreamBasicDescription &aAudioStreamDescription,
-    Float64 aSeconds, UInt32 *aBufferSize) {
+    Float64 aBufferLengthMs, UInt32 *aBufferSize, UInt32 *aMaxPacketSize) {
 
   // For CBR audio data, get the (constant) packet size from the AudioStreamBasicDescription structure. Use this value
   // as the maximum packet size. This assignment has the side effect of determining if the audio data to be recorded
@@ -127,10 +140,11 @@ void Recorder::DeriveBufferSize(AudioQueueRef aAudioQueue, AudioStreamBasicDescr
   }
 
   // Derive the buffer size in bytes.
-  Float64 numBytesForTime = aAudioStreamDescription.mSampleRate * maxPacketSize * aSeconds;
+  Float64 numBytesForTime = aAudioStreamDescription.mSampleRate * maxPacketSize * aBufferLengthMs / 1000;
 
   // Limit the buffer size, if needed, to the previously set upper bound.
   *aBufferSize = UInt32(numBytesForTime < kMaxBufferSize ? numBytesForTime : kMaxBufferSize);
+  *aMaxPacketSize = maxPacketSize;
 }
 
 void Recorder::HandleInputBuffer(void *aAudioQueueData, AudioQueueRef aAudioQueue,
@@ -163,6 +177,12 @@ void Recorder::HandleInputBuffer(void *aAudioQueueData, AudioQueueRef aAudioQueu
     // the next buffer's worth of audio data.
     fprintf(stderr, "Recorder::HandleInputBuffer() packets written to a file: %lu.\n", aNumPackets);
     pAqData->mCurrentPacket += aNumPackets;
+    // Zero trailing silence counter since silence has been interrupted.
+    pAqData->mTrailingSilenceLength = 0;
+  } else if (pAqData->mCurrentPacket != 0) {
+    // In case we already recorded something previously let's increase trailing silence counter.
+    pAqData->mTrailingSilenceLength += 1000 * aAudioQueueBuffer->mAudioDataByteSize /
+        (pAqData->mDataFormat.mSampleRate * pAqData->mMaxPacketSize);
   }
 
   // If the audio queue has stopped, return.

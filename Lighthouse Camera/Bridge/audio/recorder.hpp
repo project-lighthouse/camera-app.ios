@@ -22,7 +22,15 @@ namespace lighthouse {
 // A lower audio power level that is still not considered as silence.
 static const double kMinSoundPowerLevelThreshold = -22.0;
 
+// Length of the audio buffer in milliseconds.
+static const uint32_t kAudioBufferLengthMs = 100;
+
+// Max length of the *trailing* silence after which we should stop recording.
+static const uint32_t kMaxTrailingSilenceLengthMs = 2000;
+
 struct AudioQueueRecorderState : AudioQueueState {
+  // Length of the trailing silence in milliseconds.
+  uint32_t mTrailingSilenceLength;
 };
 
 class Recorder {
@@ -43,11 +51,12 @@ private:
    * all the factors that might affect buffer size, such as the number of audio channels.
    * @param aAudioQueue The audio queue that owns the buffers whose size we'd like to specify.
    * @param aAudioStreamDescription The AudioStreamBasicDescription structure for the audio queue.
-   * @param aSeconds The size for each audio queue buffer in seconds of audio.
+   * @param aBufferLengthMs The length for each audio queue buffer in milliseconds of audio.
    * @param[out] aBufferSize The size for each audio queue buffer in bytes.
+   * @param[out] aMaxPacketSize The maximum size of the packet (CBR or VBR).
    **/
   static void DeriveBufferSize(AudioQueueRef aAudioQueue, AudioStreamBasicDescription &aAudioStreamDescription,
-      Float64 aSeconds, UInt32 *aBufferSize);
+      Float64 aBufferLengthMs, UInt32 *aBufferSize, UInt32 *aMaxPacketSize);
 
   /**
    * The Recording Audio Queue Callback.
