@@ -7,10 +7,10 @@
 //
 
 #include <opencv2/opencv.hpp> // Must be imported before Cocoa
+#include <opencv2/imgcodecs/ios.h>
 
 #include <AVFoundation/AVFoundation.h>
 
-#include "image.hpp"
 #include "feedback.hpp"
 #include "feedback.h"
 #include "filesystem.hpp"
@@ -27,7 +27,7 @@ SEL onItemRecordedSelector = @selector(onItemRecorded:);
 void
 Feedback::ReceivedFrame(const char* info, cv::Mat& frame) {
   fprintf(stderr, "Feedback::ReceivedFrame(%s) got frame (%d,%d), %d channels, type %d\n", info, frame.rows, frame.cols, frame.channels(), frame.type());
-  UIImage* image = matrixToImage(frame); // FIXME: Who owns that?
+  UIImage* image = MatToUIImage(frame);
   [sViewController performSelectorOnMainThread:showFrameSelector withObject:image waitUntilDone:false];
   fprintf(stderr, "Feedback::ReceivedFrame(%s) dispatched frame\n", info);
   ShowLabel(info);

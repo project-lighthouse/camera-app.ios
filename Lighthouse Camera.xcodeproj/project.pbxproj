@@ -70,7 +70,6 @@
 		6314DD701E2920DC00B5689D /* kernel.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = kernel.mp4; sourceTree = "<group>"; };
 		6333A3331E1FC22C002CF407 /* feedback.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = feedback.mm; sourceTree = "<group>"; };
 		6333A3341E1FC22C002CF407 /* feedback.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = feedback.hpp; sourceTree = "<group>"; };
-		6333A3371E1FD4F8002CF407 /* image.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = image.hpp; sourceTree = "<group>"; };
 		6333A3381E1FEEBF002CF407 /* feedback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = feedback.h; sourceTree = "<group>"; };
 		6333A3391E203043002CF407 /* box.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = box.mp4; sourceTree = "<group>"; };
 		63B98FD31E03F211000125CB /* Lighthouse Camera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Lighthouse Camera.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -374,7 +373,6 @@
 			children = (
 				7A608B0F1E0AC54600A88001 /* bridge.h */,
 				7A608B101E0AC54600A88001 /* bridge.mm */,
-				6333A3371E1FD4F8002CF407 /* image.hpp */,
 				7AD590661E1BC2ED00958FEB /* filesystem.mm */,
 				7AD590671E1BC2ED00958FEB /* filesystem.hpp */,
 				6333A3331E1FC22C002CF407 /* feedback.mm */,
