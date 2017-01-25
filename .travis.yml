@@ -12,10 +12,6 @@ before_install:
   - git lfs track 3rdparty/opencv-ios.zip
   - git lfs pull
 
-install:
-  # Travis ships with an old version of rvm that causes travis issue #6307
-  - rvm get stable
-
 before_script:
   # Make outputs more readable.
   - gem install xcpretty-travis-formatter
@@ -24,9 +20,4 @@ before_script:
 
 # The default script uses xctool for building, which doesn't work anymore. Overriding.
 script:
-  - xcodebuild build -project "Lighthouse Camera.xcodeproj" -scheme "Lighthouse Camera Travis Tests" -sdk iphonesimulator10.2 ONLY_ACTIVE_ARCH=NO | xcpretty -f `xcpretty-travis-formatter` && exit ${PIPESTATUS[0]}
-  # Now build for xctool. Disable code coverage, otherwise xctool won't find the binary.
-  - xcodebuild build-for-testing -enableCodeCoverage NO -project "Lighthouse Camera.xcodeproj" -scheme "Lighthouse Camera" -sdk iphonesimulator10.2 | xcpretty -f `xcpretty-travis-formatter` && exit ${PIPESTATUS[0]}
-  # Interestingly, xcodebuild doesn't know how to launch tests for iOS. So, use xctool for this.
-  - 3rdparty/xctool/xctool.sh run-tests -test-sdk iphonesimulator10.2 -scheme "Lighthouse Camera"
-  - echo "Look, .travis.yml is complete!"
+  - make test
