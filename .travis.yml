@@ -21,4 +21,4 @@ before_script:
 # The default script uses xctool, which doesn't work anymore. Overriding.
 script:
   - xcodebuild build -project "Lighthouse Camera.xcodeproj" -scheme "Lighthouse Camera Travis Tests" -sdk iphonesimulator10.2 ONLY_ACTIVE_ARCH=NO | xcpretty -f `xcpretty-travis-formatter` && exit ${PIPESTATUS[0]}
-
+  - xcodebuild build-for-testing -enableCodeCoverage YES -project "Lighthouse Camera.xcodeproj" -scheme "Lighthouse Camera" -sdk iphonesimulator10.2 | xcpretty -f `xcpretty-travis-formatter` && exit ${PIPESTATUS[0]}

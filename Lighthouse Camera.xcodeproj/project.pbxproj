@@ -17,6 +17,7 @@
 		6314DD771E2920DC00B5689D /* kernel.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6314DD701E2920DC00B5689D /* kernel.mp4 */; };
 		6333A3351E1FC22C002CF407 /* feedback.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6333A3331E1FC22C002CF407 /* feedback.mm */; };
 		6333A33A1E203043002CF407 /* box.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6333A3391E203043002CF407 /* box.mp4 */; };
+		6386F96A1E37FB99005A9EAC /* opencv2.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7A608B091E0ABE6900A88001 /* opencv2.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		63B98FD71E03F211000125CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B98FD61E03F211000125CB /* AppDelegate.swift */; };
 		63B98FDE1E03F211000125CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63B98FDD1E03F211000125CB /* Assets.xcassets */; };
 		63B98FEC1E03F211000125CB /* Lighthouse_CameraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B98FEB1E03F211000125CB /* Lighthouse_CameraTests.swift */; };
@@ -58,6 +59,19 @@
 			remoteInfo = "Lighthouse Camera";
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6386F9691E37FB8F005A9EAC /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				6386F96A1E37FB99005A9EAC /* opencv2.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		6314DD681E265BAB00B5689D /* now-you-see-me.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "now-you-see-me.mp4"; sourceTree = "<group>"; };
@@ -600,6 +614,7 @@
 				63B98FE31E03F211000125CB /* Sources */,
 				63B98FE41E03F211000125CB /* Frameworks */,
 				63B98FE51E03F211000125CB /* Resources */,
+				6386F9691E37FB8F005A9EAC /* CopyFiles */,
 			);
 			buildRules = (
 			);
