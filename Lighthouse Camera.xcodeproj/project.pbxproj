@@ -43,7 +43,6 @@
 		8594D440129263F13633F2C3 /* recorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8594DD5A2AFE95188BED776E /* recorder.cpp */; };
 		F14F217E077F14990E4DD804 /* libPods-Lighthouse CameraUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1739BDF3BC9E4CCDABF08B2E /* libPods-Lighthouse CameraUITests.a */; };
 		F9FBF9E688843E71DE40BFE2 /* libPods-Lighthouse Camera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A928AAF997147D2226F33A8 /* libPods-Lighthouse Camera.a */; };
-		FCAE6CE398101D02BF5ADC84 /* libPods-Lighthouse CameraTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C56E4AC66ED140571971EFE6 /* libPods-Lighthouse CameraTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -238,7 +237,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FCAE6CE398101D02BF5ADC84 /* libPods-Lighthouse CameraTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1015,6 +1013,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				KEEP_PRIVATE_EXTERNS = NO;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1064,6 +1063,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				KEEP_PRIVATE_EXTERNS = NO;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -1223,6 +1223,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
