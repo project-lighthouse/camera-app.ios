@@ -41,6 +41,7 @@
 		7AE727E11E13D5E5007B3758 /* manual.html in Resources */ = {isa = PBXBuildFile; fileRef = 7AE727BF1E13D5E5007B3758 /* manual.html */; };
 		8594D0A0392254E78E80A1C4 /* player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8594DD8343F2242CEFF07B76 /* player.cpp */; };
 		8594D440129263F13633F2C3 /* recorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8594DD5A2AFE95188BED776E /* recorder.cpp */; };
+		D5C2956FA309366D6BFB3012 /* libPods-Lighthouse CameraTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C56E4AC66ED140571971EFE6 /* libPods-Lighthouse CameraTests.a */; };
 		F14F217E077F14990E4DD804 /* libPods-Lighthouse CameraUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1739BDF3BC9E4CCDABF08B2E /* libPods-Lighthouse CameraUITests.a */; };
 		F9FBF9E688843E71DE40BFE2 /* libPods-Lighthouse Camera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A928AAF997147D2226F33A8 /* libPods-Lighthouse Camera.a */; };
 /* End PBXBuildFile section */
@@ -237,6 +238,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5C2956FA309366D6BFB3012 /* libPods-Lighthouse CameraTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

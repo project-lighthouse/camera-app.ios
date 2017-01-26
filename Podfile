@@ -1,11 +1,11 @@
 target 'Lighthouse Camera' do
-  pod 'OpenCV', '~> 3.1'
+  pod 'OpenCV-iOS', '~> 3.x'
 end
 
 target 'Lighthouse CameraTests' do
-  pod 'OpenCV', '~> 3.1'
+  pod 'OpenCV-iOS', '~> 3.x'
 end
 
 target 'Lighthouse CameraUITests' do
-  pod 'OpenCV', '~> 3.1'
+  pod 'OpenCV-iOS', '~> 3.x'
 end
