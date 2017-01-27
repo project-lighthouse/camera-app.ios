@@ -24,6 +24,7 @@
 		63B98FF71E03F211000125CB /* Lighthouse_CameraUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B98FF61E03F211000125CB /* Lighthouse_CameraUITests.swift */; };
 		63C81B7D1E1BD23F005F850E /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A608B091E0ABE6900A88001 /* opencv2.framework */; };
 		63D7472A1E1E75C100025CE2 /* video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63D747281E1E75C100025CE2 /* video.cpp */; };
+		64138EE852140DF188C20D9E /* libPods-Lighthouse Camera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CCB802F2DD250D13EE600A82 /* libPods-Lighthouse Camera.a */; };
 		7A018E751E0AA40700EEB90B /* Lib in Resources */ = {isa = PBXBuildFile; fileRef = 7A018E741E0AA40700EEB90B /* Lib */; };
 		7A2FBF221E0D3F20001B4E8A /* image_matcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A2FBF201E0D3F20001B4E8A /* image_matcher.cpp */; };
 		7A2FBF251E0D4138001B4E8A /* image_description.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7A2FBF231E0D4138001B4E8A /* image_description.cpp */; };
@@ -41,9 +42,8 @@
 		7AE727E11E13D5E5007B3758 /* manual.html in Resources */ = {isa = PBXBuildFile; fileRef = 7AE727BF1E13D5E5007B3758 /* manual.html */; };
 		8594D0A0392254E78E80A1C4 /* player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8594DD8343F2242CEFF07B76 /* player.cpp */; };
 		8594D440129263F13633F2C3 /* recorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8594DD5A2AFE95188BED776E /* recorder.cpp */; };
-		D5C2956FA309366D6BFB3012 /* libPods-Lighthouse CameraTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C56E4AC66ED140571971EFE6 /* libPods-Lighthouse CameraTests.a */; };
-		F14F217E077F14990E4DD804 /* libPods-Lighthouse CameraUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1739BDF3BC9E4CCDABF08B2E /* libPods-Lighthouse CameraUITests.a */; };
-		F9FBF9E688843E71DE40BFE2 /* libPods-Lighthouse Camera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A928AAF997147D2226F33A8 /* libPods-Lighthouse Camera.a */; };
+		C7BDE14A8562103B9BA97497 /* libPods-Lighthouse CameraTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CDB50A09328E5CBB76F7C5A0 /* libPods-Lighthouse CameraTests.a */; };
+		F9D59B485EE5A953AD6B183A /* libPods-Lighthouse CameraUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19EFBF94A576FE5689EF7E65 /* libPods-Lighthouse CameraUITests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,11 +77,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1739BDF3BC9E4CCDABF08B2E /* libPods-Lighthouse CameraUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Lighthouse CameraUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		1A928AAF997147D2226F33A8 /* libPods-Lighthouse Camera.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Lighthouse Camera.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D7DE24BD91F0E93FFB83A7A /* Pods-Lighthouse CameraUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse CameraUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse CameraUITests/Pods-Lighthouse CameraUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		2ECEDF1F41B05A8C05877567 /* Pods-Lighthouse CameraTests.debug developer.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse CameraTests.debug developer.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse CameraTests/Pods-Lighthouse CameraTests.debug developer.xcconfig"; sourceTree = "<group>"; };
-		3C2AFF4896C26321CFDA0B17 /* Pods-Lighthouse CameraTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse CameraTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse CameraTests/Pods-Lighthouse CameraTests.release.xcconfig"; sourceTree = "<group>"; };
+		00F676A5A11FD62AEAF327F0 /* Pods-Lighthouse Camera.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse Camera.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse Camera/Pods-Lighthouse Camera.release.xcconfig"; sourceTree = "<group>"; };
+		08A3A3A71819A157CC63FA30 /* Pods-Lighthouse CameraTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse CameraTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse CameraTests/Pods-Lighthouse CameraTests.debug.xcconfig"; sourceTree = "<group>"; };
+		0D77EF0C73E742AF4D123875 /* Pods-Lighthouse Camera.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse Camera.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse Camera/Pods-Lighthouse Camera.debug.xcconfig"; sourceTree = "<group>"; };
+		19EFBF94A576FE5689EF7E65 /* libPods-Lighthouse CameraUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Lighthouse CameraUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1BCBB6558E1B4BF8BA1EB7A2 /* Pods-Lighthouse CameraTests.debug developer.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse CameraTests.debug developer.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse CameraTests/Pods-Lighthouse CameraTests.debug developer.xcconfig"; sourceTree = "<group>"; };
 		6314DD681E265BAB00B5689D /* now-you-see-me.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "now-you-see-me.mp4"; sourceTree = "<group>"; };
 		6314DD6A1E2920DC00B5689D /* paper.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = paper.mp4; sourceTree = "<group>"; };
 		6314DD6B1E2920DC00B5689D /* bottle1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = bottle1.mp4; sourceTree = "<group>"; };
@@ -106,7 +106,7 @@
 		63B98FF81E03F211000125CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63D747281E1E75C100025CE2 /* video.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = video.cpp; path = video/video.cpp; sourceTree = "<group>"; };
 		63D747291E1E75C100025CE2 /* video.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = video.hpp; path = video/video.hpp; sourceTree = "<group>"; };
-		75FF1B395880FEAF3C8E6863 /* Pods-Lighthouse CameraUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse CameraUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse CameraUITests/Pods-Lighthouse CameraUITests.release.xcconfig"; sourceTree = "<group>"; };
+		6BDA0EF0B0ECCC2CA0F1594B /* Pods-Lighthouse CameraUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse CameraUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse CameraUITests/Pods-Lighthouse CameraUITests.release.xcconfig"; sourceTree = "<group>"; };
 		7A018E741E0AA40700EEB90B /* Lib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Lib; path = "$(PROJECT_DIR)/Lib"; sourceTree = "<absolute>"; };
 		7A2FBF201E0D3F20001B4E8A /* image_matcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image_matcher.cpp; sourceTree = "<group>"; };
 		7A2FBF211E0D3F20001B4E8A /* image_matcher.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = image_matcher.hpp; sourceTree = "<group>"; };
@@ -209,17 +209,17 @@
 		7AE727DE1E13D5E5007B3758 /* valarray.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = valarray.hpp; sourceTree = "<group>"; };
 		7AE727DF1E13D5E5007B3758 /* vector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vector.hpp; sourceTree = "<group>"; };
 		7AED7F681E156576006F2C23 /* serialization.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = serialization.hpp; sourceTree = "<group>"; };
-		82C84EFB98DC851AF66FDE9B /* Pods-Lighthouse CameraTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse CameraTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse CameraTests/Pods-Lighthouse CameraTests.debug.xcconfig"; sourceTree = "<group>"; };
-		8450E71F418018BEFDFB7966 /* Pods-Lighthouse Camera.debug developer.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse Camera.debug developer.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse Camera/Pods-Lighthouse Camera.debug developer.xcconfig"; sourceTree = "<group>"; };
 		8594D2A7ECB792A81B0EFFEA /* recorder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = recorder.hpp; sourceTree = "<group>"; };
 		8594D5911473B08ADAC6F7D8 /* player.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = player.hpp; sourceTree = "<group>"; };
 		8594DD5A2AFE95188BED776E /* recorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = recorder.cpp; sourceTree = "<group>"; };
 		8594DD6CE7954D4481E4BD24 /* audio.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = audio.hpp; sourceTree = "<group>"; };
 		8594DD8343F2242CEFF07B76 /* player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = player.cpp; sourceTree = "<group>"; };
-		867BAB7782B53967A00E572A /* Pods-Lighthouse Camera.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse Camera.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse Camera/Pods-Lighthouse Camera.release.xcconfig"; sourceTree = "<group>"; };
-		91E605B08910607D6DC6EB6A /* Pods-Lighthouse CameraUITests.debug developer.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse CameraUITests.debug developer.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse CameraUITests/Pods-Lighthouse CameraUITests.debug developer.xcconfig"; sourceTree = "<group>"; };
-		B11C18B2A2F901F0C382FF86 /* Pods-Lighthouse Camera.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse Camera.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse Camera/Pods-Lighthouse Camera.debug.xcconfig"; sourceTree = "<group>"; };
-		C56E4AC66ED140571971EFE6 /* libPods-Lighthouse CameraTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Lighthouse CameraTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9865A347109E709447B0CF15 /* Pods-Lighthouse CameraUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse CameraUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse CameraUITests/Pods-Lighthouse CameraUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		9D72AB87EC03E1C922DFC001 /* Pods-Lighthouse Camera.debug developer.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse Camera.debug developer.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse Camera/Pods-Lighthouse Camera.debug developer.xcconfig"; sourceTree = "<group>"; };
+		AE21728DCB274E30C908D61E /* Pods-Lighthouse CameraUITests.debug developer.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse CameraUITests.debug developer.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse CameraUITests/Pods-Lighthouse CameraUITests.debug developer.xcconfig"; sourceTree = "<group>"; };
+		CCB802F2DD250D13EE600A82 /* libPods-Lighthouse Camera.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Lighthouse Camera.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CDB50A09328E5CBB76F7C5A0 /* libPods-Lighthouse CameraTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Lighthouse CameraTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9B4F300835173F39AD03793 /* Pods-Lighthouse CameraTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse CameraTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse CameraTests/Pods-Lighthouse CameraTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -230,7 +230,7 @@
 				7A493F351E1EBB7300394AA5 /* AudioToolbox.framework in Frameworks */,
 				7A493F331E1EB7B800394AA5 /* CoreAudio.framework in Frameworks */,
 				63C81B7D1E1BD23F005F850E /* opencv2.framework in Frameworks */,
-				F9FBF9E688843E71DE40BFE2 /* libPods-Lighthouse Camera.a in Frameworks */,
+				64138EE852140DF188C20D9E /* libPods-Lighthouse Camera.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,7 +238,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D5C2956FA309366D6BFB3012 /* libPods-Lighthouse CameraTests.a in Frameworks */,
+				C7BDE14A8562103B9BA97497 /* libPods-Lighthouse CameraTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,7 +246,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F14F217E077F14990E4DD804 /* libPods-Lighthouse CameraUITests.a in Frameworks */,
+				F9D59B485EE5A953AD6B183A /* libPods-Lighthouse CameraUITests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,7 +278,7 @@
 				63B98FF51E03F211000125CB /* Lighthouse CameraUITests */,
 				63B98FD41E03F211000125CB /* Products */,
 				7AF59F771E0855760055266A /* Frameworks */,
-				8170C7F7413910EFF8AC14A1 /* Pods */,
+				F4A920353A927F1F518D2F4F /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -590,27 +590,11 @@
 				7A493F341E1EBB7300394AA5 /* AudioToolbox.framework */,
 				7A493F321E1EB7B800394AA5 /* CoreAudio.framework */,
 				7A608B091E0ABE6900A88001 /* opencv2.framework */,
-				1A928AAF997147D2226F33A8 /* libPods-Lighthouse Camera.a */,
-				C56E4AC66ED140571971EFE6 /* libPods-Lighthouse CameraTests.a */,
-				1739BDF3BC9E4CCDABF08B2E /* libPods-Lighthouse CameraUITests.a */,
+				CCB802F2DD250D13EE600A82 /* libPods-Lighthouse Camera.a */,
+				CDB50A09328E5CBB76F7C5A0 /* libPods-Lighthouse CameraTests.a */,
+				19EFBF94A576FE5689EF7E65 /* libPods-Lighthouse CameraUITests.a */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		8170C7F7413910EFF8AC14A1 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				B11C18B2A2F901F0C382FF86 /* Pods-Lighthouse Camera.debug.xcconfig */,
-				8450E71F418018BEFDFB7966 /* Pods-Lighthouse Camera.debug developer.xcconfig */,
-				867BAB7782B53967A00E572A /* Pods-Lighthouse Camera.release.xcconfig */,
-				82C84EFB98DC851AF66FDE9B /* Pods-Lighthouse CameraTests.debug.xcconfig */,
-				2ECEDF1F41B05A8C05877567 /* Pods-Lighthouse CameraTests.debug developer.xcconfig */,
-				3C2AFF4896C26321CFDA0B17 /* Pods-Lighthouse CameraTests.release.xcconfig */,
-				2D7DE24BD91F0E93FFB83A7A /* Pods-Lighthouse CameraUITests.debug.xcconfig */,
-				91E605B08910607D6DC6EB6A /* Pods-Lighthouse CameraUITests.debug developer.xcconfig */,
-				75FF1B395880FEAF3C8E6863 /* Pods-Lighthouse CameraUITests.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		8594D5CF01BA67F014F47E13 /* audio */ = {
@@ -625,6 +609,22 @@
 			path = audio;
 			sourceTree = "<group>";
 		};
+		F4A920353A927F1F518D2F4F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0D77EF0C73E742AF4D123875 /* Pods-Lighthouse Camera.debug.xcconfig */,
+				9D72AB87EC03E1C922DFC001 /* Pods-Lighthouse Camera.debug developer.xcconfig */,
+				00F676A5A11FD62AEAF327F0 /* Pods-Lighthouse Camera.release.xcconfig */,
+				08A3A3A71819A157CC63FA30 /* Pods-Lighthouse CameraTests.debug.xcconfig */,
+				1BCBB6558E1B4BF8BA1EB7A2 /* Pods-Lighthouse CameraTests.debug developer.xcconfig */,
+				D9B4F300835173F39AD03793 /* Pods-Lighthouse CameraTests.release.xcconfig */,
+				9865A347109E709447B0CF15 /* Pods-Lighthouse CameraUITests.debug.xcconfig */,
+				AE21728DCB274E30C908D61E /* Pods-Lighthouse CameraUITests.debug developer.xcconfig */,
+				6BDA0EF0B0ECCC2CA0F1594B /* Pods-Lighthouse CameraUITests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -632,12 +632,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 63B98FFB1E03F211000125CB /* Build configuration list for PBXNativeTarget "Lighthouse Camera" */;
 			buildPhases = (
-				B11733CCDBEB94D87A22FAD4 /* [CP] Check Pods Manifest.lock */,
+				DFE30AEDC8390E13014D382F /* [CP] Check Pods Manifest.lock */,
 				63B98FCF1E03F210000125CB /* Sources */,
 				63B98FD01E03F210000125CB /* Frameworks */,
 				63B98FD11E03F210000125CB /* Resources */,
-				4719F350A6CD979AC9C3ABC1 /* [CP] Embed Pods Frameworks */,
-				21D5C8C869C09C7C1B5F1D08 /* [CP] Copy Pods Resources */,
+				C667B6B8996E4B72FFE0D472 /* [CP] Embed Pods Frameworks */,
+				D239A22D5EE9002BDA024333 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -652,13 +652,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 63B98FFE1E03F211000125CB /* Build configuration list for PBXNativeTarget "Lighthouse CameraTests" */;
 			buildPhases = (
-				E9BCC65D1DF061C528F15017 /* [CP] Check Pods Manifest.lock */,
+				218D19820A1134D6D4C64CD0 /* [CP] Check Pods Manifest.lock */,
 				63B98FE31E03F211000125CB /* Sources */,
 				63B98FE41E03F211000125CB /* Frameworks */,
 				63B98FE51E03F211000125CB /* Resources */,
 				6386F9691E37FB8F005A9EAC /* CopyFiles */,
-				C6C6D443A4622D5534999540 /* [CP] Embed Pods Frameworks */,
-				82C932B0C90D3C01638F2DCF /* [CP] Copy Pods Resources */,
+				D67E324C9A51159598656DE8 /* [CP] Embed Pods Frameworks */,
+				32A9D118445556EBD7D210D7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -674,12 +674,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 63B990011E03F211000125CB /* Build configuration list for PBXNativeTarget "Lighthouse CameraUITests" */;
 			buildPhases = (
-				BFC218EF80F1956ED356E07E /* [CP] Check Pods Manifest.lock */,
+				16C3BFF67CD6F379959EF016 /* [CP] Check Pods Manifest.lock */,
 				63B98FEE1E03F211000125CB /* Sources */,
 				63B98FEF1E03F211000125CB /* Frameworks */,
 				63B98FF01E03F211000125CB /* Resources */,
-				0EF7024ED459C723A10B3085 /* [CP] Embed Pods Frameworks */,
-				C037A27CB87102E301E812AB /* [CP] Copy Pods Resources */,
+				6574744AB99937CE0567B110 /* [CP] Embed Pods Frameworks */,
+				B5F0FE87A63A23BBEA1E602E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -781,52 +781,37 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0EF7024ED459C723A10B3085 /* [CP] Embed Pods Frameworks */ = {
+		16C3BFF67CD6F379959EF016 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lighthouse CameraUITests/Pods-Lighthouse CameraUITests-frameworks.sh\"\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		21D5C8C869C09C7C1B5F1D08 /* [CP] Copy Pods Resources */ = {
+		218D19820A1134D6D4C64CD0 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "[CP] Copy Pods Resources";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lighthouse Camera/Pods-Lighthouse Camera-resources.sh\"\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		4719F350A6CD979AC9C3ABC1 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lighthouse Camera/Pods-Lighthouse Camera-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		82C932B0C90D3C01638F2DCF /* [CP] Copy Pods Resources */ = {
+		32A9D118445556EBD7D210D7 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -841,37 +826,22 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lighthouse CameraTests/Pods-Lighthouse CameraTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B11733CCDBEB94D87A22FAD4 /* [CP] Check Pods Manifest.lock */ = {
+		6574744AB99937CE0567B110 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "[CP] Check Pods Manifest.lock";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lighthouse CameraUITests/Pods-Lighthouse CameraUITests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		BFC218EF80F1956ED356E07E /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		C037A27CB87102E301E812AB /* [CP] Copy Pods Resources */ = {
+		B5F0FE87A63A23BBEA1E602E /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -886,7 +856,37 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lighthouse CameraUITests/Pods-Lighthouse CameraUITests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C6C6D443A4622D5534999540 /* [CP] Embed Pods Frameworks */ = {
+		C667B6B8996E4B72FFE0D472 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lighthouse Camera/Pods-Lighthouse Camera-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D239A22D5EE9002BDA024333 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lighthouse Camera/Pods-Lighthouse Camera-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D67E324C9A51159598656DE8 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -901,7 +901,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Lighthouse CameraTests/Pods-Lighthouse CameraTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E9BCC65D1DF061C528F15017 /* [CP] Check Pods Manifest.lock */ = {
+		DFE30AEDC8390E13014D382F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1015,7 +1015,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				KEEP_PRIVATE_EXTERNS = NO;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1065,7 +1065,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				KEEP_PRIVATE_EXTERNS = NO;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -1076,7 +1076,7 @@
 		};
 		63B98FFC1E03F211000125CB /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B11C18B2A2F901F0C382FF86 /* Pods-Lighthouse Camera.debug.xcconfig */;
+			baseConfigurationReference = 0D77EF0C73E742AF4D123875 /* Pods-Lighthouse Camera.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1087,10 +1087,16 @@
 					"$(PROJECT_DIR)/Lib/**",
 					"$(PROJECT_DIR)/Lib",
 				);
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Lib";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Lib",
+				);
 				INFOPLIST_FILE = "Lighthouse Camera/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Lib/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Lib/**",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = cd.mozilla.org.lighthouse.cam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Lighthouse Camera/Bridge/bridge.h";
@@ -1101,7 +1107,7 @@
 		};
 		63B98FFD1E03F211000125CB /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 867BAB7782B53967A00E572A /* Pods-Lighthouse Camera.release.xcconfig */;
+			baseConfigurationReference = 00F676A5A11FD62AEAF327F0 /* Pods-Lighthouse Camera.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1112,10 +1118,16 @@
 					"$(PROJECT_DIR)/Lib/**",
 					"$(PROJECT_DIR)/Lib",
 				);
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Lib";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Lib",
+				);
 				INFOPLIST_FILE = "Lighthouse Camera/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Lib/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Lib/**",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = cd.mozilla.org.lighthouse.cam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Lighthouse Camera/Bridge/bridge.h";
@@ -1125,9 +1137,9 @@
 		};
 		63B98FFF1E03F211000125CB /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 82C84EFB98DC851AF66FDE9B /* Pods-Lighthouse CameraTests.debug.xcconfig */;
+			baseConfigurationReference = 08A3A3A71819A157CC63FA30 /* Pods-Lighthouse CameraTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = "Lighthouse CameraTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1140,9 +1152,9 @@
 		};
 		63B990001E03F211000125CB /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3C2AFF4896C26321CFDA0B17 /* Pods-Lighthouse CameraTests.release.xcconfig */;
+			baseConfigurationReference = D9B4F300835173F39AD03793 /* Pods-Lighthouse CameraTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = "Lighthouse CameraTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1155,9 +1167,9 @@
 		};
 		63B990021E03F211000125CB /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2D7DE24BD91F0E93FFB83A7A /* Pods-Lighthouse CameraUITests.debug.xcconfig */;
+			baseConfigurationReference = 9865A347109E709447B0CF15 /* Pods-Lighthouse CameraUITests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Lighthouse CameraUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1170,9 +1182,9 @@
 		};
 		63B990031E03F211000125CB /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 75FF1B395880FEAF3C8E6863 /* Pods-Lighthouse CameraUITests.release.xcconfig */;
+			baseConfigurationReference = 6BDA0EF0B0ECCC2CA0F1594B /* Pods-Lighthouse CameraUITests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Lighthouse CameraUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1225,7 +1237,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1237,7 +1249,7 @@
 		};
 		7ADCE4BF1E25686B007F6E02 /* Debug Developer */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8450E71F418018BEFDFB7966 /* Pods-Lighthouse Camera.debug developer.xcconfig */;
+			baseConfigurationReference = 9D72AB87EC03E1C922DFC001 /* Pods-Lighthouse Camera.debug developer.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1248,10 +1260,16 @@
 					"$(PROJECT_DIR)/Lib/**",
 					"$(PROJECT_DIR)/Lib",
 				);
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Lib";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Lib",
+				);
 				INFOPLIST_FILE = "Lighthouse Camera/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Lib/**";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Lib/**",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = cd.mozilla.org.lighthouse.cam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Lighthouse Camera/Bridge/bridge.h";
@@ -1262,9 +1280,9 @@
 		};
 		7ADCE4C01E25686B007F6E02 /* Debug Developer */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2ECEDF1F41B05A8C05877567 /* Pods-Lighthouse CameraTests.debug developer.xcconfig */;
+			baseConfigurationReference = 1BCBB6558E1B4BF8BA1EB7A2 /* Pods-Lighthouse CameraTests.debug developer.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = "Lighthouse CameraTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1277,9 +1295,9 @@
 		};
 		7ADCE4C11E25686B007F6E02 /* Debug Developer */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 91E605B08910607D6DC6EB6A /* Pods-Lighthouse CameraUITests.debug developer.xcconfig */;
+			baseConfigurationReference = AE21728DCB274E30C908D61E /* Pods-Lighthouse CameraUITests.debug developer.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Lighthouse CameraUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

@@ -1,3 +1,5 @@
+project 'Lighthouse Camera.xcodeproj'
+
 target 'Lighthouse Camera' do
   pod 'OpenCV-iOS', '~> 3.x'
 end
