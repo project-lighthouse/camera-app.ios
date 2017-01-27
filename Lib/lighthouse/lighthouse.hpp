@@ -103,6 +103,9 @@ private:
 
   // A thread designed to run all blocking camera/vision operations.
   std::thread mVideoThread;
+  // Id of the video thread. Use it only to check that you are on that thread.
+  std::thread::id mVideoThreadId;
+
   // Representation of the latest `Task` requested from the event loop.
   std::atomic_int mTask;
   // A stamp incremented each time we send a message to the event loop.
