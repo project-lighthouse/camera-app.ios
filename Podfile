@@ -1,13 +1,23 @@
-project 'Lighthouse Camera.xcodeproj'
+# Uncomment the next line to define a global platform for your project
+platform :ios, '10.0'
+
+workspace 'Lighthouse Camera'
 
 target 'Lighthouse Camera' do
-  pod 'OpenCV-iOS', '~> 3.x'
-end
+  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+  use_frameworks!
 
-target 'Lighthouse CameraTests' do
-  pod 'OpenCV-iOS', '~> 3.x'
-end
+  # Pods for Lighthouse Camera
+  pod 'OpenCV-Dynamic', '~> 3.x'
 
-target 'Lighthouse CameraUITests' do
-  pod 'OpenCV-iOS', '~> 3.x'
+  target 'Lighthouse CameraTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+  target 'Lighthouse CameraUITests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
 end
