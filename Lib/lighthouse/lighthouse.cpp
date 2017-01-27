@@ -50,6 +50,7 @@ Lighthouse::Lighthouse(ImageMatchingSettings aImageMatchingSettings)
 
 Lighthouse::~Lighthouse() {
   StopRecord();
+  SendMessage(Task::STOP);
   mVideoThread.join();
 }
 
@@ -255,6 +256,9 @@ void Lighthouse::RunEventLoop() {
         RunIdentifyObject();
         Feedback::OperationComplete();
         continue;
+      case (int) Task::STOP:
+        // We're done with the loop.
+        return;
       default:
         assert(false);
         continue;

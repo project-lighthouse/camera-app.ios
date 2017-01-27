@@ -33,6 +33,8 @@ enum class Task {
   // Record a new object.
   RECORD = 1,
   IDENTIFY = 2,
+
+  STOP,
 };
 
 // Describes all possible assets that are related to the image description, but are managed separately.
