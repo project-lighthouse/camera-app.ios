@@ -10,6 +10,6 @@ if ! which cmake >/dev/null; then
 fi
 
 # Run Swiftlint
-echo "Here comes the output of Swiftlint"
-swiftlint
+# echo "Here comes the output of Swiftlint"
+# swiftlint
 
