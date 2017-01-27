@@ -117,7 +117,6 @@
 		7A493F341E1EBB7300394AA5 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		7A608B061E0ABE1000A88001 /* lighthouse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lighthouse.cpp; sourceTree = "<group>"; };
 		7A608B071E0ABE1000A88001 /* lighthouse.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = lighthouse.hpp; sourceTree = "<group>"; };
-		7A608B091E0ABE6900A88001 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = Lib/opencv2.framework; sourceTree = "<group>"; };
 		7A608B0F1E0AC54600A88001 /* bridge.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = bridge.h; sourceTree = "<group>"; };
 		7A608B101E0AC54600A88001 /* bridge.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = bridge.mm; sourceTree = "<group>"; };
 		7A608B121E0AC59F00A88001 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
