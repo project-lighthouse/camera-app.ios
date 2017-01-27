@@ -8,7 +8,7 @@ target 'Lighthouse Camera' do
   use_frameworks!
 
   # Pods for Lighthouse Camera
-  pod 'OpenCV-Dynamic', '~> 3.x'
+  pod 'OpenCV', '~> 3.x'
 
   target 'Lighthouse CameraTests' do
     inherit! :search_paths
