@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/project-lighthouse/camera-app.ios.svg?branch=master)](https://travis-ci.org/project-lighthouse/camera-app.ios)
+[![BuddyBuild](https://dashboard.buddybuild.com/api/statusImage?appID=588c4477b276cd010079348d&branch=master&build=latest)](https://dashboard.buddybuild.com/apps/588c4477b276cd010079348d/build/latest?branch=master)
 
 # Lighthouse
 
