@@ -149,6 +149,7 @@ Lighthouse::AuxRunEventLoop(Lighthouse *self) {
 }
 
 void Lighthouse::RunIdentifyObject() {
+  assert(std::this_thread::get_id() == mVideoThreadId);
   // Start recording. `mCamera` is in charge of stopping itself if `mTask` stops being `Task::IDENTIFY`.
   cv::Mat sourceImage;
   if (!mCamera.CaptureForIdentification(&mTask, sourceImage)) {
@@ -201,7 +202,7 @@ void Lighthouse::RunIdentifyObject() {
 }
 
 void Lighthouse::RunRecordObject() {
-  assert(std::this_thread::get_id() == mVideoThread.get_id());
+  assert(std::this_thread::get_id() == mVideoThreadId);
   // Start recording. `mCamera` is in charge of stopping itself if `mTask` stops being `Task::RECORD`.
   cv::Mat source;
   if (!mCamera.CaptureForRecord(&mTask, source)) {
@@ -226,7 +227,7 @@ void Lighthouse::RunRecordObject() {
 }
 
 void Lighthouse::RunEventLoop() {
-  assert(std::this_thread::get_id() == mVideoThread.get_id());
+  mVideoThreadId = std::this_thread::get_id();
   // Stamp of the latest message received.
   uint64_t stamp = 0;
   while (true) {
