@@ -1,4 +1,4 @@
-[![BuddyBuild](https://dashboard.buddybuild.com/api/statusImage?appID=588c4477b276cd010079348d&branch=master&build=latest)](https://dashboard.buddybuild.com/apps/588c4477b276cd010079348d/build/latest?branch=master)
+[![BuddyBuild](https://dashboard.buddybuild.com/api/statusImage?appID=588f51230cb8960100bd1d2b&branch=master&build=latest)](https://dashboard.buddybuild.com/apps/588f51230cb8960100bd1d2b/build/latest?branch=master)
 
 # Lighthouse
 
