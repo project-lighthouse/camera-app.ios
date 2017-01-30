@@ -78,6 +78,8 @@
 		366919782DA3916DDE802591 /* Pods-Lighthouse Camera.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse Camera.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse Camera/Pods-Lighthouse Camera.release.xcconfig"; sourceTree = "<group>"; };
 		485D3F56785DCAEA2958DDA1 /* Pods-Lighthouse Camera.debug developer.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse Camera.debug developer.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse Camera/Pods-Lighthouse Camera.debug developer.xcconfig"; sourceTree = "<group>"; };
 		5B1CA736F65497FAC9F12E83 /* Pods_Lighthouse_CameraUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lighthouse_CameraUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		630C735F1E40950C00948F96 /* errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = errors.h; sourceTree = "<group>"; };
+		630C73611E40955300948F96 /* errors.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = errors.hpp; sourceTree = "<group>"; };
 		6314DD681E265BAB00B5689D /* now-you-see-me.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "now-you-see-me.mp4"; sourceTree = "<group>"; };
 		6314DD6A1E2920DC00B5689D /* paper.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = paper.mp4; sourceTree = "<group>"; };
 		6314DD6B1E2920DC00B5689D /* bottle1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = bottle1.mp4; sourceTree = "<group>"; };
@@ -331,6 +333,7 @@
 		7A2FBF1F1E0D3F02001B4E8A /* matching */ = {
 			isa = PBXGroup;
 			children = (
+				630C735F1E40950C00948F96 /* errors.h */,
 				7A2FBF201E0D3F20001B4E8A /* image_matcher.cpp */,
 				7A2FBF211E0D3F20001B4E8A /* image_matcher.hpp */,
 				7A2FBF231E0D4138001B4E8A /* image_description.cpp */,
@@ -363,6 +366,7 @@
 		7A608B051E0ABDF900A88001 /* lighthouse */ = {
 			isa = PBXGroup;
 			children = (
+				630C73611E40955300948F96 /* errors.hpp */,
 				63D747271E1E755D00025CE2 /* video */,
 				7A2FBF1F1E0D3F02001B4E8A /* matching */,
 				7A608B061E0ABE1000A88001 /* lighthouse.cpp */,
