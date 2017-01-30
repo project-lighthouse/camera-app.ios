@@ -32,7 +32,7 @@ using namespace cv;
 Ptr<VideoCapture> OpenCamera() {
   fprintf(stderr, "OpenCamera() start\n");
   auto capture = Ptr<VideoCapture>(new VideoCapture());
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_OS_SIMULATOR
   // Simulator specific code
     
   const std::string resourceName("now-you-see-me");
@@ -43,7 +43,7 @@ Ptr<VideoCapture> OpenCamera() {
     return Ptr<VideoCapture>();
   }
     
-#else // TARGET_IPHONE_SIMULATOR
+#else // TARGET_OS_SIMULATOR
   // Device specific code
     
   if (!capture->open(0)) {
@@ -51,17 +51,43 @@ Ptr<VideoCapture> OpenCamera() {
     return Ptr<VideoCapture>();
   }
     
-#endif // TARGET_IPHONE_SIMULATOR
+#endif // TARGET_OS_SIMULATOR
 
   return capture;
 }
 
+// Method is called *before* picture is taken and performs any necessary camera preparations (sets up focus, turn on
+// flash light etc.) depending on the platform being used.
+void OnBeforeTakePicture(VideoCapture* aCapture) {
+#if TARGET_OS_IOS
+  // FIXME: We should also somehow set the focus point in the middle of view, but it's not exposed through
+  // Set torch and focus modes as AVCaptureTorchModeOn and AVCaptureFocusModeAutoFocus respectively.
+  aCapture->set(cv::CAP_PROP_IOS_DEVICE_TORCH, 1);
+  aCapture->set(cv::CAP_PROP_IOS_DEVICE_FOCUS, 1);
+  // Let's make sure that the "torch" mode is activated and only then grab the frame.
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+#endif // TARGET_OS_IOS
+}
+
+
+// Method is called *after* picture has been taken and effectively releases/cleans up everything that has been made
+// in `OnBeforeTakePicture` (disables auto focus, turns off flashlight etc.) depending on the platform being used.
+void OnAfterTakePicture(VideoCapture* aCapture) {
+#if TARGET_OS_IOS
+  // Set torch and focus modes as AVCaptureTorchModeOff and AVCaptureFocusModeOff respectively.
+  aCapture->set(cv::CAP_PROP_IOS_DEVICE_TORCH, 0);
+  aCapture->set(cv::CAP_PROP_IOS_DEVICE_FOCUS, 0);
+#endif // TARGET_OS_IOS
+}
+
 bool
 TakePicture(VideoCapture* aCapture, Mat& aResult) {
-  // FIXME: Turn ON the flashlight.
+  OnBeforeTakePicture(aCapture);
+  bool isFrameReadSuccessfully = aCapture->read(aResult);
+  OnAfterTakePicture(aCapture);
 
   // FIXME: We might want to take several images and keep the least blurry.
-  if (!aCapture->read(aResult)) {
+  if (!isFrameReadSuccessfully) {
     Feedback::CannotTakePicture();
     return false;
   }
@@ -77,7 +103,6 @@ TakePicture(VideoCapture* aCapture, Mat& aResult) {
   Feedback::PlaySoundNamed("shutter");
   Feedback::ReceivedFrame("TakePicture", aResult);
 
-  // FIXME: Turn OFF the flashlight.
   return true;
 }
 
@@ -198,7 +223,7 @@ NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, c
 
   Feedback::PlaySoundNamed("register_step2");
 
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_OS_SIMULATOR
   // We need to advance the video, otherwise we'll never receive the frames.
   // Note that OpenCV offers primitives for skipping frames, but they don't seem to work on the simulator.
   int frames = 0;
@@ -236,7 +261,7 @@ NowYouSeeMeNowYouDont(const std::chrono::duration<Rep, Period>& sleepDuration, c
     return false;
   }
 
-#endif // TARGET_IPHONE_SIMULATOR
+#endif // TARGET_OS_SIMULATOR
 
   fprintf(stderr, "NowYouSeeMeNowYouDont: Taking imageBackground\n");
   Mat imageBackground;
