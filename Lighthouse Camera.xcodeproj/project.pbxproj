@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		456090756913F1E352339617 /* Pods_Lighthouse_CameraUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1CA736F65497FAC9F12E83 /* Pods_Lighthouse_CameraUITests.framework */; };
+		5C1E03641E4114720075C33A /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C1E03601E4114720075C33A /* PreviewView.swift */; };
+		5C1E03651E4114720075C33A /* PermissionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C1E03611E4114720075C33A /* PermissionHelper.swift */; };
+		5C1E03661E4114720075C33A /* AlertHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C1E03621E4114720075C33A /* AlertHelper.swift */; };
+		5C1E03671E4114720075C33A /* TTSHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C1E03631E4114720075C33A /* TTSHelper.swift */; };
 		6314DD691E265BAB00B5689D /* now-you-see-me.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6314DD681E265BAB00B5689D /* now-you-see-me.mp4 */; };
 		6314DD711E2920DC00B5689D /* paper.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6314DD6A1E2920DC00B5689D /* paper.mp4 */; };
 		6314DD721E2920DC00B5689D /* bottle1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6314DD6B1E2920DC00B5689D /* bottle1.mp4 */; };
@@ -78,6 +82,10 @@
 		366919782DA3916DDE802591 /* Pods-Lighthouse Camera.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse Camera.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse Camera/Pods-Lighthouse Camera.release.xcconfig"; sourceTree = "<group>"; };
 		485D3F56785DCAEA2958DDA1 /* Pods-Lighthouse Camera.debug developer.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lighthouse Camera.debug developer.xcconfig"; path = "Pods/Target Support Files/Pods-Lighthouse Camera/Pods-Lighthouse Camera.debug developer.xcconfig"; sourceTree = "<group>"; };
 		5B1CA736F65497FAC9F12E83 /* Pods_Lighthouse_CameraUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Lighthouse_CameraUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C1E03601E4114720075C33A /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
+		5C1E03611E4114720075C33A /* PermissionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PermissionHelper.swift; sourceTree = "<group>"; };
+		5C1E03621E4114720075C33A /* AlertHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertHelper.swift; sourceTree = "<group>"; };
+		5C1E03631E4114720075C33A /* TTSHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTSHelper.swift; sourceTree = "<group>"; };
 		6314DD681E265BAB00B5689D /* now-you-see-me.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "now-you-see-me.mp4"; sourceTree = "<group>"; };
 		6314DD6A1E2920DC00B5689D /* paper.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = paper.mp4; sourceTree = "<group>"; };
 		6314DD6B1E2920DC00B5689D /* bottle1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = bottle1.mp4; sourceTree = "<group>"; };
@@ -391,6 +399,10 @@
 		7A608B0D1E0AC22500A88001 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				5C1E03601E4114720075C33A /* PreviewView.swift */,
+				5C1E03611E4114720075C33A /* PermissionHelper.swift */,
+				5C1E03621E4114720075C33A /* AlertHelper.swift */,
+				5C1E03631E4114720075C33A /* TTSHelper.swift */,
 				7A608B121E0AC59F00A88001 /* ViewController.swift */,
 			);
 			path = Main;
@@ -921,8 +933,12 @@
 				63D7472A1E1E75C100025CE2 /* video.cpp in Sources */,
 				7A608B111E0AC54600A88001 /* bridge.mm in Sources */,
 				7A2FBF251E0D4138001B4E8A /* image_description.cpp in Sources */,
+				5C1E03661E4114720075C33A /* AlertHelper.swift in Sources */,
 				6333A3351E1FC22C002CF407 /* feedback.mm in Sources */,
+				5C1E03641E4114720075C33A /* PreviewView.swift in Sources */,
+				5C1E03671E4114720075C33A /* TTSHelper.swift in Sources */,
 				7A608B131E0AC59F00A88001 /* ViewController.swift in Sources */,
+				5C1E03651E4114720075C33A /* PermissionHelper.swift in Sources */,
 				7A2FBF221E0D3F20001B4E8A /* image_matcher.cpp in Sources */,
 				7AD590681E1BC2ED00958FEB /* filesystem.mm in Sources */,
 				7A608B081E0ABE1000A88001 /* lighthouse.cpp in Sources */,

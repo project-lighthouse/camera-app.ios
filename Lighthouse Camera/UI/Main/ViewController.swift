@@ -9,9 +9,8 @@
 import UIKit
 import AVFoundation
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, PreviewViewDelegate {
   var bridge: Bridge!
-
   var isBusy: Bool
 
   required init?(coder aCoder: NSCoder) {
@@ -20,31 +19,33 @@ class ViewController: UIViewController {
   }
 
   //MARK: Properties
+  // Outlet for the captured images
   @IBOutlet weak var imageView: UIImageView!
+  // TBD - Outlet for debug info, to be removed eventually
   @IBOutlet weak var label: UILabel!
+  // Outlet for the live preview UIView
+  @IBOutlet private weak var previewView: PreviewView!
 
-  //MARK: Actions
-
-  // Invoked when the user has clicked on "record".
-  @IBAction func onRecordClick(_ sender: Any) {
-    if self.isBusy {
-      bridge.onStopCapture()
-      self.isBusy = false
-
-      return;
-    }
-
-    // Ask for microphone permission beforehand so that user is not interrupted when he tries to record voice label
-    // for the first time.
-    AVAudioSession.sharedInstance().requestRecordPermission({ (granted: Bool) -> Void in
-      if granted {
-        self.bridge.onRecordObject();
-        self.isBusy = true
-      } else {
-        self.showError(message: "If you want to add or edit voice labels for the images, please, go to " +
-            "Settings > Privacy > Microphone and enable microphone permission for the Lighthouse app.")
+  // Invoked when the user has clicked on "record/capture".
+  @IBAction func onCaptureClick(_ sender: Any) {
+    // Check for camera authorization before starting match
+    checkCameraAuthorization { authorized in
+      if authorized {
+        if self.isBusy {
+            self.bridge.onStopCapture()
+            self.isBusy = false
+        }
+        // Ask for microphone permission beforehand so that user is not interrupted when he tries to record voice label
+        // for the first time.
+        self.checkMicrophoneAuthorization { authorized in
+          if authorized {
+            self.bridge.onRecordObject();
+            self.isBusy = true
+            self.resetView()
+          }
+        }
       }
-    })
+    }
   }
 
   // Invoked when the user clicks to stop the ongoing action.
@@ -52,28 +53,28 @@ class ViewController: UIViewController {
     bridge.onStopCapture();
   }
 
-  // Invoked when the user has clicked on "identify".
-  @IBAction func onIdentifyClick(_ sender: Any) {
-    if self.isBusy {
-      bridge.onStopCapture()
-      self.isBusy = false
-    } else {
-      bridge.onIdentifyObject();
-      self.isBusy = true
+  // Invoked when the user has clicked on "identify/match".
+  @IBAction func onMatchClick(_ sender: Any) {
+    // Check for camera authorization before starting match
+    checkCameraAuthorization { authorized in
+      if authorized {
+        if self.isBusy {
+          self.bridge.onStopCapture()
+          self.isBusy = false
+        } else {
+          self.bridge.onIdentifyObject();
+          self.isBusy = true
+        }
+        self.resetView()
+      }
     }
-  }
-
-  private func showError(message: String) {
-    let alert = UIAlertController(title: "Error", message: message,
-        preferredStyle: UIAlertControllerStyle.alert)
-    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default))
-
-    self.present(alert, animated: true, completion: nil)
   }
 
   @objc(operationComplete)
   public dynamic func operationComplete() {
+    NSLog("operation complete \n");
     self.isBusy = false
+    self.resetView()
   }
 
   // Used by `Feedback` to show frames currently being recorded
@@ -108,10 +109,14 @@ class ViewController: UIViewController {
     super.viewDidLoad()
 
     bridge = Bridge()
-    self.isBusy = false;
+    isBusy = false;
     sViewController = self;
 
-    self.registerSettingsBundle()
+    // Assign the delegate to self, previewView UIView is holding a weak reference to
+    // PreviewViewDelegate class and will be deallocated
+    previewView.delegate = self
+
+    registerSettingsBundle()
 
     // Establish audio session.
     // FIXME: We should probably start session only when we really need it and stop when we don't.
@@ -119,10 +124,41 @@ class ViewController: UIViewController {
     try! session.setCategory(AVAudioSessionCategoryPlayAndRecord,
         with: AVAudioSessionCategoryOptions.defaultToSpeaker)
     try! session.setActive(true)
+
+  }
+
+  func displayPreviewSession() {
+    // Called from PreviewView when it starts preview session
+    // Placeholder for any subsequent logic once preview session displays
   }
 
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
+  }
+
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+  }
+
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    // Check for camera permission before preview view display
+    checkCameraAuthorization { authorized in
+      if authorized {
+        // Announce Lighthouse App is ready to use
+        AVSpeechSynthesizer(textID: .AppReady, rate: 0.55)
+      }
+    }
+  }
+
+  private func resetView() {
+    if isBusy {
+      imageView.isHidden = false
+      previewView.videoPreviewLayer.opacity = 0
+    } else {
+      imageView.isHidden = true
+      previewView.videoPreviewLayer.opacity = 1
+    }
   }
 
   func registerSettingsBundle() {
@@ -130,5 +166,6 @@ class ViewController: UIViewController {
 
     defaults.set(500, forKey: "Matching:NumberOfFeatures")
   }
+
 }
 
