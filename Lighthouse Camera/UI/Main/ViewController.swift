@@ -38,7 +38,19 @@ class ViewController: UIViewController {
     // for the first time.
     AVAudioSession.sharedInstance().requestRecordPermission({ (granted: Bool) -> Void in
       if granted {
-        self.bridge.onRecordObject();
+        class Callback: LighthouseUIImageDelegate {
+          override func onSuccess(_ image: UIImage?) {
+            print("Callback: record onSuccess");
+          }
+          override func onProgress(_ code: NSNumber) {
+            print("Callback: record onProgress %d", code);
+          }
+          override func onError(_ error: Error) {
+            print("Callback: record onError %s", error);
+          }
+        };
+        let cb = Callback();
+        self.bridge.doRecordObject(cb);
         self.isBusy = true
       } else {
         self.showError(message: "If you want to add or edit voice labels for the images, please, go to " +

@@ -21,22 +21,64 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/features2d.hpp>
 
+#include "errors.hpp"
 #include "image_matcher.hpp"
 #include "video.hpp"
 
 namespace lighthouse {
 
+// Instructions for the off main thread event loop.
 enum class Task {
   // Nothing to do.
   WAIT = 0,
 
+  // Stop the thread as soon as possible.
+  SHUTDOWN = 1,
+ 
   // Record a new object.
-  RECORD = 1,
-  IDENTIFY = 2,
+  RECORD = 2,
 
-  STOP,
+  // Identify an object.
+  IDENTIFY = 3,
 };
 
+// The base class for the contents of a message sent to the event loop.
+class AbstractPayload {
+public:
+  virtual ~AbstractPayload() {}
+};
+
+
+// A payload designed to delegate in case of progress or error.
+// Subclasses are generally more useful.
+class BasicDelegate: public AbstractPayload {
+public:
+  virtual void OnError(LighthouseError) = 0;
+  virtual void OnProgress(uint32_t) = 0;
+  virtual ~BasicDelegate() {}
+};
+
+// A payload specialized to only provide a specific value.
+// Used for testing.
+class ValueDelegate: public BasicDelegate {
+public:
+  ValueDelegate(uint32_t aValue):
+    mValue(aValue)
+  {
+    fprintf(stderr, "ValueDelegate(%u)\n", mValue);
+  }
+public:
+  const uint32_t mValue;
+};
+
+  // A payload specialized to return images in case of success.
+class ImageDelegate: public BasicDelegate {
+public:
+  virtual void OnSuccess(cv::Mat aImage) = 0;
+  virtual ~ImageDelegate() {}
+};
+
+  
 // Describes all possible assets that are related to the image description, but are managed separately.
 enum ImageDescriptionAsset {
   // Main binary data for the image description (id, descriptors, keypoints, histogram).
@@ -72,8 +114,14 @@ public:
   std::vector<std::tuple<float, ImageDescription>> FindMatches(const ImageDescription &aDescription) const;
 
   // Start recording a new object.
-  void OnRecordObject();
+  // Takes ownership of `aDelegate`, deletes it immediately after calling it.
+  // Note that the methods of `aDelegate` may be called on any thread.
+  void DoRecordObject(std::unique_ptr<ImageDelegate>&& aDelegate);
 
+  // Do nothing, just call me back once the current operation is over.
+  // Designed mostly for testing.
+  void DoCallback(std::unique_ptr<ValueDelegate>&& aDelegate);
+  
   // Start identifying an existing object.
   void OnIdentifyObject();
 
@@ -86,16 +134,20 @@ private:
   // The event loop is NEVER taken down.
   static void AuxRunEventLoop(Lighthouse *);
 
-  void SendMessage(Task aMessage);
+  // Send a message. Takes ownership of `object`.
+  void SendMessage(Task aMessage, std::unique_ptr<AbstractPayload>&& aPayload);
 
   // Actual implementation of the event loop. Runs in `mVideoThread`.
   void RunEventLoop();
 
   // Actual implementation of recording an object. Runs in `mVideoThread`.
-  void RunRecordObject();
+  void RunRecordObject(std::unique_ptr<AbstractPayload>&& payload);
 
   // Actual implementation of identifying an object. Runs in `mVideoThread`.
   void RunIdentifyObject();
+
+  // Actual implementation of `DoCallback`. Runs in `mVideoThrad`.
+  void RunCallback(std::unique_ptr<AbstractPayload>&& aDelegate);
 
   // Returns a file name of the description asset (data, voice label, source image).
   std::string GetDescriptionAssetName(const ImageDescriptionAsset aAsset) const;
@@ -108,13 +160,21 @@ private:
   // Id of the video thread. Use it only to check that you are on that thread.
   std::thread::id mVideoThreadId;
 
-  // Representation of the latest `Task` requested from the event loop.
-  std::atomic_int mTask;
   // A stamp incremented each time we send a message to the event loop.
   // Protected by mTaskMutex.
   uint64_t mTaskStamp;
+  // All messages. Protected by `mTaskMutex`.
+  struct Message {
+    Task task;
+    std::unique_ptr<AbstractPayload> payload;
+  };
+  std::vector<Message> mPendingMessages;
+  // The latest task on record. Used to interrupt ongoing tasks.
+  std::atomic<int> mLatestTask;
+
   std::mutex mTaskMutex;
   // Condition variable used to communicate with mCaptureThread.
+  // Protected by mTaskMutex.
   std::condition_variable mTaskCondition;
   // The camera. Access only on mVideoThread.
   Camera mCamera;

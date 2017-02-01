@@ -50,7 +50,7 @@ Lighthouse::Lighthouse(ImageMatchingSettings aImageMatchingSettings)
 
 Lighthouse::~Lighthouse() {
   StopRecord();
-  SendMessage(Task::STOP);
+  SendMessage(Task::SHUTDOWN, std::unique_ptr<AbstractPayload>());
   mVideoThread.join();
 }
 
@@ -121,26 +121,35 @@ std::vector<std::tuple<float, ImageDescription>> Lighthouse::FindMatches(const I
   return mImageMatcher.FindMatches(aDescription);
 }
 
-void Lighthouse::OnRecordObject() {
-  SendMessage(Task::RECORD);
+void Lighthouse::DoRecordObject(std::unique_ptr<ImageDelegate>&& aDelegate) {
+  SendMessage(Task::RECORD, std::unique_ptr<AbstractPayload>(aDelegate.release()));
+}
+
+void Lighthouse::DoCallback(std::unique_ptr<ValueDelegate>&& aDelegate) {
+  SendMessage(Task::WAIT, std::unique_ptr<AbstractPayload>(aDelegate.release()));
 }
 
 void Lighthouse::OnIdentifyObject() {
-  SendMessage(Task::IDENTIFY);
+  SendMessage(Task::IDENTIFY, std::unique_ptr<AbstractPayload>());
 }
 
 void Lighthouse::StopRecord() {
-  SendMessage(Task::WAIT);
+  SendMessage(Task::WAIT, std::unique_ptr<AbstractPayload>());
 }
 
-void Lighthouse::SendMessage(lighthouse::Task aMessage) {
-  int message = (int) aMessage;
-  fprintf(stderr, "Lighthouse::SendMessage(%d) to loop\n", message);
+void Lighthouse::SendMessage(lighthouse::Task aTask, std::unique_ptr<AbstractPayload>&& aPayload) {
+  int task = (int) aTask;
+  fprintf(stderr, "Lighthouse::SendMessage(%d) to loop\n", task);
   std::unique_lock<std::mutex> lock(mTaskMutex);
-  mTask.store(message);
+  if (aTask == Task::SHUTDOWN) {
+    mPendingMessages.clear();
+  }
+  mPendingMessages.push_back(Message {
+    aTask,
+    std::move(aPayload)
+  });
   mTaskStamp += 1;
   mTaskCondition.notify_one();
-  fprintf(stderr, "Lighthouse::SendMessage(%d) to loop done\n", message);
 }
 
 /*static*/void
@@ -148,11 +157,25 @@ Lighthouse::AuxRunEventLoop(Lighthouse *self) {
   self->RunEventLoop();
 }
 
+void Lighthouse::RunCallback(std::unique_ptr<AbstractPayload> &&aDelegate) {
+  assert(std::this_thread::get_id() == mVideoThreadId);
+
+  // The semantics of `unique_ptr` (which requires move) and `dynamic_cast` (which can fail)
+  // don't work together without a little help.
+  AbstractPayload* payload = aDelegate.release();
+  ValueDelegate* ptrDelegate = dynamic_cast<ValueDelegate*>(payload);
+  std::unique_ptr<ValueDelegate> delegate(ptrDelegate);
+
+  // Now perform call.
+  fprintf(stderr, "Lighthouse::RunCallback(%u)\n", delegate->mValue);
+  delegate->OnProgress(delegate->mValue);
+}
+
 void Lighthouse::RunIdentifyObject() {
   assert(std::this_thread::get_id() == mVideoThreadId);
   // Start recording. `mCamera` is in charge of stopping itself if `mTask` stops being `Task::IDENTIFY`.
   cv::Mat sourceImage;
-  if (!mCamera.CaptureForIdentification(&mTask, sourceImage)) {
+  if (!mCamera.CaptureForIdentification(&mLatestTask, sourceImage)) {
     // FIXME: Somehow report error.
     return;
   }
@@ -201,12 +224,20 @@ void Lighthouse::RunIdentifyObject() {
   Feedback::ReceivedFrame("match", imageWithMatch);
 }
 
-void Lighthouse::RunRecordObject() {
+void Lighthouse::RunRecordObject(std::unique_ptr<AbstractPayload>&& aPayload) {
   assert(std::this_thread::get_id() == mVideoThreadId);
+
+  // The semantics of `unique_ptr` (which requires move) and `dynamic_cast` (which can fail)
+  // don't work together without a little help.
+  AbstractPayload* payload = aPayload.release();
+  ImageDelegate* ptrDelegate = dynamic_cast<ImageDelegate*>(payload);
+  std::unique_ptr<ImageDelegate> delegate(ptrDelegate);
+
   // Start recording. `mCamera` is in charge of stopping itself if `mTask` stops being `Task::RECORD`.
   cv::Mat source;
-  if (!mCamera.CaptureForRecord(&mTask, source)) {
-    // FIXME: Somehow report error.
+  std::atomic_int fakeLatestTask((int)Task::RECORD);
+  if (!mCamera.CaptureForRecord(&mLatestTask, source)) {
+    delegate->OnError(LighthouseError::ERROR_COULD_NOT_CAPTURE); // FIXME: Refine error.
     return;
   }
 
@@ -217,22 +248,25 @@ void Lighthouse::RunRecordObject() {
   } catch (ImageQualityException e) {
     fprintf(stderr, "Lighthouse::RunRecordObject() encountered an error: %s\n", e.what());
     Feedback::PlaySoundNamed("nothing-recognized");
+    delegate->OnError(LighthouseError::ERROR_COULD_NOT_EXTRACT_DESCRIPTION);
 
-    return; // FIXME: Report actual error.
+    return;
   }
 
   SaveDescription(sourceDescription, source);
 
   Feedback::OnItemRecorded(sourceDescription.GetId());
+  delegate->OnSuccess(source);
 }
 
 void Lighthouse::RunEventLoop() {
   mVideoThreadId = std::this_thread::get_id();
   // Stamp of the latest message received.
   uint64_t stamp = 0;
+  std::vector<Message> pendingMessages;
   while (true) {
     fprintf(stderr, "Lighthouse::RunEventLoop() looping\n");
-    int task = 0;
+    std::unique_ptr<AbstractPayload> payload(nullptr);
     do {
       // While mTaskCondition is atomic, we still need a lock for the sake of the condition.
       std::unique_lock<std::mutex> lock(mTaskMutex);
@@ -243,27 +277,33 @@ void Lighthouse::RunEventLoop() {
         mTaskCondition.wait(lock);
       }
       stamp = mTaskStamp;
-      task = mTask;
+      pendingMessages.swap(mPendingMessages);
     } while (false); // Just a scope.
-    switch (task) {
-      case (int) Task::WAIT:
-        // Nothing to do.
-        continue;
-      case (int) Task::RECORD:
-        RunRecordObject();
-        Feedback::OperationComplete();
-        continue;
-      case (int) Task::IDENTIFY:
-        RunIdentifyObject();
-        Feedback::OperationComplete();
-        continue;
-      case (int) Task::STOP:
-        // We're done with the loop.
-        return;
-      default:
-        assert(false);
-        continue;
+    for (auto iterator = pendingMessages.begin(), end = pendingMessages.end();
+         iterator < end;
+         iterator++)
+    {
+      switch (iterator->task) {
+        case Task::WAIT:
+          RunCallback(std::move(iterator->payload));
+          continue;
+        case Task::RECORD: {
+          RunRecordObject(std::move(iterator->payload));
+          Feedback::OperationComplete();
+          continue;
+        }
+        case Task::IDENTIFY:
+          RunIdentifyObject();
+          Feedback::OperationComplete();
+          continue;
+        case Task::SHUTDOWN:
+          return;
+        default:
+          assert(false);
+          continue;
+      }
     }
+    pendingMessages.clear();
   }
 }
 
