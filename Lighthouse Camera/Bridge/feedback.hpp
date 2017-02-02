@@ -37,6 +37,34 @@ public:
   // Uses TTS engine to say the text with the specified utterance rate (default is -1.0f that is interpreted as
   // AVSpeechUtteranceDefaultSpeechRate).
   static void Say(const std::string &aText, float aUtteranceRate = -1.0f);
+
+  /**
+   * Record that something has happened.
+   *
+   * At the time of this writing, events are uploaded and processed through Google Analytics.
+   * The exact instant at which statistics are uploaded is left for Google Analytics to
+   * decide.
+   *
+   * If you wish to record something, please keep in mind the privacy of users.
+   *
+   * If you define a new category/action/label, please update the constants in "telemetry.h".
+   *
+   * @param aCategory A general category for the event, used for sorting. Example
+   *    categories: "gui_action", "voice_action", "performance", ...
+   *    See the #defines for standard categories.
+   * @param aAction The action undertaken by the user or the app, also used for sorting.
+   *    Generally speaking, that's the verb of the sentence. Examples: "clicked".
+   * @param aLabel More information about the action. Generally speaking, that's
+   *    the object of the action, e.g. "button_play", "silence", "duration_ms".
+   *    If there is a physical unit involved, it should appear here.
+   * @param aMeasure Some value measured by the action. For instance, a duration,
+   *    a memory amount, ...
+   */
+  static void RecordTelemetryEvent(const std::string &aCategory,
+                                   const std::string &aAction,
+                                   const std::string &aLabel,
+                                   const uint32_t aMeasure = 0);
 };
+
 
 #endif /* feedback_hpp */

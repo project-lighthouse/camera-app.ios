@@ -9,6 +9,7 @@ target 'Lighthouse Camera' do
 
   # Pods for Lighthouse Camera
   pod 'OpenCV', '~> 3.x'
+  pod 'Google/Analytics'
 
   target 'Lighthouse CameraTests' do
     inherit! :search_paths
