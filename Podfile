@@ -14,11 +14,13 @@ target 'Lighthouse Camera' do
   target 'Lighthouse CameraTests' do
     inherit! :search_paths
     # Pods for testing
+    pod 'Google/Analytics'
   end
 
   target 'Lighthouse CameraUITests' do
     inherit! :search_paths
     # Pods for testing
+    pod 'Google/Analytics'
   end
 
 end
