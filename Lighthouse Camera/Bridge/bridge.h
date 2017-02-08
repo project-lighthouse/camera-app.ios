@@ -5,6 +5,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import <Google/Analytics.h>
+
 /**
  * Static variable: the view controller.
  *

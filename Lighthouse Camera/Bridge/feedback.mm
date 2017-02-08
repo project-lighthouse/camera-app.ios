@@ -83,3 +83,25 @@ void Feedback::Say(const std::string &aText, float aUtteranceRate) {
 
   [[[AVSpeechSynthesizer alloc] init] speakUtterance:utterance];
 }
+
+/*static*/ void
+Feedback::RecordTelemetryEvent(const std::string &aCategory,
+                          const std::string &aAction,
+                          const std::string &aLabel,
+                          const uint32_t aMeasure) {
+  id<GAITracker> tracker = [GAI sharedInstance].defaultTracker;
+  NSString* category = [[NSString alloc] initWithUTF8String:aCategory.c_str()];
+  NSString* action = [[NSString alloc] initWithUTF8String:aAction.c_str()];
+  NSString* label = [[NSString alloc] initWithUTF8String:aLabel.c_str()];
+  NSNumber* measure = [[NSNumber alloc] initWithUnsignedInteger:aMeasure];
+
+  fprintf(stderr, "Feedback::RecordTelemetryEvent %s, %s, %s, %d\n",
+          aCategory.c_str(),
+          aAction.c_str(),
+          aLabel.c_str(),
+          aMeasure);
+  [tracker send:[[GAIDictionaryBuilder createEventWithCategory:category
+                                                        action:action
+                                                        label:label
+                                                        value:measure] build]];
+}

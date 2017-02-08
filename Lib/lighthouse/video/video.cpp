@@ -9,6 +9,7 @@
 #include "feedback.hpp"
 #include "filesystem.hpp"
 #include "lighthouse.hpp"
+#include "telemetry.h"
 #include "video.hpp"
 
 #include "opencv2/videoio.hpp"
@@ -320,8 +321,16 @@ lighthouse::Camera::Camera()
 bool
 Camera::CaptureForIdentification(std::atomic_int *aState, cv::Mat& aResult) {
   if (!NowYouSeeMeNowYouDont(std::chrono::milliseconds(1000), aState, Task::IDENTIFY, aResult)) {
+    Feedback::RecordTelemetryEvent(TELEMETRY_CATEGORY_VISION,
+                                   TELEMETRY_ACTION_IDENTIFY_OBJECT,
+                                   TELEMETRY_LABEL_ERROR_CODE,
+                                   1 /*Arbitrary error. FIXME: Introduce error codes.*/);
     return false;
   }
+  Feedback::RecordTelemetryEvent(TELEMETRY_CATEGORY_VISION,
+                                 TELEMETRY_ACTION_IDENTIFY_OBJECT,
+                                 TELEMETRY_LABEL_SUCCESS);
+
   Feedback::ReceivedFrame("CaptureForIdentification", aResult);
   return true;
 }
@@ -329,8 +338,15 @@ Camera::CaptureForIdentification(std::atomic_int *aState, cv::Mat& aResult) {
 bool
 Camera::CaptureForRecord(std::atomic_int *aState, cv::Mat& aResult) {
   if (!NowYouSeeMeNowYouDont(std::chrono::milliseconds(1000), aState, Task::RECORD, aResult)) {
+    Feedback::RecordTelemetryEvent(TELEMETRY_CATEGORY_VISION,
+                                   TELEMETRY_ACTION_RECORD_OBJECT,
+                                   TELEMETRY_LABEL_ERROR_CODE,
+                                   1 /*Arbitrary error. FIXME: Introduce error codes.*/);
     return false;
   }
+  Feedback::RecordTelemetryEvent(TELEMETRY_CATEGORY_VISION,
+                                 TELEMETRY_ACTION_RECORD_OBJECT,
+                                 TELEMETRY_LABEL_SUCCESS);
   Feedback::ReceivedFrame("CaptureForRecord", aResult);
   return true;
 }

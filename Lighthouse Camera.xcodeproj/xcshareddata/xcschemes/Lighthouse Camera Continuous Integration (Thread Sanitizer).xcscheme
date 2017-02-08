@@ -20,6 +20,20 @@
                ReferencedContainer = "container:Lighthouse Camera.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "63B98FE61E03F211000125CB"
+               BuildableName = "Lighthouse CameraTests.xctest"
+               BlueprintName = "Lighthouse CameraTests"
+               ReferencedContainer = "container:Lighthouse Camera.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -30,6 +44,16 @@
       codeCoverageEnabled = "YES"
       enableThreadSanitizer = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "63B98FE61E03F211000125CB"
+               BuildableName = "Lighthouse CameraTests.xctest"
+               BlueprintName = "Lighthouse CameraTests"
+               ReferencedContainer = "container:Lighthouse Camera.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
